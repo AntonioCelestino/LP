@@ -1,0 +1,41 @@
+INSERT INTO `scas`.`curso`(`CURSO_ID`, `NOME`, `TIPO_ENSINO`, `TURNO`) VALUES (1, "Sistemas de Informação","Superior","Integral");
+
+INSERT INTO `scas`.`curso`(`CURSO_ID`, `NOME`, `TIPO_ENSINO`, `TURNO`) VALUES (2, "Engenharia Mecatrônica","Superior","Integral");
+
+INSERT INTO `scas`.`curso`(`CURSO_ID`, `NOME`, `TIPO_ENSINO`, `TURNO`) VALUES (3, "Licenciatura em Física","Superior","Noturno");
+
+
+
+INSERT INTO `scas`.`modalidade`(`MODALIDADE_ID`, `VALOR_MENSAL`, `NOME`, `DESCRICAO`) VALUES (1, 100,"Transporte","Auxílio para Locomoção");
+
+INSERT INTO `scas`.`modalidade`(`MODALIDADE_ID`, `VALOR_MENSAL`, `NOME`, `DESCRICAO`) VALUES (2, 56,"Alimentação","Tickets para Refeições");
+
+INSERT INTO `scas`.`modalidade`(`MODALIDADE_ID`, `VALOR_MENSAL`, `NOME`, `DESCRICAO`) VALUES (3, 250,"Moradia","Auxílio para Aluguel");
+
+INSERT INTO `scas`.`modalidade`(`MODALIDADE_ID`, `VALOR_MENSAL`, `NOME`, `DESCRICAO`) VALUES (4, 200,"Manutenção","Auxílios Diversos");
+
+
+
+INSERT INTO `scas`.`usuario`(`USUARIO_ID`, `DATA_NASC`, `NOME`, `SEXO`,  `CPF`, `IDENTIDADE`, `TELEFONE_FIXO`, `TELEFONE_CELULAR`, `EMAIL`, `ENDERECO`, `NUMERO`, `COMPLEMENTO`, `BAIRRO`, `CEP`, `CIDADE`, `UF`, `LOGIN`, `SENHA`) VALUES (1, "00/00/0000", "Antonio Celestino Rosa", "Masculino", "000.000.000-00", "AA-00.000.000", "11-1111-1111", "11-11111-1111", "antonio@myemail.com", "Rua qualquer uma", "200", "101", "Centro", "00.000-000", "Juiz de Fora", "MG", "antonio","1234");
+
+INSERT INTO `scas`.`usuario`(`USUARIO_ID`, `DATA_NASC`, `NOME`, `SEXO`,  `CPF`, `IDENTIDADE`, `TELEFONE_FIXO`, `TELEFONE_CELULAR`, `EMAIL`, `ENDERECO`, `NUMERO`, `COMPLEMENTO`, `BAIRRO`, `CEP`, `CIDADE`, `UF`, `LOGIN`, `SENHA`) VALUES (2, "00/00/0000", "Nathan Manera Magalhães", "Masculino", "222.222.222-22", "BB-11.111.111", "33-3333-3333", "33-33333-3333","nathan@myemail.com", "Rua nenhuma qualquer", "300", "401", "Centro", "22.222-222", "Juiz de Fora", "MG","nathan","4321");
+
+
+INSERT INTO `scas`.`funcionario` (`REGISTRO`, `USUARIO_ID`, `CARGO`) VALUES ('123456', '1', 'Técnico'), ('654321', '2', 'Técnico');
+
+
+INSERT INTO `scas`.`aluno` (`MATRICULA`, `ANO_INGRESSO`, `PERIODO_CURSO`, `FAMILIA_ENDERECO`, `FAMILIA_NUMERO`, `FAMILIA_COMPLEMENTO`, `FAMILIA_BAIRRO`, `FAMILIA_CEP`, `FAMILIA_CIDADE`, `FAMILIA_UF`, `CURSO_ID`, `USUARIO_ID`) VALUES ('140156', '2014', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '1'), ('140057', '2014', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '2');
+
+
+INSERT INTO `scas`.`selecao` (`SELECAO_ID`, `DT_INICIO_INSCRICAO`, `DT_FIM_INSCRICAO`, `NUM_EDITAL`, `MODALIDADE_ID`) VALUES (1, '01/10/2015', '31/10/2015', '2015/02', '1'), (2, '01/09/2015', '30/09/2015', '2015/01', '2');
+
+
+INSERT INTO `scas`.`recurso` (`RECURSO_ID`, `ANO`, `CREDITOS`, `DEBITOS`, `SALDO`, `MODALIDADE_ID`) VALUES (1, '2015', '100000', NULL, '100000', '1'), (2, '2015', '50000', NULL, '50000', '2');
+
+//só poderá ser inserido bolsa se tiver formulário inserido (nesse caso se tiver formulario de id = 1 e id = 2)
+INSERT INTO `scas`.`bolsa` (`BOLSA_ID`, `DT_INICIO`, `DT_FIM`, `FORMULARIO_ID`) VALUES (1, '01/11/2015', '31/10/2016', '1400571'), (2, '01/11/2015', '31/10/2016', '1401562');
+
+
+SELECT m.modalidade_id, m.nome, SUM(r.saldo)soma_saldos FROM recurso r
+RIGHT JOIN modalidade m ON (r.modalidade_id = m.modalidade_id)
+GROUP BY m.modalidade_id

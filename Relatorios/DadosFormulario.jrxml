@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Dados Formulario" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8965b539-274a-4bb9-9044-f688656fb835">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     renda.`QT18_RENDA_BRUTA` AS renda_QT18_RENDA_BRUTA,
+     selecao.`NUM_EDITAL` AS selecao_NUM_EDITAL,
+     aluno.`MATRICULA` AS aluno_MATRICULA,
+     formulario.`QT13_IMOVEL` AS formulario_QT13_IMOVEL,
+     formulario.`QT07_TRABALHO_REMUNERADO` AS formulario_QT07_TRABALHO_REMUNERADO
+FROM
+     `aluno` aluno INNER JOIN `formulario` formulario ON aluno.`MATRICULA` = formulario.`ALUNO_MATRICULA`
+     INNER JOIN `renda` renda ON formulario.`FORMULARIO_ID` = renda.`FORMULARIO_ID`
+     INNER JOIN `selecao` selecao ON formulario.`SELECAO_ID` = selecao.`SELECAO_ID`]]>
+	</queryString>
+	<field name="renda_QT18_RENDA_BRUTA" class="java.lang.Double"/>
+	<field name="selecao_NUM_EDITAL" class="java.lang.String"/>
+	<field name="aluno_MATRICULA" class="java.lang.Integer"/>
+	<field name="formulario_QT13_IMOVEL" class="java.lang.String"/>
+	<field name="formulario_QT07_TRABALHO_REMUNERADO" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="e61662af-dc16-4fb0-9dee-73fc61b53ba1"/>
+				<staticText>
+					<reportElement x="20" y="20" width="307" height="43" forecolor="#FFFFFF" uuid="4cdef685-6d7a-47bf-b653-efb1f65fcf9d"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dados Formulário]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="373" y="43" width="202" height="20" forecolor="#FFFFFF" uuid="efc41746-4bfc-4b76-aa32-5f21b7cc981d"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Relatório de Dados Formulário]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="7898da13-f11b-4e55-a5a4-3b2ef121e2ad"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="0" width="108" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="dc6d02cd-a40d-4403-b9f8-b4717dcf2dd1"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Renda Bruta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="90" y="0" width="90" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="46a5cbe8-2557-4b45-bdba-7453685c6043"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Edital]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="89" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c8f7d594-7c0b-4b44-b301-6297307a767a"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Matrícula]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="288" y="0" width="203" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="73ef84ee-e8d7-4634-b60e-c63faa753fc9"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Imóvel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="491" y="0" width="64" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="eb7181f5-13c0-48d1-8ee5-ef0aa4cda1ec"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trabalha]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="3fdbfec0-918b-4187-9a1a-eaf17613aee9"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="180" y="0" width="108" height="20" uuid="edafdfcb-da93-4b5b-a3a8-5ac6da902956"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{renda_QT18_RENDA_BRUTA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="90" y="0" width="90" height="20" uuid="1d6b2946-b3ce-453b-a0e7-bff4aedaa7c4"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{selecao_NUM_EDITAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1" y="0" width="89" height="20" uuid="5dbfd36e-ce60-4456-8fdc-72b51529d16b"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{aluno_MATRICULA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="288" y="0" width="203" height="20" uuid="e9dd349f-9d88-4bff-8d1a-8299bff2797a"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{formulario_QT13_IMOVEL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="491" y="0" width="64" height="20" uuid="fb6fffb3-a76b-40be-8a01-300bbe33711e"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{formulario_QT07_TRABALHO_REMUNERADO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="f1aeff02-88b3-4dfd-ab9f-ed7805f3a348"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="62c4af0e-43de-436e-8947-4bf4245218f5"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="39e07dad-56ce-4928-bfb9-9f89971be1e5"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,143 @@
+private int codFormulario;
+private Aluno aluno
+private int codAluno;
+private Selecao selecao;
+private int codSelecao;
+
+//--- Questão 01 ---
+String qt01_Resposta;		// com ratio button de 'Sim' ou 'Não'	
+String qt01_Nome = ""; 		// preenchida se qt01_Resposta = 'sim'	
+String qt01_Parentesco = ""; 	// preenchida se qt01_Resposta = 'sim'	
+String qt01_Programa = ""; 	// preenchida se qt01_Resposta = 'sim'	
+String qt01_Ano = ""; 		// preenchida se qt01_Resposta = 'sim'	
+
+//--- Questão 02 ---
+String qt02_Alimentacao = "";	// com ratio button de 'Sim' ou 'Não'				
+String qt02_Manutencao = "";	// com ratio button de 'Sim' ou 'Não'
+String qt02_Moradia = "";	// com ratio button de 'Sim' ou 'Não'
+String qt02_Transporte = "";	// com ratio button de 'Sim' ou 'Não'
+String qt02_Outro = "";		// preenchida se as respostas anteriores são iguais a 'Não'	
+
+//--- Questão 03 ---
+String qt03_Transporte = ""; 	// com select
+String qt03_Tempo = ""; 	// preenchida se qt03_Transporte = 'pé-bicicleta'
+double qt03_ValorGastoDiario; 	// preenchida se qt03_Transporte = 'transporte coletivo'
+double qt03_ValorGastoMensal; 	// preenchida se qt03_Transporte = 'transporte locado'
+String qt03_Outro = ""; 	// preenchida se qt03_Transporte = 'Outro'
+
+//--- Questão 04 ---
+String qt04_InstituicaoEnsinoFundamental = ""; 	// com select
+
+//--- Questão 05 ---
+String qt05_InstituicaoEnsinoMedio = ""; 	// com select
+
+//--- Questão 06 ---
+String qt06_AtividadeRemunerada = ""; 	// com select
+double qt06_ValorBolsaEstagio; 		// preenchida qt06_AtividadeRemunerada = estágio
+String qt06_ProjetoIniciacao = ""; 	// preenchida qt06_AtividadeRemunerada = iniciação científica
+double qt06_ValorBolsaIniciacao; 	// preenchida qt06_AtividadeRemunerada = iniciação científica
+String qt06_ProjetoTreinamento = ""; 	// preenchida qt06_AtividadeRemunerada = treinamento profissional
+double qt06_ValorBolsaTreinamento; 	// preenchida qt06_AtividadeRemunerada = treinamento profissional
+String qt06_Outro = ""; 		// preenchida qt06_AtividadeRemunerada = Outra
+double qt06_ValorBolsaOutro; 		// preenchida qt06_AtividadeRemunerada = Outra
+
+//--- Questão 07 ---
+String qt07_TrabalhoRemunerado = "";	// com ratio button de 'Sim' ou 'Não'
+String qt07_HorasSemanais = ""; 	// preenchida se qt07_TrabalhoRemunerado = 'Sim'
+double qt07_Salario; 			// preenchida se qt07_TrabalhoRemunerado = 'Sim'
+
+//--- Questão 08 ---
+String qt08_Manutencao = ""; 	// com select
+String qt08_Outra = ""; 	// preenchida se qt08_Manutencao = 'Outra'
+
+//--- Questão 09 ---
+String qt09_Moradia = ""; 	// com select
+String qt09_Outra = ""; 	// preenchida se qt09_Moradia = 'Outra'
+
+//--- Questão 10 ---
+String qt10_ResponsavelFinanceiro = "";		// com select
+String qt10_Outros = ""; 			// preenchida se qt10_ResponsavelFinanceiro = 'Outros'
+
+//--- Questão 11 ---
+String qt11_Esgoto = "";		// com ratio button de 'Sim' ou 'Não'
+String qt11_Agua = "";			// com ratio button de 'Sim' ou 'Não'
+String qt11_Iluminacao = "";		// com ratio button de 'Sim' ou 'Não'
+String qt11_Lixo = "";			// com ratio button de 'Sim' ou 'Não'
+String qt11_Pavimentacao = "";		// com ratio button de 'Sim' ou 'Não'
+
+//--- Questão 12 ---
+String qt12_Residencia = ""; 	// com select
+String qt12_Outro = "";		// preenchida se qt12_Residencia = 'Outro'
+
+//--- Questão 13 ---
+String qt13_Imovel = ""; 	// com select
+double qt13_ValorAluguel;	// preenchida se qt13_Imovel = alugado
+double qt13_ValorPrestacao;	// preenchida se qt13_Imovel = em pagamento
+String qt13_Nome = "";		// preenchida se qt13_Imovel = emprestado
+String qt13_Outro = "";		// preenchida se qt13_Imovel = Outro
+
+//--- Questão 14 ---
+String qt14_Acabamento = ""; 	// com ratio button
+
+//--- Questão 15 ---
+String qt15_OutrosImoveis = ""; 	// com ratio button de 'Sim' ou 'Não'
+String qt15_DescricaoImoveis = "";	// preenchida se qt15_OutrosImoveis = 'Sim'
+
+//--- Questão 16 ---
+int qt16_QuantCarro;
+int qt16_QuantTV;
+int qt16_QuantMaqLavar;
+int qt16_QuantGeladeira;
+int qt16_QuantTVCabo;
+int qt16_QuantComputador;
+int qt16_QuantInternetPaga;
+int qt16_QuantEmpregadaMensalista;
+int qt16_QuantEmpregadaDiarista;
+int qt16_QuantBanheiro;
+int qt16_QuantQuarto;
+
+//--- Questão 17 ---
+String qt17_ProblemaSaude = ""; // com ratio button de 'Sim' ou 'Não'
+//se 'Sim' acessar tabela separada para preencher seus campos
+
+//--- Questão 18 ---
+//acessar tabela separada
+double qt18_AluguelImoveis;
+double qt18_PensaoMorte;
+double qt18_PensaoAlimenticia;
+double qt18_AjudaTerceiros;
+double qt18_BeneficiosSociais;
+double qt18_OutraRenda;
+String qt18_NomeOutraRenda = "";
+double qt18_TotalRenda;
+int qt18_NumeroResidentes;
+
+//--- Questão 19 ---
+double qt19_ValorAgua;
+double qt19_ValorLuz;
+double qt19_ValorTelefone;
+double qt19_ValorCondominio;
+double qt19_ValorMensalidadeEscolar;
+double qt19_ValorAlimentacao;
+double qt19_ValorSaude;
+double qt19_ValorTransporte;
+double qt19_ValorIptuAnual;
+double qt19_ValorAluguel;
+double qt19_ValorPensao;
+double qt19_ValorOutros;
+
+//--- Questão 20 ---
+double qt20_ValorAgua;
+double qt20_ValorLuz;
+double qt20_ValorTelefone;
+double qt20_ValorCondominio;
+double qt20_ValorAluguel;
+double qt20_ValorIptuAnual;
+
+//--- Questão 21 ---
+String qt21_Esclarecimentos = "";
+
+//--- Termo ---
+// é desnecessário guardar uma variável para 'termo de compromisso', 
+// pois se o usuário não aceitar selecionar, haverá um codigo javascript 
+// que não vai deixar confirmar o incluir do formulário todo, ou seja, a pessoa precisa aceitar os termos se quiser prosseguir.

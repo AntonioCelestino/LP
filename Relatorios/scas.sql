@@ -1,0 +1,451 @@
+-- phpMyAdmin SQL Dump
+-- version 4.1.14
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: 04-Abr-2016 às 14:31
+-- Versão do servidor: 5.6.17
+-- PHP Version: 5.5.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `scas`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `aluno`
+--
+
+CREATE TABLE IF NOT EXISTS `aluno` (
+  `MATRICULA` int(11) NOT NULL,
+  `ANO_INGRESSO` int(11) DEFAULT NULL,
+  `PERIODO_CURSO` varchar(45) DEFAULT NULL,
+  `FAMILIA_ENDERECO` varchar(45) DEFAULT NULL,
+  `FAMILIA_NUMERO` varchar(45) DEFAULT NULL,
+  `FAMILIA_COMPLEMENTO` varchar(45) DEFAULT NULL,
+  `FAMILIA_BAIRRO` varchar(45) DEFAULT NULL,
+  `FAMILIA_CEP` varchar(45) DEFAULT NULL,
+  `FAMILIA_CIDADE` varchar(45) DEFAULT NULL,
+  `FAMILIA_UF` varchar(45) DEFAULT NULL,
+  `CURSO_ID` int(11) NOT NULL,
+  `USUARIO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`MATRICULA`),
+  KEY `CURSO_ID` (`CURSO_ID`),
+  KEY `USUARIO_ID` (`USUARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `aluno`
+--
+
+INSERT INTO `aluno` (`MATRICULA`, `ANO_INGRESSO`, `PERIODO_CURSO`, `FAMILIA_ENDERECO`, `FAMILIA_NUMERO`, `FAMILIA_COMPLEMENTO`, `FAMILIA_BAIRRO`, `FAMILIA_CEP`, `FAMILIA_CIDADE`, `FAMILIA_UF`, `CURSO_ID`, `USUARIO_ID`) VALUES
+(140057, 2014, '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2),
+(140156, 2014, '4', '', '', '', '', '', '', '', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `bolsa`
+--
+
+CREATE TABLE IF NOT EXISTS `bolsa` (
+  `BOLSA_ID` int(11) NOT NULL,
+  `DT_INICIO` varchar(10) DEFAULT NULL,
+  `DT_FIM` varchar(10) DEFAULT NULL,
+  `FORMULARIO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`BOLSA_ID`),
+  KEY `FORMULARIO_ID` (`FORMULARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `bolsa`
+--
+
+INSERT INTO `bolsa` (`BOLSA_ID`, `DT_INICIO`, `DT_FIM`, `FORMULARIO_ID`) VALUES
+(1, '11/11/1111', '31/10/2016', 1400571);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `curso`
+--
+
+CREATE TABLE IF NOT EXISTS `curso` (
+  `CURSO_ID` int(11) NOT NULL,
+  `NOME` varchar(45) DEFAULT NULL,
+  `TIPO_ENSINO` varchar(45) DEFAULT NULL,
+  `TURNO` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`CURSO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `curso`
+--
+
+INSERT INTO `curso` (`CURSO_ID`, `NOME`, `TIPO_ENSINO`, `TURNO`) VALUES
+(1, 'Sistemas de Informação', 'Superior', 'Integral'),
+(2, 'Engenharia Mecatrônica', 'Superior', 'Integral'),
+(3, 'Licenciatura em Física', 'Superior', 'Noturno');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `doenca`
+--
+
+CREATE TABLE IF NOT EXISTS `doenca` (
+  `DOENCA_ID` int(11) NOT NULL,
+  `FORMULARIO_ID` int(11) NOT NULL,
+  `QT17_NOME` varchar(45) DEFAULT NULL,
+  `QT17_DOENCA` varchar(45) DEFAULT NULL,
+  `QT17_TRABALHO` varchar(45) DEFAULT NULL,
+  `QT17_DEPENDENCIA` varchar(45) DEFAULT NULL,
+  `QT17_GASTO` double DEFAULT NULL,
+  PRIMARY KEY (`DOENCA_ID`),
+  KEY `FORMULARIO_ID` (`FORMULARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `doenca`
+--
+
+INSERT INTO `doenca` (`DOENCA_ID`, `FORMULARIO_ID`, `QT17_NOME`, `QT17_DOENCA`, `QT17_TRABALHO`, `QT17_DEPENDENCIA`, `QT17_GASTO`) VALUES
+(14005711, 1400571, 'ufffyuyuy', 'zika virus, ebola, gripe h1n1', 'Sim', 'Sim', 100000);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `formulario`
+--
+
+CREATE TABLE IF NOT EXISTS `formulario` (
+  `FORMULARIO_ID` int(11) NOT NULL,
+  `ALUNO_MATRICULA` int(11) NOT NULL,
+  `SELECAO_ID` int(11) NOT NULL,
+  `QT01_RESPOSTA` varchar(45) DEFAULT NULL,
+  `QT01_NOME` varchar(45) DEFAULT NULL,
+  `QT01_PARENTESCO` varchar(45) DEFAULT NULL,
+  `QT01_PROGRAMA` varchar(45) DEFAULT NULL,
+  `QT01_ANO` varchar(45) DEFAULT NULL,
+  `QT02_ALIMENTACAO` varchar(45) DEFAULT NULL,
+  `QT02_MANUTENCAO` varchar(45) DEFAULT NULL,
+  `QT02_MORADIA` varchar(45) DEFAULT NULL,
+  `QT02_TRANSPORTE` varchar(45) DEFAULT NULL,
+  `QT02_OUTRO` varchar(45) DEFAULT NULL,
+  `QT03_TRANSPORTE` varchar(45) DEFAULT NULL,
+  `QT03_TEMPO` varchar(45) DEFAULT NULL,
+  `QT03_VALOR_GASTO_DIARIO` double DEFAULT NULL,
+  `QT03_VALOR_GASTO_MENSAL` double DEFAULT NULL,
+  `QT03_OUTRO` varchar(45) DEFAULT NULL,
+  `QT04_INSTITUICAO_ENSINO_FUNDAMENTAL` varchar(45) DEFAULT NULL,
+  `QT05_INSTITUICAO_ENSINO_MEDIO` varchar(45) DEFAULT NULL,
+  `QT06_ATIVIDADE_REMUNERADA` varchar(45) DEFAULT NULL,
+  `QT06_VALOR_BOLSA_ESTAGIO` double DEFAULT NULL,
+  `QT06_PROJETO_INICIACAO` varchar(45) DEFAULT NULL,
+  `QT06_VALOR_BOLSA_INICIACAO` double DEFAULT NULL,
+  `QT06_PROJETO_TREINAMENTO` varchar(45) DEFAULT NULL,
+  `QT06_VALOR_BOLSA_TREINAMENTO` double DEFAULT NULL,
+  `QT06_OUTRO` varchar(45) DEFAULT NULL,
+  `QT06_VALOR_BOLSA_OUTRO` double DEFAULT NULL,
+  `QT07_TRABALHO_REMUNERADO` varchar(45) DEFAULT NULL,
+  `QT07_HORAS_SEMANAIS` varchar(45) DEFAULT NULL,
+  `QT07_SALARIO` double DEFAULT NULL,
+  `QT08_MANUTENCAO` varchar(45) DEFAULT NULL,
+  `QT08_OUTRO` varchar(45) DEFAULT NULL,
+  `QT09_MORADIA` varchar(45) DEFAULT NULL,
+  `QT09_OUTRO` varchar(45) DEFAULT NULL,
+  `QT10_RESPONSAVEL_FINANCEIRO` varchar(45) DEFAULT NULL,
+  `QT10_OUTRO` varchar(45) DEFAULT NULL,
+  `QT11_ESGOTO` varchar(45) DEFAULT NULL,
+  `QT11_AGUA_TRATADA` varchar(45) DEFAULT NULL,
+  `QT11_ILUMINACAO` varchar(45) DEFAULT NULL,
+  `QT11_COLETA_LIXO` varchar(45) DEFAULT NULL,
+  `QT11_RUA_PAVIMENTADA` varchar(45) DEFAULT NULL,
+  `QT12_RESIDENCIA` varchar(45) DEFAULT NULL,
+  `QT12_OUTRO` varchar(45) DEFAULT NULL,
+  `QT13_IMOVEL` varchar(45) DEFAULT NULL,
+  `QT13_VALOR_ALUGUEL` double DEFAULT NULL,
+  `QT13_VALOR_PRESTACAO` double DEFAULT NULL,
+  `QT13_NOME` varchar(45) DEFAULT NULL,
+  `QT13_OUTRO` varchar(45) DEFAULT NULL,
+  `QT14_ACABAMENTO` varchar(45) DEFAULT NULL,
+  `QT15_OUTROS_IMOVEIS` varchar(45) DEFAULT NULL,
+  `QT15_DESCRICAO_IMOVEIS` varchar(45) DEFAULT NULL,
+  `QT16_QUANTIDADE_CARRO` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_TELEVISAO` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_MAQUINA_LAVAR` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_GELADEIRA` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_TV_CABO` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_COMPUTADOR` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_INTERNET` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_EMPREGADA_MENSALISTA` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_EMPREGADA_DIARISTA` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_BANHEIRO` int(11) DEFAULT NULL,
+  `QT16_QUANTIDADE_QUARTO` int(11) DEFAULT NULL,
+  `QT17_PROBLEMA_SAUDE` varchar(45) DEFAULT NULL,
+  `QT18_ALUGUEL_IMOVEIS` double DEFAULT NULL,
+  `QT18_PENSAO_MORTE` double DEFAULT NULL,
+  `QT18_PENSAO_ALIMENTICIA` double DEFAULT NULL,
+  `QT18_AJUDA_TERCEIROS` double DEFAULT NULL,
+  `QT18_BENEFICIOS_SOCIAIS` double DEFAULT NULL,
+  `QT18_OUTRA_RENDA` double DEFAULT NULL,
+  `QT18_NOME_OUTRA_RENDA` varchar(45) DEFAULT NULL,
+  `QT18_TOTAL_RENDA` double DEFAULT NULL,
+  `QT18_NUMERO_RESIDENTES` int(11) DEFAULT NULL,
+  `QT19_VALOR_AGUA` double DEFAULT NULL,
+  `QT19_VALOR_LUZ` double DEFAULT NULL,
+  `QT19_VALOR_TELEFONE` double DEFAULT NULL,
+  `QT19_VALOR_CONDOMINIO` double DEFAULT NULL,
+  `QT19_VALOR_MENSALIDADE_ESCOLAR` double DEFAULT NULL,
+  `QT19_VALOR_ALIMENTACAO` double DEFAULT NULL,
+  `QT19_VALOR_SAUDE` double DEFAULT NULL,
+  `QT19_VALOR_TRANSPORTE` double DEFAULT NULL,
+  `QT19_VALOR_IPTU_ANUAL` double DEFAULT NULL,
+  `QT19_VALOR_ALUGUEL` double DEFAULT NULL,
+  `QT19_VALOR_PENSAO` double DEFAULT NULL,
+  `QT19_VALOR_OUTROS` double DEFAULT NULL,
+  `QT20_VALOR_AGUA` double DEFAULT NULL,
+  `QT20_VALOR_LUZ` double DEFAULT NULL,
+  `QT20_VALOR_TELEFONE` double DEFAULT NULL,
+  `QT20_VALOR_CONDOMINIO` double DEFAULT NULL,
+  `QT20_VALOR_ALUGUEL` double DEFAULT NULL,
+  `QT20_VALOR_IPTU_ANUAL` double DEFAULT NULL,
+  `QT21_ESCLARECIMENTOS` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`FORMULARIO_ID`),
+  KEY `ALUNO_MATRICULA` (`ALUNO_MATRICULA`),
+  KEY `SELECAO_ID` (`SELECAO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `formulario`
+--
+
+INSERT INTO `formulario` (`FORMULARIO_ID`, `ALUNO_MATRICULA`, `SELECAO_ID`, `QT01_RESPOSTA`, `QT01_NOME`, `QT01_PARENTESCO`, `QT01_PROGRAMA`, `QT01_ANO`, `QT02_ALIMENTACAO`, `QT02_MANUTENCAO`, `QT02_MORADIA`, `QT02_TRANSPORTE`, `QT02_OUTRO`, `QT03_TRANSPORTE`, `QT03_TEMPO`, `QT03_VALOR_GASTO_DIARIO`, `QT03_VALOR_GASTO_MENSAL`, `QT03_OUTRO`, `QT04_INSTITUICAO_ENSINO_FUNDAMENTAL`, `QT05_INSTITUICAO_ENSINO_MEDIO`, `QT06_ATIVIDADE_REMUNERADA`, `QT06_VALOR_BOLSA_ESTAGIO`, `QT06_PROJETO_INICIACAO`, `QT06_VALOR_BOLSA_INICIACAO`, `QT06_PROJETO_TREINAMENTO`, `QT06_VALOR_BOLSA_TREINAMENTO`, `QT06_OUTRO`, `QT06_VALOR_BOLSA_OUTRO`, `QT07_TRABALHO_REMUNERADO`, `QT07_HORAS_SEMANAIS`, `QT07_SALARIO`, `QT08_MANUTENCAO`, `QT08_OUTRO`, `QT09_MORADIA`, `QT09_OUTRO`, `QT10_RESPONSAVEL_FINANCEIRO`, `QT10_OUTRO`, `QT11_ESGOTO`, `QT11_AGUA_TRATADA`, `QT11_ILUMINACAO`, `QT11_COLETA_LIXO`, `QT11_RUA_PAVIMENTADA`, `QT12_RESIDENCIA`, `QT12_OUTRO`, `QT13_IMOVEL`, `QT13_VALOR_ALUGUEL`, `QT13_VALOR_PRESTACAO`, `QT13_NOME`, `QT13_OUTRO`, `QT14_ACABAMENTO`, `QT15_OUTROS_IMOVEIS`, `QT15_DESCRICAO_IMOVEIS`, `QT16_QUANTIDADE_CARRO`, `QT16_QUANTIDADE_TELEVISAO`, `QT16_QUANTIDADE_MAQUINA_LAVAR`, `QT16_QUANTIDADE_GELADEIRA`, `QT16_QUANTIDADE_TV_CABO`, `QT16_QUANTIDADE_COMPUTADOR`, `QT16_QUANTIDADE_INTERNET`, `QT16_QUANTIDADE_EMPREGADA_MENSALISTA`, `QT16_QUANTIDADE_EMPREGADA_DIARISTA`, `QT16_QUANTIDADE_BANHEIRO`, `QT16_QUANTIDADE_QUARTO`, `QT17_PROBLEMA_SAUDE`, `QT18_ALUGUEL_IMOVEIS`, `QT18_PENSAO_MORTE`, `QT18_PENSAO_ALIMENTICIA`, `QT18_AJUDA_TERCEIROS`, `QT18_BENEFICIOS_SOCIAIS`, `QT18_OUTRA_RENDA`, `QT18_NOME_OUTRA_RENDA`, `QT18_TOTAL_RENDA`, `QT18_NUMERO_RESIDENTES`, `QT19_VALOR_AGUA`, `QT19_VALOR_LUZ`, `QT19_VALOR_TELEFONE`, `QT19_VALOR_CONDOMINIO`, `QT19_VALOR_MENSALIDADE_ESCOLAR`, `QT19_VALOR_ALIMENTACAO`, `QT19_VALOR_SAUDE`, `QT19_VALOR_TRANSPORTE`, `QT19_VALOR_IPTU_ANUAL`, `QT19_VALOR_ALUGUEL`, `QT19_VALOR_PENSAO`, `QT19_VALOR_OUTROS`, `QT20_VALOR_AGUA`, `QT20_VALOR_LUZ`, `QT20_VALOR_TELEFONE`, `QT20_VALOR_CONDOMINIO`, `QT20_VALOR_ALUGUEL`, `QT20_VALOR_IPTU_ANUAL`, `QT21_ESCLARECIMENTOS`) VALUES
+(1400571, 140057, 1, 'Sim', '', '', '', '', 'Não', 'Não', 'Não', 'Não', '', 'carona', NULL, NULL, NULL, NULL, 'pública', 'pública', 'Não', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Não', NULL, NULL, 'Recebo ajuda de parentes', NULL, 'Sozinho', NULL, 'Pai e mãe', NULL, 'Sim', 'Sim', 'Sim', 'Sim', 'Sim', 'Bairro padrão popular', NULL, 'Próprio - já quitado', NULL, NULL, NULL, NULL, 'Sim', 'Não', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Não', 0, 0, 0, 0, 0, 0, '', 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `funcionario`
+--
+
+CREATE TABLE IF NOT EXISTS `funcionario` (
+  `REGISTRO` int(11) NOT NULL,
+  `USUARIO_ID` int(11) NOT NULL,
+  `CARGO` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`REGISTRO`),
+  KEY `USUARIO_ID` (`USUARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `funcionario`
+--
+
+INSERT INTO `funcionario` (`REGISTRO`, `USUARIO_ID`, `CARGO`) VALUES
+(123456, 1, 'Técnico'),
+(654321, 2, 'Técnico');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `modalidade`
+--
+
+CREATE TABLE IF NOT EXISTS `modalidade` (
+  `MODALIDADE_ID` int(11) NOT NULL,
+  `VALOR_MENSAL` double DEFAULT NULL,
+  `NOME` varchar(45) DEFAULT NULL,
+  `DESCRICAO` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`MODALIDADE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `modalidade`
+--
+
+INSERT INTO `modalidade` (`MODALIDADE_ID`, `VALOR_MENSAL`, `NOME`, `DESCRICAO`) VALUES
+(1, 100, 'Transporte', 'Auxílio para Locomoção'),
+(2, 56, 'Alimentação', 'Tickets para Refeições'),
+(3, 250, 'Moradia', 'Auxílio para Aluguel'),
+(4, 200, 'Manutenção', 'Auxílios Diversos');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `recurso`
+--
+
+CREATE TABLE IF NOT EXISTS `recurso` (
+  `RECURSO_ID` int(11) NOT NULL,
+  `ANO` int(11) DEFAULT NULL,
+  `CREDITOS` double DEFAULT NULL,
+  `DEBITOS` double DEFAULT NULL,
+  `SALDO` double DEFAULT NULL,
+  `MODALIDADE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`RECURSO_ID`),
+  KEY `MODALIDADE_ID` (`MODALIDADE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `recurso`
+--
+
+INSERT INTO `recurso` (`RECURSO_ID`, `ANO`, `CREDITOS`, `DEBITOS`, `SALDO`, `MODALIDADE_ID`) VALUES
+(1, 2015, 100000, 0, 100000, 1),
+(2, 2015, 50000, NULL, 50000, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `renda`
+--
+
+CREATE TABLE IF NOT EXISTS `renda` (
+  `RENDA_ID` int(11) NOT NULL,
+  `FORMULARIO_ID` int(11) NOT NULL,
+  `QT18_NOME` varchar(45) DEFAULT NULL,
+  `QT18_DATA_NASC` varchar(45) DEFAULT NULL,
+  `QT18_ESTADO_CIVIL` varchar(45) DEFAULT NULL,
+  `QT18_PARENTESCO` varchar(45) DEFAULT NULL,
+  `QT18_ESCOLARIDADE` varchar(45) DEFAULT NULL,
+  `QT18_TRABALHO` varchar(45) DEFAULT NULL,
+  `QT18_OCUPACAO` varchar(45) DEFAULT NULL,
+  `QT18_RENDA_BRUTA` double DEFAULT NULL,
+  PRIMARY KEY (`RENDA_ID`),
+  KEY `FORMULARIO_ID` (`FORMULARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `renda`
+--
+
+INSERT INTO `renda` (`RENDA_ID`, `FORMULARIO_ID`, `QT18_NOME`, `QT18_DATA_NASC`, `QT18_ESTADO_CIVIL`, `QT18_PARENTESCO`, `QT18_ESCOLARIDADE`, `QT18_TRABALHO`, `QT18_OCUPACAO`, `QT18_RENDA_BRUTA`) VALUES
+(14005711, 1400571, 'ftftyfty', '11/11/1111', 'casado ou união estável', 'bhh', 'analfabeto', 'desempregado', 'blablablab', 328738);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `selecao`
+--
+
+CREATE TABLE IF NOT EXISTS `selecao` (
+  `SELECAO_ID` int(11) NOT NULL,
+  `DT_INICIO_INSCRICAO` varchar(10) DEFAULT NULL,
+  `DT_FIM_INSCRICAO` varchar(10) DEFAULT NULL,
+  `NUM_EDITAL` varchar(45) DEFAULT NULL,
+  `MODALIDADE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`SELECAO_ID`),
+  KEY `MODALIDADE_ID` (`MODALIDADE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `selecao`
+--
+
+INSERT INTO `selecao` (`SELECAO_ID`, `DT_INICIO_INSCRICAO`, `DT_FIM_INSCRICAO`, `NUM_EDITAL`, `MODALIDADE_ID`) VALUES
+(1, '01/10/2015', '31/10/2015', '2015/02', 1),
+(2, '01/09/2015', '30/09/2015', '2015/01', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `usuario`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `USUARIO_ID` int(11) NOT NULL,
+  `DATA_NASC` varchar(45) DEFAULT NULL,
+  `NOME` varchar(45) DEFAULT NULL,
+  `SEXO` varchar(45) DEFAULT NULL,
+  `CPF` varchar(14) DEFAULT NULL,
+  `IDENTIDADE` varchar(45) DEFAULT NULL,
+  `TELEFONE_FIXO` varchar(15) DEFAULT NULL,
+  `TELEFONE_CELULAR` varchar(15) DEFAULT NULL,
+  `EMAIL` varchar(45) DEFAULT NULL,
+  `ENDERECO` varchar(45) DEFAULT NULL,
+  `NUMERO` varchar(45) DEFAULT NULL,
+  `COMPLEMENTO` varchar(45) DEFAULT NULL,
+  `BAIRRO` varchar(45) DEFAULT NULL,
+  `CEP` varchar(45) DEFAULT NULL,
+  `CIDADE` varchar(45) DEFAULT NULL,
+  `UF` varchar(45) DEFAULT NULL,
+  `LOGIN` varchar(45) DEFAULT NULL,
+  `SENHA` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`USUARIO_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `usuario`
+--
+
+INSERT INTO `usuario` (`USUARIO_ID`, `DATA_NASC`, `NOME`, `SEXO`, `CPF`, `IDENTIDADE`, `TELEFONE_FIXO`, `TELEFONE_CELULAR`, `EMAIL`, `ENDERECO`, `NUMERO`, `COMPLEMENTO`, `BAIRRO`, `CEP`, `CIDADE`, `UF`, `LOGIN`, `SENHA`) VALUES
+(1, '00/00/0000', 'Antonio Celestino Rosa', 'Masculino', '000.000.000-00', 'AA-00.000.000', '11-1111-1111', '11-11111-1111', 'antonio@myemail.com', 'Rua qualquer uma', '200', '101', 'Centro', '00.000-000', 'Juiz de Fora', 'MG', 'antonio', '1234'),
+(2, '00/00/0000', 'Nathan Manera Magalhães', 'Masculino', '222.222.222-22', 'BB-11.111.111', '33-3333-3333', '33-33333-3333', 'nathan@myemail.com', 'Rua nenhuma qualquer', '300', '401', 'Centro', '22.222-222', 'Juiz de Fora', 'MG', 'nathan', '4321');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Limitadores para a tabela `aluno`
+--
+ALTER TABLE `aluno`
+  ADD CONSTRAINT `aluno_ibfk_1` FOREIGN KEY (`CURSO_ID`) REFERENCES `curso` (`CURSO_ID`),
+  ADD CONSTRAINT `aluno_ibfk_2` FOREIGN KEY (`USUARIO_ID`) REFERENCES `usuario` (`USUARIO_ID`);
+
+--
+-- Limitadores para a tabela `bolsa`
+--
+ALTER TABLE `bolsa`
+  ADD CONSTRAINT `bolsa_ibfk_1` FOREIGN KEY (`FORMULARIO_ID`) REFERENCES `formulario` (`FORMULARIO_ID`);
+
+--
+-- Limitadores para a tabela `doenca`
+--
+ALTER TABLE `doenca`
+  ADD CONSTRAINT `doenca_ibfk_1` FOREIGN KEY (`FORMULARIO_ID`) REFERENCES `formulario` (`FORMULARIO_ID`);
+
+--
+-- Limitadores para a tabela `formulario`
+--
+ALTER TABLE `formulario`
+  ADD CONSTRAINT `formulario_ibfk_1` FOREIGN KEY (`ALUNO_MATRICULA`) REFERENCES `aluno` (`MATRICULA`),
+  ADD CONSTRAINT `formulario_ibfk_2` FOREIGN KEY (`SELECAO_ID`) REFERENCES `selecao` (`SELECAO_ID`);
+
+--
+-- Limitadores para a tabela `funcionario`
+--
+ALTER TABLE `funcionario`
+  ADD CONSTRAINT `funcionario_ibfk_1` FOREIGN KEY (`USUARIO_ID`) REFERENCES `usuario` (`USUARIO_ID`);
+
+--
+-- Limitadores para a tabela `recurso`
+--
+ALTER TABLE `recurso`
+  ADD CONSTRAINT `recurso_ibfk_1` FOREIGN KEY (`MODALIDADE_ID`) REFERENCES `modalidade` (`MODALIDADE_ID`);
+
+--
+-- Limitadores para a tabela `renda`
+--
+ALTER TABLE `renda`
+  ADD CONSTRAINT `renda_ibfk_1` FOREIGN KEY (`FORMULARIO_ID`) REFERENCES `formulario` (`FORMULARIO_ID`);
+
+--
+-- Limitadores para a tabela `selecao`
+--
+ALTER TABLE `selecao`
+  ADD CONSTRAINT `selecao_ibfk_1` FOREIGN KEY (`MODALIDADE_ID`) REFERENCES `modalidade` (`MODALIDADE_ID`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

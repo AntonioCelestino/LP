@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Relatorio Selecoes" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="04f1d9c4-f550-48db-8ff1-1c9692238e7b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     selecao.`DT_INICIO_INSCRICAO` AS selecao_DT_INICIO_INSCRICAO,
+     selecao.`DT_FIM_INSCRICAO` AS selecao_DT_FIM_INSCRICAO,
+     selecao.`NUM_EDITAL` AS selecao_NUM_EDITAL,
+     modalidade.`NOME` AS modalidade_NOME
+FROM
+     `modalidade` modalidade INNER JOIN `selecao` selecao ON modalidade.`MODALIDADE_ID` = selecao.`MODALIDADE_ID`]]>
+	</queryString>
+	<field name="selecao_DT_INICIO_INSCRICAO" class="java.lang.String"/>
+	<field name="selecao_DT_FIM_INSCRICAO" class="java.lang.String"/>
+	<field name="selecao_NUM_EDITAL" class="java.lang.String"/>
+	<field name="modalidade_NOME" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="87a8d587-c281-480d-854c-f48ae630ed71"/>
+				<staticText>
+					<reportElement x="20" y="20" width="234" height="43" forecolor="#FFFFFF" uuid="186d7d95-472a-4c6d-9fef-785d6e5eb77c"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Seleções]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="30762d41-5990-46e9-b15c-0cacc6080853"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Relatório de Seleções]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="36535f8d-5547-4253-8d21-c92f38a04743"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="314" y="0" width="118" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c62e0314-e653-4f7f-80b3-5925156d4013"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Início]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="432" y="0" width="123" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="8b49755d-6ecd-4e10-920a-b797668ddf4c"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Fim]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="99" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="8220b79c-c1bf-48c1-9c9b-3b8f12be8e00"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Edital]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="214" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="c11f1877-74ac-4781-947e-8ab4bec36ca7"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Modalidade]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="7473dad7-6f80-4982-8af6-e336a1a148a3"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="314" y="0" width="118" height="20" uuid="85cc98fb-9764-43d5-b0aa-722e4db2b776"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{selecao_DT_INICIO_INSCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="432" y="0" width="123" height="20" uuid="f4fdc136-a7ea-4569-b0bd-5a4f992921df"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{selecao_DT_FIM_INSCRICAO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1" y="0" width="99" height="20" uuid="808f6da4-b2af-4bce-a0ae-b4515208cc93"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{selecao_NUM_EDITAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="100" y="0" width="214" height="20" uuid="ac7fc9fa-b4be-457a-841e-019a2035c460"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modalidade_NOME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="62519344-566a-4280-b0f1-5c7b3c28b98d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="d404f23b-17e3-4cb5-b4f3-5969f3884660"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="89a783a7-e728-4095-bb75-2c6fb073b32a"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
