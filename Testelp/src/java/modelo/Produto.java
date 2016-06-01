@@ -46,10 +46,6 @@ public class Produto implements Serializable {
         return ProdutoDAO.obterProduto(codProduto);
     }
 
-    public Produto(Integer id) {
-        this.id = id;
-    }
-
     public Produto(Integer id, String nome, float preco, Integer quantidade, Fornecedor fornecedorId) {
         this.id = id;
         this.nome = nome;

@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Manter Funcionário - ${operacao}</h1>
-        <form action="ManterFuncionarioController?acao=confirmar${operacao}" method="post" name="frmManterFuncionario" onsubmit="return validarFormulario(this)">
+        <form action="ManterFuncionarioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFuncionario" onsubmit="return validarFormulario(this)">
             <table>
                 <tr> 
                     <td>Nome do Usuário:</td> 

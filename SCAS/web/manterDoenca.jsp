@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Manter Doença - ${operacao}</h1>
-        <form action="ManterDoencaController?acao=confirmar${operacao}" method="post" name="frmManterDoenca" onsubmit="return validarFormulario(this)">
+        <form action="ManterDoencaController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterDoenca" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
                     <td>Digite sequência numérica para cada membro familiar (1, 2, ...):<input type="text" size="10" name="txtCodDoenca" value="${doenca.codDoenca}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>

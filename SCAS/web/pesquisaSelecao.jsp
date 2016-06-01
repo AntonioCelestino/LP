@@ -21,15 +21,15 @@
                     <td><c:out value="${selecao.codSelecao}" /></td>
                     <td><c:out value="${selecao.modalidade.nome}" /></td>
                     <td>
-                        <a href="ManterSelecaoController?acao=prepararEditar&codSelecao=<c:out value="${selecao.codSelecao}" />">Editar</a>
+                        <a href="ManterSelecaoController?acao=prepararOperacao&operacao=Editar&codSelecao=<c:out value="${selecao.codSelecao}" />">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterSelecaoController?acao=prepararExcluir&codSelecao=<c:out value="${selecao.codSelecao}" />">Excluir</a>
+                        <a href="ManterSelecaoController?acao=prepararOperacao&operacao=Excluir&codSelecao=<c:out value="${selecao.codSelecao}" />">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterSelecaoController?acao=prepararIncluir" method="post">
+        <form action="ManterSelecaoController?acao=prepararOperacao&operacao=Incluir" method="post">
             <input type="submit" name="btnIncluir" value="Incluir">
         </form>
     </body>

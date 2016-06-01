@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Manter Recurso - ${operacao}</h1>
-        <form action="ManterRecursoController?acao=confirmar${operacao}" method="post" name="frmManterRecurso" onsubmit="return validarFormulario(this)">
+        <form action="ManterRecursoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterRecurso" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
                     <td>Código:</td> 

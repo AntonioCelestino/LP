@@ -23,15 +23,15 @@
                     <td><c:out value="${recurso.modalidade.nome}" /></td>
                     <td><c:out value="${recurso.saldo}" /></td>
                     <td>
-                        <a href="ManterRecursoController?acao=prepararEditar&codRecurso=<c:out value="${recurso.codRecurso}" />">Editar</a>
+                        <a href="ManterRecursoController?acao=prepararOperacao&operacao=Editar&codRecurso=<c:out value="${recurso.codRecurso}" />">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterRecursoController?acao=prepararExcluir&codRecurso=<c:out value="${recurso.codRecurso}" />">Excluir</a>
+                        <a href="ManterRecursoController?acao=prepararOperacao&operacao=Excluir&codRecurso=<c:out value="${recurso.codRecurso}" />">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterRecursoController?acao=prepararIncluir" method="post">
+        <form action="ManterRecursoController?acao=prepararOperacao&operacao=Incluir" method="post">
             <input type="submit" name="btnIncluir" value="Incluir">
         </form>
     </body>

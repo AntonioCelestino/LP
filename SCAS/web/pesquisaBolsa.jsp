@@ -23,15 +23,15 @@
                     <td><c:out value="${bolsa.formulario.selecao.modalidade.nome}"/></td>
                     <td><c:out value="${bolsa.formulario.aluno.usuario.nome}"/></td>
                     <td>
-                        <a href="ManterBolsaController?acao=prepararEditar&codBolsa=<c:out value="${bolsa.codBolsa}"/>">Editar</a>
+                        <a href="ManterBolsaController?acao=prepararOperacao&operacao=Editar&codBolsa=<c:out value="${bolsa.codBolsa}"/>">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterBolsaController?acao=prepararExcluir&codBolsa=<c:out value="${bolsa.codBolsa}"/>">Excluir</a>
+                        <a href="ManterBolsaController?acao=prepararOperacao&operacao=Excluir&codBolsa=<c:out value="${bolsa.codBolsa}"/>">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterBolsaController?acao=prepararIncluir" method="post">
+        <form action="ManterBolsaController?acao=prepararOperacao&operacao=Incluir" method="post">
             <input type="submit" name="btnIncluir" value="Incluir"/>
         </form>
     </body>

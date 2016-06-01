@@ -22,7 +22,7 @@
     </head>
     <body>
         <h1>Manter Usuário - ${operacao}</h1>
-        <form action="ManterUsuarioController?acao=confirmar${operacao}" method="post" name="frmManterUsuario" onsubmit="return validarFormulario(this)">
+        <form action="ManterUsuarioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterUsuario" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
                     <td>Código: <input type="text" name="txtCodUsuario" value="${usuario.codUsuario}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>

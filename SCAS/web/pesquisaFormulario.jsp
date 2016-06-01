@@ -23,15 +23,15 @@
                     <td><c:out value="${formulario.aluno.usuario.nome}"/></td>
                     <td><c:out value="${formulario.selecao.numeroEdital}"/></td>
                     <td>
-                        <a href="ManterFormularioController?acao=prepararEditar&codFormulario=<c:out value="${formulario.codFormulario}"/>">Editar</a>
+                        <a href="ManterFormularioController?acao=prepararOperacao&operacao=Editar&codFormulario=<c:out value="${formulario.codFormulario}"/>">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterFormularioController?acao=prepararExcluir&codFormulario=<c:out value="${formulario.codFormulario}"/>">Excluir</a>
+                        <a href="ManterFormularioController?acao=prepararOperacao&operacao=Excluir&codFormulario=<c:out value="${formulario.codFormulario}"/>">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterFormularioController?acao=prepararIncluir" method="post">
+        <form action="ManterFormularioController?acao=prepararOperacao&operacao=Incluir" method="post">
             <input type="submit" name="btnIncluir" value="Incluir"/>
         </form>
     </body>

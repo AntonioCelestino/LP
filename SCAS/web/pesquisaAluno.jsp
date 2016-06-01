@@ -23,15 +23,15 @@
                     <td><c:out value="${aluno.usuario.nome}"/></td>
                     <td><c:out value="${aluno.curso.nome}"/></td>
                     <td>
-                        <a href="ManterAlunoController?acao=prepararEditar&codAluno=<c:out value="${aluno.matricula}"/>">Editar</a>
+                        <a href="ManterAlunoController?acao=prepararOperacao&operacao=Editar&codAluno=<c:out value="${aluno.matricula}"/>">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterAlunoController?acao=prepararExcluir&codAluno=<c:out value="${aluno.matricula}"/>">Excluir</a>
+                        <a href="ManterAlunoController?acao=prepararOperacao&operacao=Excluir&codAluno=<c:out value="${aluno.matricula}"/>">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterAlunoController?acao=prepararIncluir" method="post">
+        <form action="ManterAlunoController?acao=prepararOperacao&operacao=Incluir" method="post">
             <input type="submit" name="btnIncluir" value="Incluir"/>
         </form>
     </body>

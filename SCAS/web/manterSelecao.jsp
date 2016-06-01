@@ -22,7 +22,7 @@
     </head>
     <body>
         <h1>Manter Seleção - ${operacao}</h1>
-        <form action="ManterSelecaoController?acao=confirmar${operacao}" method="post" name="frmManterSelecao" onsubmit="return validarFormulario(this)">
+        <form action="ManterSelecaoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterSelecao" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
                     <td>Código:</td> 

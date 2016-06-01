@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Formulário Sócioeconômico - ${operacao}</h1>
-        <form action="ManterFormularioController?acao=confirmar${operacao}" method="post" name="frmManterFormulario" onsubmit="return validarFormulario(this)">
+        <form action="ManterFormularioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFormulario" onsubmit="return validarFormulario(this)">
             <table>
                 <tr> 
                     <td><hr />Confirme o nome do aluno:

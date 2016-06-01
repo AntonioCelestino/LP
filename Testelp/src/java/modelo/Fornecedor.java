@@ -43,10 +43,6 @@ public class Fornecedor implements Serializable {
     public static Fornecedor obterFornecedor(int codFornecedor) throws ClassNotFoundException{
         return FornecedorDAO.obterFornecedor(codFornecedor);
     }
-    
-    public Fornecedor(Integer id) {
-        this.id = id;
-    }
 
     public Fornecedor(Integer id, String nome, String cnpj, String telefone, String cidade) {
         this.id = id;

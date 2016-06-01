@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Manter Modalidade - ${operacao}</h1>
-        <form action="ManterModalidadeController?acao=confirmar${operacao}" method="post" name="frmManterModalidade" onsubmit="return validarFormulario(this)">
+        <form action="ManterModalidadeController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterModalidade" onsubmit="return validarFormulario(this)">
             <table>
                 <tr>
                     <td>Código:</td> 
