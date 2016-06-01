@@ -124,7 +124,7 @@ public class Fornecedor implements Serializable {
     
     public void salvar() throws SQLException, ClassNotFoundException {
         FornecedorDAO.getInstance().salvar(this);
-    }
+}
 
     public void alterar() throws SQLException, ClassNotFoundException{
         FornecedorDAO.getInstance().alterar(this);

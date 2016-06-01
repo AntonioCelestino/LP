@@ -30,7 +30,7 @@
                         <select name="optFornecedor" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                             <option value="0" <c:if test="${produto.id == null}"> selected</c:if>> </option>  
                             <c:forEach items="${fornecedores}" var="fornecedor">
-                                <option value="${fornecedor.id}" <c:if test="${produto.fornecedorId == fornecedor.id}"> selected</c:if>>${fornecedor.nome}</option>  
+                                <option value="${fornecedor.id}" <c:if test="${produto.fornecedorId.id == fornecedor.id}"> selected</c:if>>${fornecedor.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "produto")
 public class Produto implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -27,9 +27,8 @@ public class Produto implements Serializable {
     @Size(max = 45)
     @Column(name = "NOME", length = 45)
     private String nome;
-    @Size(max = 45)
-    @Column(name = "PRECO", length = 45)
-    private double preco;
+    @Column(name = "PRECO")
+    private float preco;
     @Column(name = "QUANTIDADE")
     private Integer quantidade;
     @JoinColumn(name = "FORNECEDOR_ID", referencedColumnName = "ID", nullable = false)
@@ -51,7 +50,7 @@ public class Produto implements Serializable {
         this.id = id;
     }
 
-    public Produto(Integer id, String nome, double preco, Integer quantidade, Fornecedor fornecedorId) {
+    public Produto(Integer id, String nome, float preco, Integer quantidade, Fornecedor fornecedorId) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
@@ -75,11 +74,11 @@ public class Produto implements Serializable {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public float getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(float preco) {
         this.preco = preco;
     }
 
@@ -121,12 +120,12 @@ public class Produto implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Produto[ id=" + id + " ]";
+        return "modelo.Produto[ id=" + id + " ]";
     }
     
     public void salvar() throws SQLException, ClassNotFoundException {
         ProdutoDAO.getInstance().salvar(this);
-    }
+}
 
     public void alterar() throws SQLException, ClassNotFoundException{
         ProdutoDAO.getInstance().alterar(this);

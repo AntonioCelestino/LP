@@ -82,7 +82,7 @@ public class ManterProdutoController extends HttpServlet {
             request.setAttribute("operacao", operacao);
             request.setAttribute("fornecedores", FornecedorDAO.obterFornecedores());
             if(!operacao.equals("Incluir")){
-                int codProduto = Integer.parseInt(request.getParameter("txtCodProduto"));
+                int codProduto = Integer.parseInt(request.getParameter("codProduto"));
                 produto = ProdutoDAO.obterProduto(codProduto);
                 request.setAttribute("produto", produto);
             }
@@ -100,7 +100,7 @@ public class ManterProdutoController extends HttpServlet {
             String operacao = request.getParameter("operacao");
             int codProduto = Integer.parseInt(request.getParameter("txtCodProduto"));
             String nome = request.getParameter("txtNome");
-            double preco = Double.parseDouble(request.getParameter("txtPreco"));
+            float preco = Float.parseFloat(request.getParameter("txtPreco"));
             int quantidade = Integer.parseInt(request.getParameter("txtQuantidade"));
             int codFornecedor = Integer.parseInt(request.getParameter("optFornecedor"));
             Fornecedor fornecedor = null;
@@ -112,7 +112,9 @@ public class ManterProdutoController extends HttpServlet {
                 ProdutoDAO.getInstance().salvar(produto);
             }else if(operacao.equals("Editar")){
                 produto.setNome(nome);
-
+                produto.setPreco(preco);
+                produto.setQuantidade(quantidade);
+                produto.setFornecedorId(fornecedor);
                 ProdutoDAO.getInstance().alterar(produto);
             }else if (operacao.equals("Excluir")){
                 ProdutoDAO.getInstance().excluir(produto);
