@@ -1,124 +1,109 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import modelo.Modalidade;
 
 public class ModalidadeDAO {
+    
+    private static ModalidadeDAO instance = new ModalidadeDAO();
 
-    public static List<Modalidade> obterModalidades() throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
-        List<Modalidade> modalidades = new ArrayList<Modalidade>();
+    public static ModalidadeDAO getInstance() {
+        return instance;
+    }
+
+    private ModalidadeDAO() {
+    }
+    
+    public static List<Modalidade> obterModalidades(){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Modalidade> modalidades = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from MODALIDADE");
-            while (rs.next()) {
-                Modalidade modalidade = new Modalidade(
-                        rs.getInt("MODALIDADE_ID"),
-                        rs.getString("NOME"),
-                        rs.getDouble("VALOR_MENSAL"),
-                        rs.getString("DESCRICAO"));
-                modalidades.add(modalidade);
+            tx.begin();
+            TypedQuery<Modalidade> query = em.createQuery("select m from Modalidade m", Modalidade.class);
+            modalidades = query.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return modalidades;
     }
 
-    public static Modalidade obterModalidade(int codModalidade) throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
+    public static Modalidade obterModalidade(int codModalidade){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         Modalidade modalidade = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from MODALIDADE where MODALIDADE_ID = " + codModalidade);
-            while (rs.next()) {
-                modalidade = new Modalidade(
-                        rs.getInt("MODALIDADE_ID"),
-                        rs.getString("NOME"),
-                        rs.getDouble("VALOR_MENSAL"),
-                        rs.getString("DESCRICAO"));
+            tx.begin();
+            modalidade = em.find(Modalidade.class, codModalidade);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return modalidade;
     }
     
-    public static void gravar(Modalidade modalidade) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "insert into modalidade (MODALIDADE_ID, NOME, VALOR_MENSAL, DESCRICAO) values (?,?,?,?)";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setInt(1, modalidade.getCodModalidade());
-            comando.setString(2, modalidade.getNome());
-            comando.setDouble(3, modalidade.getValorMensal());
-            comando.setString(4, modalidade.getDescricao());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public static void alterar(Modalidade modalidade) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "update modalidade set NOME = ?, VALOR_MENSAL = ?, DESCRICAO = ? where MODALIDADE_ID = ?";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setString(1, modalidade.getNome());
-            comando.setDouble(2, modalidade.getValorMensal());
-            comando.setString(3, modalidade.getDescricao());
-            comando.setInt(4, modalidade.getCodModalidade());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public static void excluir(Modalidade modalidade) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from MODALIDADE where MODALIDADE_ID = " + modalidade.getCodModalidade();
-            comando.execute(stringSQL);
-        }catch (SQLException e) {
-            throw e;
-        }finally {
-            fecharConexao(conexao, comando);
+    public static void gravar(Modalidade modalidade){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(modalidade);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
     
-    public static void fecharConexao(Connection conexao, Statement comando) {
+    public static void alterar(Modalidade modalidade){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            if (comando != null) {
-                comando.close();
+            tx.begin();
+            em.merge(modalidade);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            if (conexao != null) {
-                conexao.close();
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
+        }
+    }
+ 
+    public static void excluir(Modalidade modalidade){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Modalidade.class, modalidade.getCodModalidade()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 }

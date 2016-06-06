@@ -1,124 +1,109 @@
 package dao;
 
-import exception.TratamentoExcecao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import modelo.Curso;
 
 public class CursoDAO {
-    public static List<Curso> obterCursos() throws ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        List<Curso> cursos = new ArrayList<Curso>();
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from CURSO");
-            while(rs.next()){
-                Curso curso = new Curso(
-                        rs.getInt("CURSO_ID"),
-                        rs.getString("NOME"),
-                        rs.getString("TIPO_ENSINO"),
-                        rs.getString("TURNO"));
-                cursos.add(curso);
+    
+    private static CursoDAO instance = new CursoDAO();
+
+    public static CursoDAO getInstance() {
+        return instance;
+    }
+
+    private CursoDAO() {
+    }
+    
+    public static List<Curso> obterCursos(){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Curso> cursos = null;
+        try {
+            tx.begin();
+            TypedQuery<Curso> query = em.createQuery("select c from Curso c", Curso.class);
+            cursos = query.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        finally{
-            fecharConexao(conexao, comando);
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
         return cursos;
     }
 
-    public static Curso obterCurso(int codCurso) throws ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
+    public static Curso obterCurso(int codCurso){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         Curso curso = null;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from CURSO where CURSO_ID = " + codCurso);
-            rs.first();
-            curso = new Curso(
-                        rs.getInt("CURSO_ID"),
-                        rs.getString("NOME"),
-                        rs.getString("TIPO_ENSINO"),
-                        rs.getString("TURNO"));
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try {
+            tx.begin();
+            curso = em.find(Curso.class, codCurso);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return curso;
     }
     
-    public static void gravar(Curso curso) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "insert into curso (CURSO_ID, NOME, TIPO_ENSINO, TURNO) values (?,?,?,?)";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setInt(1, curso.getCodCurso());
-            comando.setString(2, curso.getNome());
-            comando.setString(3, curso.getTipoEnsino());
-            comando.setString(4, curso.getTurno());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
+    public static void gravar(Curso curso){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(curso);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
     
-    public static void alterar(Curso curso) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "update curso set NOME = ?, TIPO_ENSINO = ?, TURNO = ? where CURSO_ID = ?";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setString(1, curso.getNome());
-            comando.setString(2, curso.getTipoEnsino());
-            comando.setString(3, curso.getTurno());
-            comando.setInt(4, curso.getCodCurso());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
+    public static void alterar(Curso curso){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(curso);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
  
-    public static void excluir(Curso curso) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from CURSO where CURSO_ID = " + curso.getCodCurso();
-            comando.execute(stringSQL);
-        }catch (SQLException e) {
-            throw e;
-        }finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-   
-    private static void fecharConexao(Connection conexao, Statement comando) {
-        try{
-            if(comando != null){
-                comando.close();
+    public static void excluir(Curso curso){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Curso.class, curso.getCodCurso()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            if(conexao != null){
-                conexao.close();
-            }
-        }catch(SQLException e){
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }   
 }

@@ -1,138 +1,109 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import modelo.Selecao;
 
 public class SelecaoDAO {
-    public static List<Selecao> obterSelecoes() throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
-        List<Selecao> selecoes = new ArrayList<Selecao>();
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from SELECAO");
-            while (rs.next()) {
-                Selecao selecao = new Selecao(
-                        rs.getInt("SELECAO_ID"),
-                        rs.getString("DT_INICIO_INSCRICAO"),
-                        rs.getString("DT_FIM_INSCRICAO"),
-                        rs.getString("NUM_EDITAL"), null);
-                selecao.setCodModalidade(rs.getInt("MODALIDADE_ID"));
-                selecoes.add(selecao);
+    
+    private static SelecaoDAO instance = new SelecaoDAO();
+
+    public static SelecaoDAO getInstance() {
+        return instance;
+    }
+
+    private SelecaoDAO() {
+    }
+
+    public static List<Selecao> obterSelecoes(){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Selecao> selecoes = null;
+        try {
+            tx.begin();
+            TypedQuery<Selecao> query = em.createQuery("select s from Selecao s", Selecao.class);
+            selecoes = query.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }finally{
-            fecharConexao(conexao, comando);
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
         return selecoes;
     }
 
-    public static Selecao obterSelecao(int codSelecao) throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
+    public static Selecao obterSelecao(int codSelecao){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         Selecao selecao = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from SELECAO where SELECAO_ID = " + codSelecao);
-            rs.first();
-            selecao = new Selecao(
-                    rs.getInt("SELECAO_ID"),
-                    rs.getString("DT_INICIO_INSCRICAO"),
-                    rs.getString("DT_FIM_INSCRICAO"),
-                    rs.getString("NUM_EDITAL"), null);
-            selecao.setCodModalidade(rs.getInt("MODALIDADE_ID"));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            tx.begin();
+            selecao = em.find(Selecao.class, codSelecao);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return selecao;
     }
-    
-    public static void gravar(Selecao selecao) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "insert into selecao (SELECAO_ID, DT_INICIO_INSCRICAO, DT_FIM_INSCRICAO, NUM_EDITAL, MODALIDADE_ID) values (?,?,?,?,?)";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setInt(1, selecao.getCodSelecao());
-            comando.setString(2, selecao.getDataInicioSelecao());
-            comando.setString(3, selecao.getDataFimSelecao());
-            comando.setString(4, selecao.getNumeroEdital());
-            
-            if (selecao.getModalidade() == null){
-                comando.setNull(5, Types.NULL);
-            }else{
-                comando.setInt(5, selecao.getCodModalidade());
-            }
-            
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
-        }
-    }
 
-    public static void alterar(Selecao selecao) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "update selecao set DT_INICIO_INSCRICAO = ?, DT_FIM_INSCRICAO = ?, NUM_EDITAL = ?, MODALIDADE_ID = ? where SELECAO_ID = ?";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setString(1, selecao.getDataInicioSelecao());
-            comando.setString(2, selecao.getDataFimSelecao());
-            comando.setString(3, selecao.getNumeroEdital());
-            
-            if (selecao.getModalidade() == null){
-                comando.setNull(4, Types.NULL);
-            }else{
-                comando.setInt(4, selecao.getCodModalidade());
-            }
-            comando.setInt(5, selecao.getCodSelecao());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public static void excluir(Selecao selecao) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from SELECAO where SELECAO_ID = " + selecao.getCodSelecao();
-            comando.execute(stringSQL);
-        }catch (SQLException e) {
-            throw e;
-        }finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-
-    public static void fecharConexao(Connection conexao, Statement comando) {
+    public static void gravar(Selecao selecao){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         try {
-            if (comando != null) {
-                comando.close();
+            tx.begin();
+            em.persist(selecao);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            if (conexao != null) {
-                conexao.close();
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
+        }
+    }
+
+    public static void alterar(Selecao selecao){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(selecao);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
+        }
+    }
+
+    public static void excluir(Selecao selecao){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Selecao.class, selecao.getCodSelecao()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 }

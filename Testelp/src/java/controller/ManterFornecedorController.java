@@ -118,6 +118,8 @@ public class ManterFornecedorController extends HttpServlet {
             view.forward(request, response);
         }catch(ServletException e){
             throw e;
+        }catch(IOException ex){
+            throw new ServletException(ex);
         }
     }
 }

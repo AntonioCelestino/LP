@@ -1,136 +1,109 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import modelo.Bolsa;
 
 public class BolsaDAO {
-    public static List<Bolsa> obterBolsas() throws ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        List<Bolsa> bolsas = new ArrayList<Bolsa>();
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from BOLSA");
-            while(rs.next()){
-                Bolsa bolsa = new Bolsa(
-                        rs.getInt("BOLSA_ID"),
-                        rs.getString("DT_INICIO"),
-                        rs.getString("DT_FIM"), null);
-                bolsa.setCodFormulario(rs.getInt("FORMULARIO_ID"));
-                bolsas.add(bolsa);
+
+    private static BolsaDAO instance = new BolsaDAO();
+
+    public static BolsaDAO getInstance() {
+        return instance;
+    }
+
+    private BolsaDAO() {
+    }
+
+    public static List<Bolsa> obterBolsas(){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Bolsa> bolsas = null;
+        try {
+            tx.begin();
+            TypedQuery<Bolsa> query = em.createQuery("select b from Bolsa b", Bolsa.class);
+            bolsas = query.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        finally{
-            fecharConexao(conexao, comando);
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
         return bolsas;
     }
-    
-    public static Bolsa obterBolsa(int codBolsa) throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
+
+    public static Bolsa obterBolsa(int codBolsa){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         Bolsa bolsa = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from BOLSA where BOLSA_ID = " + codBolsa);
-            rs.first();
-            bolsa = new Bolsa(
-                        rs.getInt("BOLSA_ID"),
-                        rs.getString("DT_INICIO"),
-                        rs.getString("DT_FIM"), null);
-                bolsa.setCodFormulario(rs.getInt("FORMULARIO_ID"));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            tx.begin();
+            bolsa = em.find(Bolsa.class, codBolsa);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return bolsa;
     }
-    
-    public static void gravar(Bolsa bolsa) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "insert into bolsa (BOLSA_ID, DT_INICIO, DT_FIM, FORMULARIO_ID) values (?,?,?,?)";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setInt(1, bolsa.getCodBolsa());
-            comando.setString(2, bolsa.getDataInicio());
-            comando.setString(3, bolsa.getDataFim());
-            
-            if (bolsa.getFormulario() == null){
-                comando.setNull(4, Types.NULL);
-            }else{
-                comando.setInt(4, bolsa.getCodFormulario());
+
+    public static void gravar(Bolsa bolsa){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(bolsa);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
-        }
-    }
-    
-    public static void alterar(Bolsa bolsa) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "update bolsa set DT_INICIO = ?, DT_FIM = ?, FORMULARIO_ID = ? where BOLSA_ID = ?";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setString(1, bolsa.getDataInicio());
-            comando.setString(2, bolsa.getDataFim());
-            
-            if (bolsa.getFormulario() == null){
-                comando.setNull(3, Types.NULL);
-            }else{
-                comando.setInt(3, bolsa.getCodFormulario());
-            }
-            
-            comando.setInt(4, bolsa.getCodBolsa());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 
-    public static void excluir(Bolsa bolsa) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from BOLSA where BOLSA_ID = " + bolsa.getCodBolsa();
-            comando.execute(stringSQL);
-        }catch (SQLException e) {
-            throw e;
-        }finally {
-            fecharConexao(conexao, comando);
+    public static void alterar(Bolsa bolsa){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(bolsa);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 
-    private static void fecharConexao(Connection conexao, Statement comando) {
-        try{
-            if(comando != null){
-                comando.close();
+    public static void excluir(Bolsa bolsa){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Bolsa.class, bolsa.getCodBolsa()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            if(conexao != null){
-                conexao.close();
-            }
-        }catch(SQLException e){
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 }

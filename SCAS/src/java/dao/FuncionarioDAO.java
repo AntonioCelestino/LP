@@ -1,131 +1,109 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import modelo.Funcionario;
 
 public class FuncionarioDAO {
-    public static List<Funcionario> obterFuncionarios() throws ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        List<Funcionario> funcionarios = new ArrayList<Funcionario>();
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from FUNCIONARIO");
-            while(rs.next()){
-                Funcionario funcionario = new Funcionario(
-                        rs.getInt("REGISTRO"),
-                        rs.getString("CARGO"), null);
-                funcionario.setCodUsuario(rs.getInt("USUARIO_ID"));
-                funcionarios.add(funcionario);
+    
+    private static FuncionarioDAO instance = new FuncionarioDAO();
+
+    public static FuncionarioDAO getInstance() {
+        return instance;
+    }
+
+    private FuncionarioDAO() {
+    }
+    
+    public static List<Funcionario> obterFuncionarios(){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        List<Funcionario> funcionarios = null;
+        try {
+            tx.begin();
+            TypedQuery<Funcionario> query = em.createQuery("select f from Funcionario f", Funcionario.class);
+            funcionarios = query.getResultList();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        finally{
-            fecharConexao(conexao, comando);
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
         return funcionarios;
     }
-    
-    public static Funcionario obterFuncionario(int registro) throws ClassNotFoundException {
-        Connection conexao = null;
-        Statement comando = null;
+
+    public static Funcionario obterFuncionario(int codFuncionario){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
         Funcionario funcionario = null;
         try {
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            ResultSet rs = comando.executeQuery("select * from FUNCIONARIO where REGISTRO = " + registro);
-            rs.first();
-            funcionario = new Funcionario(
-                    rs.getInt("REGISTRO"),
-                    rs.getString("CARGO"), null);
-            funcionario.setCodUsuario(rs.getInt("USUARIO_ID"));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            tx.begin();
+            funcionario = em.find(Funcionario.class, codFuncionario);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
         } finally {
-            fecharConexao(conexao, comando);
+            PersistenceUtil.close(em);
         }
         return funcionario;
     }
-
-    public static void gravar(Funcionario funcionario) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "insert into funcionario (REGISTRO, CARGO, USUARIO_ID) values (?,?,?)";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setInt(1, funcionario.getRegistro());
-            comando.setString(2, funcionario.getCargo());
-            
-            if (funcionario.getUsuario() == null){
-                comando.setNull(3, Types.NULL);
-            }else{
-                comando.setInt(3, funcionario.getCodUsuario());
+    
+    public static void gravar(Funcionario funcionario){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(funcionario);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
     
-    public static void alterar(Funcionario funcionario) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        try{
-            conexao = BD.getConexao();
-            String sql = "update funcionario set CARGO = ?, USUARIO_ID = ? where REGISTRO = ?";
-            PreparedStatement comando = conexao.prepareStatement(sql);
-            comando.setString(1, funcionario.getCargo());
-            
-            if (funcionario.getUsuario() == null){
-                comando.setNull(2, Types.NULL);
-            }else{
-                comando.setInt(2, funcionario.getCodUsuario());
+    public static void alterar(Funcionario funcionario){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(funcionario);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            comando.setInt(3, funcionario.getRegistro());
-            comando.execute();
-            comando.close();
-            conexao.close();
-        }catch (SQLException e){
-            throw e;
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
-
-    public static void excluir(Funcionario funcionario) throws SQLException, ClassNotFoundException{
-        Connection conexao = null;
-        Statement comando = null;
-        String stringSQL;
-        try{
-            conexao = BD.getConexao();
-            comando = conexao.createStatement();
-            stringSQL = "delete from FUNCIONARIO where REGISTRO = " + funcionario.getRegistro();
-            comando.execute(stringSQL);
-        }catch (SQLException e) {
-            throw e;
-        }finally {
-            fecharConexao(conexao, comando);
-        }
-    }
-    
-    private static void fecharConexao(Connection conexao, Statement comando) {
-        try{
-            if(comando != null){
-                comando.close();
+ 
+    public static void excluir(Funcionario funcionario){
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Funcionario.class, funcionario.getRegistro()));
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
-            if(conexao != null){
-                conexao.close();
-            }
-        }catch(SQLException e){
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
         }
     }
 }
