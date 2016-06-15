@@ -1,28 +1,45 @@
 package modelo;
 
-import dao.ModalidadeDAO;
 import dao.SelecaoDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Selecao {
-    private int codSelecao;
-    private String dataInicioSelecao;
-    private String dataFimSelecao;
-    private String numeroEdital;
+@Entity
+@Table(name = "selecao")
+public class Selecao implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "SELECAO_ID", nullable = false)
+    private Integer codSelecao;
+    @Size(max = 45)
+    @Column(name = "DT_INICIO_INSCRICAO", length = 45)
+    private String dataInicioSelecao;
+    @Size(max = 45)
+    @Column(name = "DT_FIM_INSCRICAO", length = 45)
+    private String dataFimSelecao;
+    @Size(max = 45)
+    @Column(name = "NUM_EDITAL", length = 45)
+    private String numeroEdital;
+    @JoinColumn(name = "MODALIDADE_ID", referencedColumnName = "MODALIDADE_ID", nullable = false)
+    @ManyToOne(optional = false)
     private Modalidade modalidade;
     
-    private int codModalidade;
-
-    public Selecao(int codSelecao, String dataInicioSelecao, String dataFimSelecao, String numeroEdital, Modalidade modalidade) {
-        this.codSelecao = codSelecao;
-        this.dataInicioSelecao = dataInicioSelecao;
-        this.dataFimSelecao = dataFimSelecao;
-        this.numeroEdital = numeroEdital;
-        this.modalidade = modalidade;
+    public Selecao(){
     }
-    
+
     public static List<Selecao> obterSelecoes() throws ClassNotFoundException{
         return SelecaoDAO.obterSelecoes();
     }
@@ -30,21 +47,21 @@ public class Selecao {
     public static Selecao obterSelecao(int codSelecao) throws ClassNotFoundException{
         return SelecaoDAO.obterSelecao(codSelecao);
     }
+    
+    public Selecao(Integer codSelecao, String dataInicioSelecao, String dataFimSelecao, String numeroEdital, Modalidade modalidade) {
+        this.codSelecao = codSelecao;
+        this.dataInicioSelecao = dataInicioSelecao;
+        this.dataFimSelecao = dataFimSelecao;
+        this.numeroEdital = numeroEdital;
+        this.modalidade = modalidade;
+    }
 
-    public int getCodSelecao() {
+    public Integer getCodSelecao() {
         return codSelecao;
     }
 
-    public void setCodSelecao(int codSelecao) {
+    public void setCodSelecao(Integer codSelecao) {
         this.codSelecao = codSelecao;
-    }
-
-    public int getCodModalidade() {
-        return codModalidade;
-    }
-
-    public void setCodModalidade(int codModalidade) {
-        this.codModalidade = codModalidade;
     }
 
     public String getDataInicioSelecao() {
@@ -71,10 +88,7 @@ public class Selecao {
         this.numeroEdital = numeroEdital;
     }
 
-    public Modalidade getModalidade() throws ClassNotFoundException {
-        if ((codModalidade != 0) && (modalidade == null)) {
-            modalidade = ModalidadeDAO.obterModalidade(codModalidade);
-        }
+    public Modalidade getModalidade(){
         return modalidade;
     }
 
@@ -82,16 +96,41 @@ public class Selecao {
         this.modalidade = modalidade;
     }
     
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codSelecao != null ? codSelecao.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Selecao)) {
+            return false;
+        }
+        Selecao other = (Selecao) object;
+        if ((this.codSelecao == null && other.codSelecao != null) || (this.codSelecao != null && !this.codSelecao.equals(other.codSelecao))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Selecao[ id=" + codSelecao + " ]";
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
-        SelecaoDAO.gravar(this);
+        SelecaoDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException{
-        SelecaoDAO.alterar(this);
+        SelecaoDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        SelecaoDAO.excluir(this);
+        SelecaoDAO.getInstance().excluir(this);
     }
     
 }

@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import dao.DoencaDAO;
+import dao.FormularioDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,12 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import modelo.Doenca;
 import modelo.Formulario;
 
-/**
- *
- * @author Nathan
- */
 public class ManterDoencaController extends HttpServlet {
 
+    private Doenca doenca;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,32 +24,15 @@ public class ManterDoencaController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -75,11 +48,7 @@ public class ManterDoencaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterDoencaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -93,11 +62,7 @@ public class ManterDoencaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterDoencaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,142 +75,59 @@ public class ManterDoencaController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            request.setAttribute("operacao", "Incluir");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            request.setAttribute("formularios", FormularioDAO.obterFormularios());
+            if(!operacao.equals("Incluir")){
+                int codDoenca = Integer.parseInt(request.getParameter("codDoenca"));
+                doenca = DoencaDAO.obterDoenca(codDoenca);
+                request.setAttribute("doenca", doenca);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterDoenca.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
+            view.forward(request, response);
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException e){
+            throw new ServletException(e);
         }
     }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codDoenca = Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodDoenca"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt17_Nome = request.getParameter("txt_qt17_Nome");
-        String qt17_Doenca = request.getParameter("txt_qt17_Doenca");
-        String qt17_Trabalho = request.getParameter("opt_qt17_Trabalho");
-        String qt17_Dependencia = request.getParameter("opt_qt17_Dependencia");
-        double qt17_Gasto = Double.parseDouble(request.getParameter("txt_qt17_Gasto"));
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            String operacao = request.getParameter("operacao");
+            int codDoenca = Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodDoenca"));
+            int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
+            String qt17_Nome = request.getParameter("txt_qt17_Nome");
+            String qt17_Doenca = request.getParameter("txt_qt17_Doenca");
+            String qt17_Trabalho = request.getParameter("opt_qt17_Trabalho");
+            String qt17_Dependencia = request.getParameter("opt_qt17_Dependencia");
+            float qt17_Gasto = Float.parseFloat(request.getParameter("txt_qt17_Gasto"));
             Formulario formulario = null;
             if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
+                formulario = FormularioDAO.obterFormulario(codFormulario);
             }
-            Doenca doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
-            doenca.setCodFormulario(codFormulario);
-            doenca.gravar();
+            if(operacao.equals("Incluir")){
+                doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
+                DoencaDAO.getInstance().gravar(doenca);
+            }else if(operacao.equals("Editar")){
+                doenca.setFormulario(formulario);
+                doenca.setQt17_Nome(qt17_Nome);
+                doenca.setQt17_Doenca(qt17_Doenca);
+                doenca.setQt17_Trabalho(qt17_Trabalho);
+                doenca.setQt17_Dependencia(qt17_Dependencia);
+                doenca.setQt17_Gasto(qt17_Gasto);
+                DoencaDAO.getInstance().alterar(doenca);
+            }else if (operacao.equals("Excluir")){
+                DoencaDAO.getInstance().excluir(doenca);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-            int codDoenca = Integer.parseInt(request.getParameter("codDoenca"));
-            Doenca doenca = Doenca.obterDoenca(codDoenca);
-            request.setAttribute("doenca", doenca);
-            RequestDispatcher view = request.getRequestDispatcher("/manterDoenca.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codDoenca = Integer.parseInt(request.getParameter("txtCodDoenca"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt17_Nome = request.getParameter("txt_qt17_Nome");
-        String qt17_Doenca = request.getParameter("txt_qt17_Doenca");
-        String qt17_Trabalho = request.getParameter("opt_qt17_Trabalho");
-        String qt17_Dependencia = request.getParameter("opt_qt17_Dependencia");
-        double qt17_Gasto = Double.parseDouble(request.getParameter("txt_qt17_Gasto"));
-        try{
-            Formulario formulario = null;
-            if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
-            }
-            Doenca doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
-            doenca.setCodFormulario(codFormulario);
-            doenca.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-            int codDoenca = Integer.parseInt(request.getParameter("codDoenca"));
-            Doenca doenca = Doenca.obterDoenca(codDoenca);
-            request.setAttribute("doenca", doenca);
-            RequestDispatcher view = request.getRequestDispatcher("/manterDoenca.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codDoenca = Integer.parseInt(request.getParameter("txtCodDoenca"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt17_Nome = request.getParameter("txt_qt17_Nome");
-        String qt17_Doenca = request.getParameter("txt_qt17_Doenca");
-        String qt17_Trabalho = request.getParameter("opt_qt17_Trabalho");
-        String qt17_Dependencia = request.getParameter("opt_qt17_Dependencia");
-        double qt17_Gasto = Double.parseDouble(request.getParameter("txt_qt17_Gasto"));
-        try{
-            Formulario formulario = null;
-            if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
-            }
-            Doenca doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
-            doenca.setCodFormulario(codFormulario);
-            doenca.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 

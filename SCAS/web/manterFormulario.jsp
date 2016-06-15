@@ -13,11 +13,11 @@
         <form action="ManterFormularioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFormulario" onsubmit="return validarFormulario(this)">
             <table>
                 <tr> 
-                    <td><hr />Confirme o nome do aluno:
+                    <td><hr />Confirme o nome do aluno (nome | matrícula):
                         <select name="optAluno" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${formulario.codAluno == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${formulario.aluno.matricula == null}"> selected</c:if>> </option>  
                             <c:forEach items="${alunos}" var="aluno">
-                                <option value="${aluno.matricula}" <c:if test="${formulario.codAluno == aluno.matricula}"> selected</c:if>>${aluno.usuario.nome}</option>  
+                                <option value="${aluno.matricula}" <c:if test="${formulario.aluno.matricula == aluno.matricula}"> selected</c:if>>${aluno.usuario.nome} | ${aluno.matricula}</option>  
                             </c:forEach>
                         </select>
                     </td>
@@ -25,9 +25,9 @@
                 <tr> 
                     <td><hr />Escolha em qual Seleção quer concorrer:
                         <select name="optSelecao" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${formulario.codSelecao == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${formulario.selecao.codSelecao == null}"> selected</c:if>> </option>  
                             <c:forEach items="${selecoes}" var="selecao">
-                                <option value="${selecao.codSelecao}" <c:if test="${formulario.codSelecao == selecao.codSelecao}"> selected</c:if>>${selecao.numeroEdital} | ${selecao.modalidade.nome}</option>  
+                                <option value="${selecao.codSelecao}" <c:if test="${formulario.selecao.codSelecao == selecao.codSelecao}"> selected</c:if>>${selecao.numeroEdital} | ${selecao.modalidade.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

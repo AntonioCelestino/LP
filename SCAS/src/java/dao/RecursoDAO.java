@@ -56,7 +56,7 @@ public class RecursoDAO {
         return recurso;
     }
 
-    public static void gravar(Recurso recurso){
+    public void gravar(Recurso recurso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class RecursoDAO {
         }
     }
 
-    public static void alterar(Recurso recurso){
+    public void alterar(Recurso recurso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class RecursoDAO {
         }
     }
 
-    public static void excluir(Recurso recurso){
+    public void excluir(Recurso recurso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

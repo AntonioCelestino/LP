@@ -18,9 +18,9 @@
                 <tr> 
                     <td>Formulário: (Nome do Aluno | Seleção Modalidade): 
                         <select name="optFormulario" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${doenca.codFormulario == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${doenca.formulario.codFormulario == null}"> selected</c:if>> </option>  
                             <c:forEach items="${formularios}" var="formulario">
-                                <option value="${formulario.codFormulario}" <c:if test="${doenca.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome}</option>  
+                                <option value="${formulario.codFormulario}" <c:if test="${doenca.formulario.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

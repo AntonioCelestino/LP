@@ -1,25 +1,68 @@
 package modelo;
 
 import dao.RendaDAO;
-import dao.FormularioDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Renda {
-    private int codRenda;
-    private Formulario formulario;
-    private String qt18_Nome;
-    private String qt18_DataNasc;
-    private String qt18_EstadoCivil;
-    private String qt18_Parentesco;
-    private String qt18_Escolaridade;
-    private String qt18_Trabalho;
-    private String qt18_Ocupacao;
-    private double qt18_RendaBruta;
+@Entity
+@Table(name = "renda")
+public class Renda implements Serializable {
     
-    private int codFormulario;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "RENDA_ID", nullable = false)
+    private Integer codRenda;
+    @JoinColumn(name = "FORMULARIO_ID", referencedColumnName = "FORMULARIO_ID", nullable = false)
+    @ManyToOne(optional = false)
+    private Formulario formulario;
+    @Size(max = 45)
+    @Column(name = "QT18_NOME", length = 45)
+    private String qt18_Nome;
+    @Size(max = 45)
+    @Column(name = "QT18_DATA_NASC", length = 45)
+    private String qt18_DataNasc;
+    @Size(max = 45)
+    @Column(name = "QT18_ESTADO_CIVIL", length = 45)
+    private String qt18_EstadoCivil;
+    @Size(max = 45)
+    @Column(name = "QT18_PARENTESCO", length = 45)
+    private String qt18_Parentesco;
+    @Size(max = 45)
+    @Column(name = "QT18_ESCOLARIDADE", length = 45)
+    private String qt18_Escolaridade;
+    @Size(max = 45)
+    @Column(name = "QT18_TRABALHO", length = 45)
+    private String qt18_Trabalho;
+    @Size(max = 45)
+    @Column(name = "QT18_OCUPACAO", length = 45)
+    private String qt18_Ocupacao;
+    @Column(name = "QT18_RENDA_BRUTA")
+    private float qt18_RendaBruta;
+    
+    public Renda(){
+    }
 
-    public Renda(int codRenda, Formulario formulario, String qt18_Nome, String qt18_DataNasc, String qt18_EstadoCivil, String qt18_Parentesco, String qt18_Escolaridade, String qt18_Trabalho, String qt18_Ocupacao, double qt18_RendaBruta) {
+    public static List<Renda> obterRendas() throws ClassNotFoundException{
+        return RendaDAO.obterRendas();
+    }
+
+    public static Renda obterRenda(int codRenda) throws ClassNotFoundException {
+        return RendaDAO.obterRenda(codRenda);
+    }
+    
+    public Renda(Integer codRenda, Formulario formulario, String qt18_Nome, String qt18_DataNasc, String qt18_EstadoCivil, String qt18_Parentesco, String qt18_Escolaridade, String qt18_Trabalho, String qt18_Ocupacao, float qt18_RendaBruta) {
         this.codRenda = codRenda;
         this.formulario = formulario;
         this.qt18_Nome = qt18_Nome;
@@ -31,27 +74,16 @@ public class Renda {
         this.qt18_Ocupacao = qt18_Ocupacao;
         this.qt18_RendaBruta = qt18_RendaBruta;
     }
-
-    public static List<Renda> obterRendas() throws ClassNotFoundException{
-        return RendaDAO.obterRendas();
-    }
-
-    public static Renda obterRenda(int codRenda) throws ClassNotFoundException {
-        return RendaDAO.obterRenda(codRenda);
-    }
     
-    public int getCodRenda() {
+    public Integer getCodRenda() {
         return codRenda;
     }
 
-    public void setCodRenda(int codRenda) {
+    public void setCodRenda(Integer codRenda) {
         this.codRenda = codRenda;
     }
 
-    public Formulario getFormulario() throws ClassNotFoundException {
-        if ((codFormulario != 0) && (formulario == null)){
-            formulario = FormularioDAO.obterFormulario(codFormulario);
-        }
+    public Formulario getFormulario(){
         return formulario;
     }
 
@@ -115,31 +147,48 @@ public class Renda {
         this.qt18_Ocupacao = qt18_Ocupacao;
     }
 
-    public double getQt18_RendaBruta() {
+    public float getQt18_RendaBruta() {
         return qt18_RendaBruta;
     }
 
-    public void setQt18_RendaBruta(double qt18_RendaBruta) {
+    public void setQt18_RendaBruta(float qt18_RendaBruta) {
         this.qt18_RendaBruta = qt18_RendaBruta;
     }
-
-    public int getCodFormulario() {
-        return codFormulario;
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codRenda != null ? codRenda.hashCode() : 0);
+        return hash;
     }
 
-    public void setCodFormulario(int codFormulario) {
-        this.codFormulario = codFormulario;
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Renda)) {
+            return false;
+        }
+        Renda other = (Renda) object;
+        if ((this.codRenda == null && other.codRenda != null) || (this.codRenda != null && !this.codRenda.equals(other.codRenda))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Renda[ id=" + codRenda + " ]";
     }
     
     public void gravar() throws SQLException, ClassNotFoundException {
-        RendaDAO.gravar(this);
+        RendaDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException {
-        RendaDAO.alterar(this);
+        RendaDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        RendaDAO.excluir(this);
+        RendaDAO.getInstance().excluir(this);
     }
 }

@@ -15,9 +15,9 @@
                 <tr> 
                     <td>Nome do Usuário: 
                         <select name="optUsuario" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${aluno.codUsuario == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${aluno.usuario.codUsuario == null}"> selected</c:if>> </option>  
                             <c:forEach items="${usuarios}" var="usuario">
-                                <option value="${usuario.codUsuario}" <c:if test="${aluno.codUsuario == usuario.codUsuario}"> selected</c:if>>${usuario.nome}</option>  
+                                <option value="${usuario.codUsuario}" <c:if test="${aluno.usuario.codUsuario == usuario.codUsuario}"> selected</c:if>>${usuario.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>
@@ -31,9 +31,9 @@
                 <tr> 
                     <td>Curso do Aluno:
                         <select name="optCurso" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${aluno.codCurso == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${aluno.curso.codCurso == null}"> selected</c:if>> </option>  
                             <c:forEach items="${cursos}" var="curso">
-                                <option value="${curso.codCurso}" <c:if test="${aluno.codCurso == curso.codCurso}"> selected</c:if>>${curso.nome}</option>  
+                                <option value="${curso.codCurso}" <c:if test="${aluno.curso.codCurso == curso.codCurso}"> selected</c:if>>${curso.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

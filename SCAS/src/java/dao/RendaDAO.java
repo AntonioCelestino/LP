@@ -56,7 +56,7 @@ public class RendaDAO {
         return renda;
     }
 
-    public static void gravar(Renda renda){
+    public void gravar(Renda renda){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class RendaDAO {
         }
     }
 
-    public static void alterar(Renda renda){
+    public void alterar(Renda renda){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class RendaDAO {
         }
     }
 
-    public static void excluir(Renda renda){
+    public void excluir(Renda renda){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

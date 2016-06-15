@@ -56,7 +56,7 @@ public class ModalidadeDAO {
         return modalidade;
     }
     
-    public static void gravar(Modalidade modalidade){
+    public void gravar(Modalidade modalidade){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class ModalidadeDAO {
         }
     }
     
-    public static void alterar(Modalidade modalidade){
+    public void alterar(Modalidade modalidade){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class ModalidadeDAO {
         }
     }
  
-    public static void excluir(Modalidade modalidade){
+    public void excluir(Modalidade modalidade){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

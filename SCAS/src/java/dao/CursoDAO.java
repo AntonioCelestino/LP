@@ -56,7 +56,7 @@ public class CursoDAO {
         return curso;
     }
     
-    public static void gravar(Curso curso){
+    public void gravar(Curso curso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class CursoDAO {
         }
     }
     
-    public static void alterar(Curso curso){
+    public void alterar(Curso curso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class CursoDAO {
         }
     }
  
-    public static void excluir(Curso curso){
+    public void excluir(Curso curso){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

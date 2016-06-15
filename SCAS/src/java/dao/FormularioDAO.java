@@ -56,7 +56,7 @@ public class FormularioDAO {
         return formulario;
     }
     
-    public static void gravar(Formulario formulario){
+    public void gravar(Formulario formulario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class FormularioDAO {
         }
     }
     
-    public static void alterar(Formulario formulario){
+    public void alterar(Formulario formulario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class FormularioDAO {
         }
     }
  
-    public static void excluir(Formulario formulario){
+    public void excluir(Formulario formulario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

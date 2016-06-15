@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import dao.AlunoDAO;
+import dao.CursoDAO;
+import dao.UsuarioDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,12 +13,9 @@ import modelo.Aluno;
 import modelo.Curso;
 import modelo.Usuario;
 
-/**
- *
- * @author Nathan
- */
 public class ManterAlunoController extends HttpServlet {
 
+    private Aluno aluno;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,32 +26,15 @@ public class ManterAlunoController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -76,11 +50,7 @@ public class ManterAlunoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterAlunoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -94,11 +64,7 @@ public class ManterAlunoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterAlunoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,176 +76,74 @@ public class ManterAlunoController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, ServletException {
+    
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            request.setAttribute("operacao", "Incluir");
-            request.setAttribute("cursos", Curso.obterCursos());
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            request.setAttribute("cursos", CursoDAO.obterCursos());
+            request.setAttribute("usuarios", UsuarioDAO.obterUsuarios());
+            if(!operacao.equals("Incluir")){
+                int codAluno = Integer.parseInt(request.getParameter("codAluno"));
+                aluno = AlunoDAO.obterAluno(codAluno);
+                request.setAttribute("aluno", aluno);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterAluno.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
+            view.forward(request, response);
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException e){
+            throw new ServletException(e);
         }
     }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
-        int anoIngresso = Integer.parseInt(request.getParameter("txtAnoIngresso"));
-        String periodoCurso = request.getParameter("txtPeriodoCurso");
-        String familia_endereco = request.getParameter("txtFamiliaEndereco");
-        String familia_numero = request.getParameter("txtFamiliaNumero");
-        String familia_complemento = request.getParameter("txtFamiliaComplemento");
-        String familia_bairro = request.getParameter("txtFamiliaBairro");
-        String familia_cep = request.getParameter("txtFamiliaCep");
-        String familia_cidade = request.getParameter("txtFamiliaCidade");
-        String familia_uf = request.getParameter("txtFamiliaUF");
-        int codCurso = Integer.parseInt(request.getParameter("optCurso"));
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
-            Usuario usuario = null;
-            if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
-            }
+            String operacao = request.getParameter("operacao");
+            int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
+            int anoIngresso = Integer.parseInt(request.getParameter("txtAnoIngresso"));
+            String periodoCurso = request.getParameter("txtPeriodoCurso");
+            String familia_endereco = request.getParameter("txtFamiliaEndereco");
+            String familia_numero = request.getParameter("txtFamiliaNumero");
+            String familia_complemento = request.getParameter("txtFamiliaComplemento");
+            String familia_bairro = request.getParameter("txtFamiliaBairro");
+            String familia_cep = request.getParameter("txtFamiliaCep");
+            String familia_cidade = request.getParameter("txtFamiliaCidade");
+            String familia_uf = request.getParameter("txtFamiliaUF");
+            int codCurso = Integer.parseInt(request.getParameter("optCurso"));
+            int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
             Curso curso = null;
+            Usuario usuario = null;
             if(codCurso != 0){
-                curso = Curso.obterCurso(codCurso);
+                curso = CursoDAO.obterCurso(codCurso);
             }
-            Aluno aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-            aluno.setCodUsuario(codUsuario);
-            aluno.setCodCurso(codCurso);
-            aluno.gravar();
+            if(codUsuario != 0){
+                usuario = UsuarioDAO.obterUsuario(codUsuario);
+            }
+            if(operacao.equals("Incluir")){
+                aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
+                AlunoDAO.getInstance().gravar(aluno);
+            }else if(operacao.equals("Editar")){
+                aluno.setPeriodoCurso(periodoCurso);
+                aluno.setFamilia_endereco(familia_endereco);
+                aluno.setFamilia_numero(familia_numero);
+                aluno.setFamilia_complemento(familia_complemento);
+                aluno.setFamilia_bairro(familia_bairro);
+                aluno.setFamilia_cep(familia_cep);
+                aluno.setFamilia_cidade(familia_cidade);
+                aluno.setFamilia_uf(familia_uf);
+                aluno.setCurso(curso);
+                aluno.setUsuario(usuario);
+                AlunoDAO.getInstance().alterar(aluno);
+            }else if (operacao.equals("Excluir")){
+                AlunoDAO.getInstance().excluir(aluno);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            request.setAttribute("cursos", Curso.obterCursos());
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            int matricula = Integer.parseInt(request.getParameter("codAluno"));
-            Aluno aluno = Aluno.obterAluno(matricula);
-            request.setAttribute("aluno", aluno);
-            RequestDispatcher view = request.getRequestDispatcher("/manterAluno.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            request.setAttribute("cursos", Curso.obterCursos());
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            int matricula = Integer.parseInt(request.getParameter("codAluno"));
-            Aluno aluno = Aluno.obterAluno(matricula);
-            request.setAttribute("aluno", aluno);
-            RequestDispatcher view = request.getRequestDispatcher("/manterAluno.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
-        int anoIngresso = Integer.parseInt(request.getParameter("txtAnoIngresso"));
-        String periodoCurso = request.getParameter("txtPeriodoCurso");
-        String familia_endereco = request.getParameter("txtFamiliaEndereco");
-        String familia_numero = request.getParameter("txtFamiliaNumero");
-        String familia_complemento = request.getParameter("txtFamiliaComplemento");
-        String familia_bairro = request.getParameter("txtFamiliaBairro");
-        String familia_cep = request.getParameter("txtFamiliaCep");
-        String familia_cidade = request.getParameter("txtFamiliaCidade");
-        String familia_uf = request.getParameter("txtFamiliaUF");
-        int codCurso = Integer.parseInt(request.getParameter("optCurso"));
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
-        try{
-            Usuario usuario = null;
-            if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
-            }
-            Curso curso = null;
-            if(codCurso != 0){
-                curso = Curso.obterCurso(codCurso);
-            }
-            Aluno aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-            aluno.setCodUsuario(codUsuario);
-            aluno.setCodCurso(codCurso);
-            aluno.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
-        int anoIngresso = Integer.parseInt(request.getParameter("txtAnoIngresso"));
-        String periodoCurso = request.getParameter("txtPeriodoCurso");
-        String familia_endereco = request.getParameter("txtFamiliaEndereco");
-        String familia_numero = request.getParameter("txtFamiliaNumero");
-        String familia_complemento = request.getParameter("txtFamiliaComplemento");
-        String familia_bairro = request.getParameter("txtFamiliaBairro");
-        String familia_cep = request.getParameter("txtFamiliaCep");
-        String familia_cidade = request.getParameter("txtFamiliaCidade");
-        String familia_uf = request.getParameter("txtFamiliaUF");
-        int codCurso = Integer.parseInt(request.getParameter("optCurso"));
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
-        try{
-            Usuario usuario = null;
-            if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
-            }
-            Curso curso = null;
-            if(codCurso != 0){
-                curso = Curso.obterCurso(codCurso);
-            }
-            Aluno aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-            aluno.setCodUsuario(codUsuario);
-            aluno.setCodCurso(codCurso);
-            aluno.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 }

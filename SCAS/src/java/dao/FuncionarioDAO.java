@@ -56,7 +56,7 @@ public class FuncionarioDAO {
         return funcionario;
     }
     
-    public static void gravar(Funcionario funcionario){
+    public void gravar(Funcionario funcionario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class FuncionarioDAO {
         }
     }
     
-    public static void alterar(Funcionario funcionario){
+    public void alterar(Funcionario funcionario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class FuncionarioDAO {
         }
     }
  
-    public static void excluir(Funcionario funcionario){
+    public void excluir(Funcionario funcionario){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

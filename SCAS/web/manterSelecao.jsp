@@ -44,9 +44,9 @@
                     <td>Nome da Modalidade:</td> 
                     <td>
                         <select name="optModalidade" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${selecao.codModalidade == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${selecao.modalidade.codModalidade == null}"> selected</c:if>> </option>  
                             <c:forEach items="${modalidades}" var="modalidade">
-                                <option value="${modalidade.codModalidade}" <c:if test="${selecao.codModalidade == modalidade.codModalidade}"> selected</c:if>>${modalidade.nome}</option>  
+                                <option value="${modalidade.codModalidade}" <c:if test="${selecao.modalidade.codModalidade == modalidade.codModalidade}"> selected</c:if>>${modalidade.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

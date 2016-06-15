@@ -40,9 +40,9 @@
                         <td>Formulário: (Nome do Aluno | Seleção Modalidade): </td> 
                         <td>
                             <select name="optFormulario" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${bolsa.codFormulario == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${bolsa.formulario.codFormulario == null}"> selected</c:if>> </option>  
                             <c:forEach items="${formularios}" var="formulario">
-                                <option value="${formulario.codFormulario}" <c:if test="${bolsa.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome}</option>  
+                                <option value="${formulario.codFormulario}" <c:if test="${bolsa.formulario.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>

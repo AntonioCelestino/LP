@@ -1,29 +1,74 @@
 package modelo;
 
 import dao.AlunoDAO;
-import dao.CursoDAO;
-import dao.UsuarioDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Aluno {
-    private int matricula;
-    private int anoIngresso;
+@Entity
+@Table(name = "aluno")
+public class Aluno implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "MATRICULA", nullable = false)
+    private Integer matricula;
+    @Column(name = "ANO_INGRESSO")
+    private Integer anoIngresso;
+    @Size(max = 45)
+    @Column(name = "PERIODO_CURSO", length = 45)
     private String periodoCurso;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_ENDERECO", length = 45)
     private String familia_endereco;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_NUMERO", length = 45)
     private String familia_numero;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_COMPLEMENTO", length = 45)
     private String familia_complemento;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_BAIRRO", length = 45)
     private String familia_bairro;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_CEP", length = 45)
     private String familia_cep;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_CIDADE", length = 45)
     private String familia_cidade;
+    @Size(max = 45)
+    @Column(name = "FAMILIA_UF", length = 45)
     private String familia_uf;
+    @JoinColumn(name = "CURSO_ID", referencedColumnName = "CURSO_ID", nullable = false)
+    @ManyToOne(optional = false)
     private Curso curso;
+    @JoinColumn(name = "USUARIO_ID", referencedColumnName = "USUARIO_ID", nullable = false)
+    @ManyToOne(optional = false)
     private Usuario usuario;
     
-    private int codCurso;
-    private int codUsuario;
+    public Aluno(){
+    }
 
-    public Aluno(int matricula, int anoIngresso, String periodoCurso, String familia_endereco, String familia_numero, String familia_complemento, String familia_bairro, String familia_cep, String familia_cidade, String familia_uf, Curso curso, Usuario usuario) {
+    public static List<Aluno> obterAlunos() throws ClassNotFoundException{
+        return AlunoDAO.obterAlunos();
+    }
+    
+    public static Aluno obterAluno(int codAluno) throws ClassNotFoundException{
+        return AlunoDAO.obterAluno(codAluno);
+    }
+    
+    public Aluno(Integer matricula, Integer anoIngresso, String periodoCurso, String familia_endereco, String familia_numero, String familia_complemento, String familia_bairro, String familia_cep, String familia_cidade, String familia_uf, Curso curso, Usuario usuario) {
         this.matricula = matricula;
         this.anoIngresso = anoIngresso;
         this.periodoCurso = periodoCurso;
@@ -37,28 +82,20 @@ public class Aluno {
         this.curso = curso;
         this.usuario = usuario;
     }
-    
-    public static List<Aluno> obterAlunos() throws ClassNotFoundException{
-        return AlunoDAO.obterAlunos();
-    }
-    
-    public static Aluno obterAluno(int codAluno) throws ClassNotFoundException{
-        return AlunoDAO.obterAluno(codAluno);
-    }
 
-    public int getMatricula() {
+    public Integer getMatricula() {
         return matricula;
     }
 
-    public void setMatricula(int matricula) {
+    public void setMatricula(Integer matricula) {
         this.matricula = matricula;
     }
 
-    public int getAnoIngresso() {
+    public Integer getAnoIngresso() {
         return anoIngresso;
     }
 
-    public void setAnoIngresso(int anoIngresso) {
+    public void setAnoIngresso(Integer anoIngresso) {
         this.anoIngresso = anoIngresso;
     }
 
@@ -125,27 +162,8 @@ public class Aluno {
     public void setFamilia_uf(String familia_uf) {
         this.familia_uf = familia_uf;
     }
-
-    public int getCodCurso() {
-        return codCurso;
-    }
-
-    public void setCodCurso(int codCurso) {
-        this.codCurso = codCurso;
-    }
-
-    public int getCodUsuario() {
-        return codUsuario;
-    }
-
-    public void setCodUsuario(int codUsuario) {
-        this.codUsuario = codUsuario;
-    }
     
-    public Curso getCurso() throws ClassNotFoundException{
-        if ((codCurso != 0) && (curso == null)){
-            curso = CursoDAO.obterCurso(codCurso);
-        }
+    public Curso getCurso(){
         return curso;
     }
 
@@ -153,10 +171,7 @@ public class Aluno {
         this.curso = curso;
     }
 
-    public Usuario getUsuario() throws ClassNotFoundException {
-        if ((codUsuario != 0) && (usuario == null)) {
-            usuario = UsuarioDAO.obterUsuario(codUsuario);
-        }
+    public Usuario getUsuario(){
         return usuario;
     }
 
@@ -164,16 +179,41 @@ public class Aluno {
         this.usuario = usuario;
     }
     
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (matricula != null ? matricula.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Aluno)) {
+            return false;
+        }
+        Aluno other = (Aluno) object;
+        if ((this.matricula == null && other.matricula != null) || (this.matricula != null && !this.matricula.equals(other.matricula))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Aluno[ id=" + matricula + " ]";
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
-        AlunoDAO.gravar(this);
+        AlunoDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException{
-        AlunoDAO.alterar(this);
+        AlunoDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        AlunoDAO.excluir(this);
+        AlunoDAO.getInstance().excluir(this);
     }
     
 }

@@ -1,14 +1,36 @@
 package modelo;
 
 import dao.CursoDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Curso {
-    private int codCurso;
+@Entity
+@Table(name = "curso")
+public class Curso implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @NotNull
+    @Column(name = "CURSO_ID", nullable = false)
+    private Integer codCurso;
+    @Size(max = 45)
+    @Column(name = "NOME", length = 45)
     private String nome;
+    @Size(max = 45)
+    @Column(name = "TIPO_ENSINO", length = 45)
     private String tipoEnsino;
+    @Size(max = 45)
+    @Column(name = "TURNO", length = 45)
     private String turno;
+    
+    public Curso(){
+    }
     
     public static List<Curso> obterCursos() throws ClassNotFoundException{
         return CursoDAO.obterCursos();
@@ -18,18 +40,18 @@ public class Curso {
         return CursoDAO.obterCurso(codCurso);
     }
 
-    public Curso(int codCurso, String nome, String tipoEnsino, String turno) {
+    public Curso(Integer codCurso, String nome, String tipoEnsino, String turno) {
         this.codCurso = codCurso;
         this.nome = nome;
         this.tipoEnsino = tipoEnsino;
         this.turno = turno;
     }
 
-    public int getCodCurso() {
+    public Integer getCodCurso() {
         return codCurso;
     }
 
-    public void setCodCurso(int codCurso) {
+    public void setCodCurso(Integer codCurso) {
         this.codCurso = codCurso;
     }
     
@@ -57,16 +79,41 @@ public class Curso {
         this.turno = turno;
     }
     
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codCurso != null ? codCurso.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Curso)) {
+            return false;
+        }
+        Curso other = (Curso) object;
+        if ((this.codCurso == null && other.codCurso != null) || (this.codCurso != null && !this.codCurso.equals(other.codCurso))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Curso[ id=" + codCurso + " ]";
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
-        CursoDAO.gravar(this);
+        CursoDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException{
-        CursoDAO.alterar(this);
+        CursoDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        CursoDAO.excluir(this);
+        CursoDAO.getInstance().excluir(this);
     }
     
 }

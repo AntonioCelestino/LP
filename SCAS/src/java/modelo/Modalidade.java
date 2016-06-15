@@ -1,20 +1,33 @@
 package modelo;
 
 import dao.ModalidadeDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Modalidade {
-    private int codModalidade;
+@Entity
+@Table(name = "modalidade")
+public class Modalidade implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @NotNull
+    @Column(name = "MODALIDADE_ID", nullable = false)
+    private Integer codModalidade;
+    @Column(name = "VALOR_MENSAL")
+    private float valorMensal;
+    @Column(name = "NOME", length = 45)
     private String nome;
-    private double valorMensal;
+    @Size(max = 45)
+    @Column(name = "DESCRICAO", length = 45)
     private String descricao;
-
-    public Modalidade(int codModalidade, String nome, double valorMensal, String descricao) {
-        this.codModalidade = codModalidade;
-        this.nome = nome;
-        this.valorMensal = valorMensal;
-        this.descricao = descricao;
+    
+    public Modalidade(){
     }
     
     public static List<Modalidade> obterModalidades() throws ClassNotFoundException{
@@ -25,11 +38,18 @@ public class Modalidade {
         return ModalidadeDAO.obterModalidade(codModalidade);
     }
 
-    public int getCodModalidade() {
+    public Modalidade(Integer codModalidade, float valorMensal, String nome, String descricao) {
+        this.codModalidade = codModalidade;
+        this.valorMensal = valorMensal;
+        this.nome = nome;
+        this.descricao = descricao;
+    }
+
+    public Integer getCodModalidade() {
         return codModalidade;
     }
 
-    public void setCodModalidade(int codModalidade) {
+    public void setCodModalidade(Integer codModalidade) {
         this.codModalidade = codModalidade;
     }
 
@@ -41,11 +61,11 @@ public class Modalidade {
         this.nome = nome;
     }
 
-    public double getValorMensal() {
+    public float getValorMensal() {
         return valorMensal;
     }
 
-    public void setValorMensal(double valorMensal) {
+    public void setValorMensal(float valorMensal) {
         this.valorMensal = valorMensal;
     }
 
@@ -57,16 +77,41 @@ public class Modalidade {
         this.descricao = descricao;
     }
     
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codModalidade != null ? codModalidade.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Modalidade)) {
+            return false;
+        }
+        Modalidade other = (Modalidade) object;
+        if ((this.codModalidade == null && other.codModalidade != null) || (this.codModalidade != null && !this.codModalidade.equals(other.codModalidade))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Modalidade[ id=" + codModalidade + " ]";
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
-        ModalidadeDAO.gravar(this);
+        ModalidadeDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException{
-        ModalidadeDAO.alterar(this);
+        ModalidadeDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        ModalidadeDAO.excluir(this);
+        ModalidadeDAO.getInstance().excluir(this);
     }
     
 }

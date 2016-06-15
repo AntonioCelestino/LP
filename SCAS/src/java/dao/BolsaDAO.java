@@ -56,7 +56,7 @@ public class BolsaDAO {
         return bolsa;
     }
 
-    public static void gravar(Bolsa bolsa){
+    public void gravar(Bolsa bolsa){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class BolsaDAO {
         }
     }
 
-    public static void alterar(Bolsa bolsa){
+    public void alterar(Bolsa bolsa){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class BolsaDAO {
         }
     }
 
-    public static void excluir(Bolsa bolsa){
+    public void excluir(Bolsa bolsa){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

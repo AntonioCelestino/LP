@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import dao.ModalidadeDAO;
+import dao.SelecaoDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,12 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import modelo.Modalidade;
 import modelo.Selecao;
 
-/**
- *
- * @author Nathan
- */
 public class ManterSelecaoController extends HttpServlet {
-
+    
+    private Selecao selecao;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,32 +24,15 @@ public class ManterSelecaoController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -75,11 +48,7 @@ public class ManterSelecaoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterSelecaoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -93,11 +62,7 @@ public class ManterSelecaoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterSelecaoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,136 +75,55 @@ public class ManterSelecaoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            request.setAttribute("operacao", "Incluir");
-            request.setAttribute("modalidades", Modalidade.obterModalidades());
-            
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            request.setAttribute("modalidades", ModalidadeDAO.obterModalidades());
+            if(!operacao.equals("Incluir")){
+                int codSelecao = Integer.parseInt(request.getParameter("codSelecao"));
+                selecao = SelecaoDAO.obterSelecao(codSelecao);
+                request.setAttribute("selecao", selecao);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterSelecao.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
+            view.forward(request, response);
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException e){
+            throw new ServletException(e);
         }
     }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
-        String dataInicioSelecao = request.getParameter("txtDataInicioSelecao");
-        String dataFimSelecao = request.getParameter("txtDataFimSelecao");
-        String numeroEdital = request.getParameter("txtNumeroEdital");
-        int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            String operacao = request.getParameter("operacao");
+            int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
+            String dataInicioSelecao = request.getParameter("txtDataInicioSelecao");
+            String dataFimSelecao = request.getParameter("txtDataFimSelecao");
+            String numeroEdital = request.getParameter("txtNumeroEdital");
+            int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
-                modalidade = Modalidade.obterModalidade(codModalidade);
+                modalidade = ModalidadeDAO.obterModalidade(codModalidade);
             }
-            Selecao selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-            selecao.setCodModalidade(codModalidade);
-            selecao.gravar();
+            if(operacao.equals("Incluir")){
+                selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
+                SelecaoDAO.getInstance().gravar(selecao);
+            }else if(operacao.equals("Editar")){
+                selecao.setDataInicioSelecao(dataInicioSelecao);
+                selecao.setDataFimSelecao(dataFimSelecao);
+                selecao.setNumeroEdital(numeroEdital);
+                selecao.setModalidade(modalidade);
+                SelecaoDAO.getInstance().alterar(selecao);
+            }else if (operacao.equals("Excluir")){
+                SelecaoDAO.getInstance().excluir(selecao);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            request.setAttribute("modalidades", Modalidade.obterModalidades());
-            int codSelecao = Integer.parseInt(request.getParameter("codSelecao"));
-            Selecao selecao = Selecao.obterSelecao(codSelecao);
-            request.setAttribute("selecao", selecao);
-            RequestDispatcher view = request.getRequestDispatcher("/manterSelecao.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            request.setAttribute("modalidades", Modalidade.obterModalidades());
-            int codSelecao = Integer.parseInt(request.getParameter("codSelecao"));
-            Selecao selecao = Selecao.obterSelecao(codSelecao);
-            request.setAttribute("selecao", selecao);
-            RequestDispatcher view = request.getRequestDispatcher("/manterSelecao.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
-        String dataInicioSelecao = request.getParameter("txtDataInicioSelecao");
-        String dataFimSelecao = request.getParameter("txtDataFimSelecao");
-        String numeroEdital = request.getParameter("txtNumeroEdital");
-        int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
-        try{
-            Modalidade modalidade = null;
-            if(codModalidade != 0){
-                modalidade = Modalidade.obterModalidade(codModalidade);
-            }
-            Selecao selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-            selecao.setCodModalidade(codModalidade);
-            selecao.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
-        String dataInicioSelecao = request.getParameter("txtDataInicioSelecao");
-        String dataFimSelecao = request.getParameter("txtDataFimSelecao");
-        String numeroEdital = request.getParameter("txtNumeroEdital");
-        int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
-        try{
-            Modalidade modalidade = null;
-            if(codModalidade != 0){
-                modalidade = Modalidade.obterModalidade(codModalidade);
-            }
-            Selecao selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-            selecao.setCodModalidade(codModalidade);
-            selecao.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 }

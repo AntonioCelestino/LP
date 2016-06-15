@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import dao.FormularioDAO;
+import dao.RendaDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,12 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import modelo.Renda;
 import modelo.Formulario;
 
-/**
- *
- * @author Nathan
- */
 public class ManterRendaController extends HttpServlet {
-
+    
+    private Renda renda;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,32 +24,15 @@ public class ManterRendaController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -75,11 +48,7 @@ public class ManterRendaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterRendaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -93,11 +62,7 @@ public class ManterRendaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterRendaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,151 +75,65 @@ public class ManterRendaController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            request.setAttribute("operacao", "Incluir");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            request.setAttribute("formularios", FormularioDAO.obterFormularios());
+            if(!operacao.equals("Incluir")){
+                int codRenda = Integer.parseInt(request.getParameter("codRenda"));
+                renda = RendaDAO.obterRenda(codRenda);
+                request.setAttribute("renda", renda);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterRenda.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
+            view.forward(request, response);
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException e){
+            throw new ServletException(e);
         }
     }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codRenda = Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodRenda"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt18_Nome = request.getParameter("txt_qt18_Nome");
-        String qt18_DataNasc = request.getParameter("txt_qt18_DataNasc");
-        String qt18_EstadoCivil = request.getParameter("opt_qt18_EstadoCivil");
-        String qt18_Parentesco = request.getParameter("txt_qt18_Parentesco");
-        String qt18_Escolaridade = request.getParameter("opt_qt18_Escolaridade");
-        String qt18_Trabalho = request.getParameter("opt_qt18_Trabalho");
-        String qt18_Ocupacao = request.getParameter("txt_qt18_Ocupacao");
-        double qt18_RendaBruta = Double.parseDouble(request.getParameter("txt_qt18_RendaBruta"));
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            String operacao = request.getParameter("operacao");
+            int codRenda = Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodRenda"));
+            int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
+            String qt18_Nome = request.getParameter("txt_qt18_Nome");
+            String qt18_DataNasc = request.getParameter("txt_qt18_DataNasc");
+            String qt18_EstadoCivil = request.getParameter("opt_qt18_EstadoCivil");
+            String qt18_Parentesco = request.getParameter("txt_qt18_Parentesco");
+            String qt18_Escolaridade = request.getParameter("opt_qt18_Escolaridade");
+            String qt18_Trabalho = request.getParameter("opt_qt18_Trabalho");
+            String qt18_Ocupacao = request.getParameter("txt_qt18_Ocupacao");
+            float qt18_RendaBruta = Float.parseFloat(request.getParameter("txt_qt18_RendaBruta"));
             Formulario formulario = null;
             if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
+                formulario = FormularioDAO.obterFormulario(codFormulario);
             }
-            Renda renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-            renda.setCodFormulario(codFormulario);
-            renda.gravar();
+            if(operacao.equals("Incluir")){
+                renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
+                RendaDAO.getInstance().gravar(renda);
+            }else if(operacao.equals("Editar")){
+                renda.setFormulario(formulario);
+                renda.setQt18_Nome(qt18_Nome);
+                renda.setQt18_DataNasc(qt18_DataNasc);
+                renda.setQt18_EstadoCivil(qt18_EstadoCivil);
+                renda.setQt18_Parentesco(qt18_Parentesco);
+                renda.setQt18_Escolaridade(qt18_Escolaridade);
+                renda.setQt18_Trabalho(qt18_Trabalho);
+                renda.setQt18_Ocupacao(qt18_Ocupacao);
+                renda.setQt18_RendaBruta(qt18_RendaBruta);
+                RendaDAO.getInstance().alterar(renda);
+            }else if (operacao.equals("Excluir")){
+                RendaDAO.getInstance().excluir(renda);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-            int codRenda = Integer.parseInt(request.getParameter("codRenda"));
-            Renda renda = Renda.obterRenda(codRenda);
-            request.setAttribute("renda", renda);
-            RequestDispatcher view = request.getRequestDispatcher("/manterRenda.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codRenda = Integer.parseInt(request.getParameter("txtCodRenda"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt18_Nome = request.getParameter("txt_qt18_Nome");
-        String qt18_DataNasc = request.getParameter("txt_qt18_DataNasc");
-        String qt18_EstadoCivil = request.getParameter("opt_qt18_EstadoCivil");
-        String qt18_Parentesco = request.getParameter("txt_qt18_Parentesco");
-        String qt18_Escolaridade = request.getParameter("opt_qt18_Escolaridade");
-        String qt18_Trabalho = request.getParameter("opt_qt18_Trabalho");
-        String qt18_Ocupacao = request.getParameter("txt_qt18_Ocupacao");
-        double qt18_RendaBruta = Double.parseDouble(request.getParameter("txt_qt18_RendaBruta"));
-        try{
-            Formulario formulario = null;
-            if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
-            }
-            Renda renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-            renda.setCodFormulario(codFormulario);
-            renda.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            request.setAttribute("formularios", Formulario.obterFormularios());
-            int codRenda = Integer.parseInt(request.getParameter("codRenda"));
-            Renda renda = Renda.obterRenda(codRenda);
-            request.setAttribute("renda", renda);
-            RequestDispatcher view = request.getRequestDispatcher("/manterRenda.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codRenda = Integer.parseInt(request.getParameter("txtCodRenda"));
-        int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-        String qt18_Nome = request.getParameter("txt_qt18_Nome");
-        String qt18_DataNasc = request.getParameter("txt_qt18_DataNasc");
-        String qt18_EstadoCivil = request.getParameter("opt_qt18_EstadoCivil");
-        String qt18_Parentesco = request.getParameter("txt_qt18_Parentesco");
-        String qt18_Escolaridade = request.getParameter("opt_qt18_Escolaridade");
-        String qt18_Trabalho = request.getParameter("opt_qt18_Trabalho");
-        String qt18_Ocupacao = request.getParameter("txt_qt18_Ocupacao");
-        double qt18_RendaBruta = Double.parseDouble(request.getParameter("txt_qt18_RendaBruta"));
-        try{
-            Formulario formulario = null;
-            if(codFormulario != 0){
-                formulario = Formulario.obterFormulario(codFormulario);
-            }
-            Renda renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-            renda.setCodFormulario(codFormulario);
-            renda.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 

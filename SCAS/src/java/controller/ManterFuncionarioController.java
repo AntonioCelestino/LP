@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.FuncionarioDAO;
+import dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -24,6 +26,8 @@ import modelo.Usuario;
  */
 public class ManterFuncionarioController extends HttpServlet {
 
+    private Funcionario funcionario;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,32 +38,15 @@ public class ManterFuncionarioController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -75,11 +62,7 @@ public class ManterFuncionarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterFuncionarioController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -93,11 +76,7 @@ public class ManterFuncionarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ManterFuncionarioController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -110,130 +89,52 @@ public class ManterFuncionarioController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ClassNotFoundException, ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
-            request.setAttribute("operacao", "Incluir");
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            request.setAttribute("usuarios", UsuarioDAO.obterUsuarios());
+            if(!operacao.equals("Incluir")){
+                int codFuncionario = Integer.parseInt(request.getParameter("codFuncionario"));
+                funcionario = FuncionarioDAO.obterFuncionario(codFuncionario);
+                request.setAttribute("funcionario", funcionario);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterFuncionario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
+            view.forward(request, response);
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException e){
+            throw new ServletException(e);
         }
     }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int registro = Integer.parseInt(request.getParameter("txtRegistro"));
-        String cargo = request.getParameter("optCargo");
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
+    
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            String operacao = request.getParameter("operacao");
+            int registro = Integer.parseInt(request.getParameter("txtRegistro"));
+            String cargo = request.getParameter("optCargo");
+            int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
             Usuario usuario = null;
             if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
+                usuario = UsuarioDAO.obterUsuario(codUsuario);
             }
-            Funcionario funcionario = new Funcionario(registro, cargo, usuario);
-            funcionario.setCodUsuario(codUsuario);
-            funcionario.gravar();
+            if(operacao.equals("Incluir")){
+                funcionario = new Funcionario(registro, cargo, usuario);
+                FuncionarioDAO.getInstance().gravar(funcionario);
+            }else if(operacao.equals("Editar")){
+                funcionario.setRegistro(registro);
+                funcionario.setCargo(cargo);
+                funcionario.setUsuario(usuario);
+                FuncionarioDAO.getInstance().alterar(funcionario);
+            }else if (operacao.equals("Excluir")){
+                FuncionarioDAO.getInstance().excluir(funcionario);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFuncionarioController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            int registro = Integer.parseInt(request.getParameter("codFuncionario"));
-            Funcionario funcionario = Funcionario.obterFuncionario(registro);
-            request.setAttribute("funcionario", funcionario);
-            RequestDispatcher view = request.getRequestDispatcher("/manterFuncionario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            request.setAttribute("usuarios", Usuario.obterUsuarios());
-            int registro = Integer.parseInt(request.getParameter("codFuncionario"));
-            Funcionario funcionario = Funcionario.obterFuncionario(registro);
-            request.setAttribute("funcionario", funcionario);
-            RequestDispatcher view = request.getRequestDispatcher("/manterFuncionario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int registro = Integer.parseInt(request.getParameter("txtRegistro"));
-        String cargo = request.getParameter("optCargo");
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
-        try{
-            Usuario usuario = null;
-            if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
-            }
-            Funcionario funcionario = new Funcionario(registro, cargo, usuario);
-            funcionario.setCodUsuario(codUsuario);
-            funcionario.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaFuncionarioController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int registro = Integer.parseInt(request.getParameter("txtRegistro"));
-        String cargo = request.getParameter("optCargo");
-        int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
-        try{
-            Usuario usuario = null;
-            if(codUsuario != 0){
-                usuario = Usuario.obterUsuario(codUsuario);
-            }
-            Funcionario funcionario = new Funcionario(registro, cargo, usuario);
-            funcionario.setCodUsuario(codUsuario);
-            funcionario.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaFuncionarioController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 }

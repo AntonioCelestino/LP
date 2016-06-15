@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import dao.ModalidadeDAO;
 import java.io.IOException;
-import java.sql.SQLException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,12 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Modalidade;
 
-/**
- *
- * @author Nathan
- */
 public class ManterModalidadeController extends HttpServlet {
 
+    private Modalidade modalidade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,28 +26,11 @@ public class ManterModalidadeController extends HttpServlet {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -98,115 +73,48 @@ public class ManterModalidadeController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
-            request.setAttribute("operacao", "Incluir");
-            
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            if(!operacao.equals("Incluir")){
+                int codModalidade = Integer.parseInt(request.getParameter("codModalidade"));
+                modalidade = ModalidadeDAO.obterModalidade(codModalidade);
+                request.setAttribute("modalidade", modalidade);
+            }
             RequestDispatcher view = request.getRequestDispatcher("/manterModalidade.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } //catch(ClassNotFoundException ex){
-            //throw new ServletException(ex);
-        //}
-    }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
-        String nome = request.getParameter("txtNomeModalidade");
-        double valorMensal = Double.parseDouble(request.getParameter("txtValorMensal"));
-        String descricao = request.getParameter("txtDescricaoModalidade"); 
-        try{
-            Modalidade modalidade = new Modalidade(codModalidade, nome, valorMensal, descricao);
-            modalidade.gravar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            int codModalidade = Integer.parseInt(request.getParameter("codModalidade"));
-            Modalidade modalidade = Modalidade.obterModalidade(codModalidade);
-            request.setAttribute("modalidade", modalidade);
-            RequestDispatcher view = request.getRequestDispatcher("/manterModalidade.jsp");
-            view.forward(request, response);   
         }catch(ServletException ex){
             throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
+        }catch(IOException ex){
             throw new ServletException(ex);
         }
     }
 
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
-            request.setAttribute("operacao", "Excluir");
-            int codModalidade = Integer.parseInt(request.getParameter("codModalidade"));
-            Modalidade modalidade = Modalidade.obterModalidade(codModalidade);
-            request.setAttribute("modalidade", modalidade);
-            RequestDispatcher view = request.getRequestDispatcher("/manterModalidade.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
-        String nome = request.getParameter("txtNomeModalidade");
-        double valorMensal = Double.parseDouble(request.getParameter("txtValorMensal"));
-        String descricao = request.getParameter("txtDescricaoModalidade"); 
-        try{
-            Modalidade modalidade = new Modalidade(codModalidade, nome, valorMensal, descricao);
-            modalidade.alterar();
+            String operacao = request.getParameter("operacao");
+            int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
+            float valorMensal = Float.parseFloat(request.getParameter("txtValorMensal"));
+            String nome = request.getParameter("txtNomeModalidade");
+            String descricao = request.getParameter("txtDescricaoModalidade"); 
+            if(operacao.equals("Incluir")){
+                modalidade = new Modalidade(codModalidade, valorMensal, nome, descricao);
+                ModalidadeDAO.getInstance().gravar(modalidade);
+            }else if(operacao.equals("Editar")){
+                modalidade.setValorMensal(valorMensal);
+                modalidade.setNome(nome);
+                modalidade.setDescricao(descricao);
+                ModalidadeDAO.getInstance().alterar(modalidade);
+            }else if (operacao.equals("Excluir")){
+                ModalidadeDAO.getInstance().excluir(modalidade);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
-        String nome = request.getParameter("txtNomeModalidade");
-        double valorMensal = Double.parseDouble(request.getParameter("txtValorMensal"));
-        String descricao = request.getParameter("txtDescricaoModalidade"); 
-        try{
-            Modalidade modalidade = new Modalidade(codModalidade, nome, valorMensal, descricao);
-            modalidade.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 }

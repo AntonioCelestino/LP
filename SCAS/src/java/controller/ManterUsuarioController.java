@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import modelo.Usuario;
  */
 public class ManterUsuarioController extends HttpServlet {
 
+    private Usuario usuario;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,28 +38,11 @@ public class ManterUsuarioController extends HttpServlet {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
-        if(acao.equals("prepararIncluir")){
-            prepararIncluir(request, response);
-        } else {
-            if (acao.equals("confirmarIncluir")) {
-                confirmarIncluir(request, response);
-            } else {
-                if(acao.equals("prepararEditar")){
-                    prepararEditar(request, response);
-                } else {
-                    if (acao.equals("confirmarEditar")) {
-                        confirmarEditar(request, response);
-                    } else {
-                        if(acao.equals("prepararExcluir")){
-                            prepararExcluir(request, response);
-                        } else {
-                            if (acao.equals("confirmarExcluir")) {
-                                confirmarExcluir(request, response);
-                            }
-                        }
-                    }   
-                }
-            }
+        if(acao.equals("prepararOperacao")){
+            prepararOperacao(request, response);
+        } 
+        if(acao.equals("confirmarOperacao")){
+            confirmarOperacao(request, response);
         }
     }
 
@@ -99,157 +85,77 @@ public class ManterUsuarioController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void prepararIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
-            request.setAttribute("operacao", "Incluir");
+            String operacao = request.getParameter("operacao");
+            request.setAttribute("operacao", operacao);
+            if(!operacao.equals("Incluir")){
+                int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
+                usuario = UsuarioDAO.obterUsuario(codUsuario);
+                request.setAttribute("usuario", usuario);
+            }
+            RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
+            view.forward(request, response);
+        }catch(ServletException ex){
+            throw ex;
+        }catch(IOException ex){
+            throw new ServletException(ex);
+        }
+    }
+
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        try{
+            String operacao = request.getParameter("operacao");
+            int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
+            String dataNasc = request.getParameter("txtDataNasc");
+            String nome = request.getParameter("txtNome");
+            String sexo = request.getParameter("txtSexo");
+            String cpf = request.getParameter("txtCPF");
+            String identidade = request.getParameter("txtIdentidade");
+            String telefoneFixo = request.getParameter("txtTelefoneFixo");
+            String telefoneCelular = request.getParameter("txtTelefoneCelular");
+            String email = request.getParameter("txtEmail");
+            String endereco = request.getParameter("txtEndereco");
+            String numero = request.getParameter("txtNumero");
+            String complemento = request.getParameter("txtComplemento");
+            String bairro = request.getParameter("txtBairro");
+            String cep = request.getParameter("txtCep");
+            String cidade = request.getParameter("txtCidade");
+            String uf = request.getParameter("txtUF");
+            String login = request.getParameter("txtLogin");
+            String senha = request.getParameter("txtSenha");
             
-            RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } //catch(ClassNotFoundException ex){
-            //throw new ServletException(ex);
-        //}
-    }
-
-    private void confirmarIncluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
-        String dataNasc = request.getParameter("txtDataNasc");
-        String nome = request.getParameter("txtNome");
-        String sexo = request.getParameter("txtSexo");
-        String cpf = request.getParameter("txtCPF");
-        String identidade = request.getParameter("txtIdentidade");
-        String telefoneFixo = request.getParameter("txtTelefoneFixo");
-        String telefoneCelular = request.getParameter("txtTelefoneCelular");
-        String email = request.getParameter("txtEmail");
-        String endereco = request.getParameter("txtEndereco");
-        String numero = request.getParameter("txtNumero");
-        String complemento = request.getParameter("txtComplemento");
-        String bairro = request.getParameter("txtBairro");
-        String cep = request.getParameter("txtCep");
-        String cidade = request.getParameter("txtCidade");
-        String uf = request.getParameter("txtUF");
-        String login = request.getParameter("txtLogin");
-        String senha = request.getParameter("txtSenha");
-        try{
-            Usuario usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, complemento, bairro, cep, cidade, uf, login, senha);
-            usuario.gravar();
+            if(operacao.equals("Incluir")){
+                usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, complemento, bairro, cep, cidade, uf, login, senha);
+                UsuarioDAO.getInstance().gravar(usuario);
+            }else if(operacao.equals("Editar")){
+                usuario.setDataNasc(dataNasc);
+                usuario.setNome(nome);
+                usuario.setSexo(sexo);
+                usuario.setCpf(cpf);
+                usuario.setIdentidade(identidade);
+                usuario.setTelefoneFixo(telefoneFixo);
+                usuario.setTelefoneCelular(telefoneCelular);
+                usuario.setEmail(email);
+                usuario.setEndereco(endereco);
+                usuario.setNumero(numero);
+                usuario.setComplemento(complemento);
+                usuario.setBairro(bairro);
+                usuario.setCep(cep);
+                usuario.setCidade(cidade);
+                usuario.setUf(uf);
+                usuario.setLogin(login);
+                usuario.setSenha(senha);
+                UsuarioDAO.getInstance().alterar(usuario);
+            }else if (operacao.equals("Excluir")){
+                UsuarioDAO.getInstance().excluir(usuario);
+            }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
             view.forward(request, response);
-        }catch (IOException ex){
+        }catch(ServletException e){
+            throw e;
+        }catch(IOException ex){
             throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void prepararEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Editar");
-            int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
-            Usuario usuario = Usuario.obterUsuario(codUsuario);
-            request.setAttribute("usuario", usuario);
-            RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void prepararExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try{
-            request.setAttribute("operacao", "Excluir");
-            int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
-            Usuario usuario = Usuario.obterUsuario(codUsuario);
-            request.setAttribute("usuario", usuario);
-            RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
-            view.forward(request, response);   
-        } catch(ServletException ex){
-            throw ex;
-        } catch(IOException ex){
-            throw new ServletException(ex);
-        } catch(ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }
-    }
-
-    private void confirmarEditar(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
-        String dataNasc = request.getParameter("txtDataNasc");
-        String nome = request.getParameter("txtNome");
-        String sexo = request.getParameter("txtSexo");
-        String cpf = request.getParameter("txtCPF");
-        String identidade = request.getParameter("txtIdentidade");
-        String telefoneFixo = request.getParameter("txtTelefoneFixo");
-        String telefoneCelular = request.getParameter("txtTelefoneCelular");
-        String email = request.getParameter("txtEmail");
-        String endereco = request.getParameter("txtEndereco");
-        String numero = request.getParameter("txtNumero");
-        String complemento = request.getParameter("txtComplemento");
-        String bairro = request.getParameter("txtBairro");
-        String cep = request.getParameter("txtCep");
-        String cidade = request.getParameter("txtCidade");
-        String uf = request.getParameter("txtUF");
-        String login = request.getParameter("txtLogin");
-        String senha = request.getParameter("txtSenha");
-        try{
-            Usuario usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, complemento, bairro, cep, cidade, uf, login, senha);
-            usuario.alterar();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
-        }
-    }
-
-    private void confirmarExcluir(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
-        String dataNasc = request.getParameter("txtDataNasc");
-        String nome = request.getParameter("txtNome");
-        String sexo = request.getParameter("txtSexo");
-        String cpf = request.getParameter("txtCPF");
-        String identidade = request.getParameter("txtIdentidade");
-        String telefoneFixo = request.getParameter("txtTelefoneFixo");
-        String telefoneCelular = request.getParameter("txtTelefoneCelular");
-        String email = request.getParameter("txtEmail");
-        String endereco = request.getParameter("txtEndereco");
-        String numero = request.getParameter("txtNumero");
-        String complemento = request.getParameter("txtComplemento");
-        String bairro = request.getParameter("txtBairro");
-        String cep = request.getParameter("txtCep");
-        String cidade = request.getParameter("txtCidade");
-        String uf = request.getParameter("txtUF");
-        String login = request.getParameter("txtLogin");
-        String senha = request.getParameter("txtSenha");
-        try{
-            Usuario usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, complemento, bairro, cep, cidade, uf, login, senha);
-            usuario.excluir();
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
-            view.forward(request, response);
-        }catch (IOException ex){
-            throw new ServletException(ex);
-        }catch (SQLException ex){
-            throw new ServletException(ex);
-        }catch (ClassNotFoundException ex){
-            throw new ServletException(ex);
-        }catch (ServletException ex){
-            throw ex;
         }
     }
 }

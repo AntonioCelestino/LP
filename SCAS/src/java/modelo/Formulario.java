@@ -1,167 +1,328 @@
 package modelo;
 
-import dao.AlunoDAO;
 import dao.FormularioDAO;
-import dao.SelecaoDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Formulario {
-    private int codFormulario;
+@Entity
+@Table(name = "formulario")
+public class Formulario implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "FORMULARIO_ID", nullable = false)
+    private Integer codFormulario;
+    @JoinColumn(name = "ALUNO_MATRICULA", referencedColumnName = "MATRICULA", nullable = false)
+    @ManyToOne(optional = false)
     private Aluno aluno;
+    @JoinColumn(name = "SELECAO_ID", referencedColumnName = "SELECAO_ID", nullable = false)
+    @ManyToOne(optional = false)
     private Selecao selecao;
     
-    private int codAluno;
-    private int codSelecao;
     //--- Questão 01 ---
+    @Size(max = 45)
+    @Column(name = "QT01_RESPOSTA", length = 45)
     private String qt01_Resposta;	// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT01_NOME", length = 45)
     private String qt01_Nome; 		// preenchida se qt01_Resposta = 'sim'
+    @Size(max = 45)
+    @Column(name = "QT01_PARENTESCO", length = 45)
     private String qt01_Parentesco; 	// preenchida se qt01_Resposta = 'sim'
+    @Size(max = 45)
+    @Column(name = "QT01_PROGRAMA", length = 45)
     private String qt01_Programa; 	// preenchida se qt01_Resposta = 'sim'
+    @Size(max = 45)
+    @Column(name = "QT01_ANO", length = 45)
     private String qt01_Ano; 		// preenchida se qt01_Resposta = 'sim'
 
     //--- Questão 02 ---
-    private String qt02_Alimentacao;	// com ratio button de 'Sim' ou 'Não'				
+    @Size(max = 45)
+    @Column(name = "QT02_ALIMENTACAO", length = 45)
+    private String qt02_Alimentacao;	// com ratio button de 'Sim' ou 'Não'	
+    @Size(max = 45)
+    @Column(name = "QT02_MANUTENCAO", length = 45)
     private String qt02_Manutencao;	// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT02_MORADIA", length = 45)
     private String qt02_Moradia;	// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT02_TRANSPORTE", length = 45)
     private String qt02_Transporte;	// com ratio button de 'Sim' ou 'Não'	
+    @Size(max = 45)
+    @Column(name = "QT02_OUTRO", length = 45)
     private String qt02_Outro;          // preenchida se as respostas anteriores são iguais a 'Não'	
 
     //--- Questão 03 ---
+    @Size(max = 45)
+    @Column(name = "QT03_TRANSPORTE", length = 45)
     private String qt03_Transporte;             // com ratio button
+    @Size(max = 45)
+    @Column(name = "QT03_TEMPO", length = 45)
     private String qt03_Tempo;                  // preenchida se qt03_Transporte = 'pé-bicicleta'
-    private String qt03_ValorGastoDiario; 	// preenchida se qt03_Transporte = 'transporte coletivo'
-    private String qt03_ValorGastoMensal; 	// preenchida se qt03_Transporte = 'transporte locado'
+    @Column(name = "QT03_VALOR_GASTO_DIARIO")
+    private float qt03_ValorGastoDiario; 	// preenchida se qt03_Transporte = 'transporte coletivo'
+    @Column(name = "QT03_VALOR_GASTO_MENSAL")
+    private float qt03_ValorGastoMensal; 	// preenchida se qt03_Transporte = 'transporte locado'
+    @Size(max = 45)
+    @Column(name = "QT03_OUTRO", length = 45)
     private String qt03_Outro;                  // preenchida se qt03_Transporte = 'Outro'
 
     //--- Questão 04 ---
+    @Size(max = 45)
+    @Column(name = "QT04_INSTITUICAO_ENSINO_FUNDAMENTAL", length = 45)
     private String qt04_InstituicaoEnsinoFundamental; 	// com ratio button
 
     //--- Questão 05 ---
+    @Size(max = 45)
+    @Column(name = "QT05_INSTITUICAO_ENSINO_MEDIO", length = 45)
     private String qt05_InstituicaoEnsinoMedio; 	// com ratio button
 
     //--- Questão 06 ---
+    @Size(max = 45)
+    @Column(name = "QT06_ATIVIDADE_REMUNERADA", length = 45)
     private String qt06_AtividadeRemunerada; 	// com ratio button
-    private String qt06_ValorBolsaEstagio; 	// preenchida qt06_AtividadeRemunerada = estágio
+    @Column(name = "QT06_VALOR_BOLSA_ESTAGIO")
+    private float qt06_ValorBolsaEstagio; 	// preenchida qt06_AtividadeRemunerada = estágio
+    @Size(max = 45)
+    @Column(name = "QT06_PROJETO_INICIACAO", length = 45)
     private String qt06_ProjetoIniciacao; 	// preenchida qt06_AtividadeRemunerada = iniciação científica
-    private String qt06_ValorBolsaIniciacao; 	// preenchida qt06_AtividadeRemunerada = iniciação científica
+    @Column(name = "QT06_VALOR_BOLSA_INICIACAO")
+    private float qt06_ValorBolsaIniciacao; 	// preenchida qt06_AtividadeRemunerada = iniciação científica
+    @Size(max = 45)
+    @Column(name = "QT06_PROJETO_TREINAMENTO", length = 45)
     private String qt06_ProjetoTreinamento; 	// preenchida qt06_AtividadeRemunerada = treinamento profissional
-    private String qt06_ValorBolsaTreinamento; 	// preenchida qt06_AtividadeRemunerada = treinamento profissional
+    @Column(name = "QT06_VALOR_BOLSA_TREINAMENTO")
+    private float qt06_ValorBolsaTreinamento; 	// preenchida qt06_AtividadeRemunerada = treinamento profissional
+    @Size(max = 45)
+    @Column(name = "QT06_OUTRO", length = 45)
     private String qt06_Outro;                  // preenchida qt06_AtividadeRemunerada = Outra
-    private String qt06_ValorBolsaOutro; 	// preenchida qt06_AtividadeRemunerada = Outra
+    @Column(name = "QT06_VALOR_BOLSA_OUTRO")
+    private float qt06_ValorBolsaOutro; 	// preenchida qt06_AtividadeRemunerada = Outra
 
     //--- Questão 07 ---
+    @Size(max = 45)
+    @Column(name = "QT07_TRABALHO_REMUNERADO", length = 45)
     private String qt07_TrabalhoRemunerado;	// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT07_HORAS_SEMANAIS", length = 45)
     private String qt07_HorasSemanais;  	// preenchida se qt07_TrabalhoRemunerado = 'Sim'
-    private String qt07_Salario; 		// preenchida se qt07_TrabalhoRemunerado = 'Sim'
+    @Column(name = "QT07_SALARIO")
+    private float qt07_Salario; 		// preenchida se qt07_TrabalhoRemunerado = 'Sim'
 
     //--- Questão 08 ---
+    @Size(max = 45)
+    @Column(name = "QT08_MANUTENCAO", length = 45)
     private String qt08_Manutencao; 	// com ratio button
+    @Size(max = 45)
+    @Column(name = "QT08_OUTRO", length = 45)
     private String qt08_Outra;          // preenchida se qt08_Manutencao = 'Outra'
 
     //--- Questão 09 ---
+    @Size(max = 45)
+    @Column(name = "QT09_MORADIA", length = 45)
     private String qt09_Moradia; 	// com ratio button
+    @Size(max = 45)
+    @Column(name = "QT09_OUTRO", length = 45)
     private String qt09_Outra;          // preenchida se qt09_Moradia = 'Outra'
 
     //--- Questão 10 ---
+    @Size(max = 45)
+    @Column(name = "QT10_RESPONSAVEL_FINANCEIRO", length = 45)
     private String qt10_ResponsavelFinanceiro;		// com ratio button
+    @Size(max = 45)
+    @Column(name = "QT10_OUTRO", length = 45)
     private String qt10_Outros; 			// preenchida se qt10_ResponsavelFinanceiro = 'Outros'
 
     //--- Questão 11 ---
+    @Size(max = 45)
+    @Column(name = "QT11_ESGOTO", length = 45)
     private String qt11_Esgoto;         // com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT11_AGUA_TRATADA", length = 45)
     private String qt11_Agua;		// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT11_ILUMINACAO", length = 45)
     private String qt11_Iluminacao;	// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT11_COLETA_LIXO", length = 45)
     private String qt11_Lixo;		// com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT11_RUA_PAVIMENTADA", length = 45)
     private String qt11_Pavimentacao;	// com ratio button de 'Sim' ou 'Não'
 
     //--- Questão 12 ---
+    @Size(max = 45)
+    @Column(name = "QT12_RESIDENCIA", length = 45)
     private String qt12_Residencia; 	// com ratio button
+    @Size(max = 45)
+    @Column(name = "QT12_OUTRO", length = 45)
     private String qt12_Outro;		// preenchida se qt12_Residencia = 'Outro'
 
     //--- Questão 13 ---
+    @Size(max = 45)
+    @Column(name = "QT13_IMOVEL", length = 45)
     private String qt13_Imovel; 	// com ratio button
-    private String qt13_ValorAluguel;	// preenchida se qt13_Imovel = alugado
-    private String qt13_ValorPrestacao;	// preenchida se qt13_Imovel = em pagamento
+    @Column(name = "QT13_VALOR_ALUGUEL")
+    private float qt13_ValorAluguel;	// preenchida se qt13_Imovel = alugado
+    @Column(name = "QT13_VALOR_PRESTACAO")
+    private float qt13_ValorPrestacao;	// preenchida se qt13_Imovel = em pagamento
+    @Size(max = 45)
+    @Column(name = "QT13_NOME", length = 45)
     private String qt13_Nome;		// preenchida se qt13_Imovel = emprestado
+    @Size(max = 45)
+    @Column(name = "QT13_OUTRO", length = 45)
     private String qt13_Outro;		// preenchida se qt13_Imovel = Outro
 
     //--- Questão 14 ---
+    @Size(max = 45)
+    @Column(name = "QT14_ACABAMENTO", length = 45)
     private String qt14_Acabamento; 	// com ratio button
 
     //--- Questão 15 ---
+    @Size(max = 45)
+    @Column(name = "QT15_OUTROS_IMOVEIS", length = 45)
     private String qt15_OutrosImoveis;      // com ratio button de 'Sim' ou 'Não'
+    @Size(max = 45)
+    @Column(name = "QT15_DESCRICAO_IMOVEIS", length = 45)
     private String qt15_DescricaoImoveis;   // preenchida se qt15_OutrosImoveis = 'Sim'
 
     //--- Questão 16 ---
-    private int qt16_QuantCarro;
-    private int qt16_QuantTV;
-    private int qt16_QuantMaqLavar;
-    private int qt16_QuantGeladeira;
-    private int qt16_QuantTVCabo;
-    private int qt16_QuantComputador;
-    private int qt16_QuantInternetPaga;
-    private int qt16_QuantEmpregadaMensalista;
-    private int qt16_QuantEmpregadaDiarista;
-    private int qt16_QuantBanheiro;
-    private int qt16_QuantQuarto;
+    @Column(name = "QT16_QUANTIDADE_CARRO")
+    private Integer qt16_QuantCarro;
+    @Column(name = "QT16_QUANTIDADE_TELEVISAO")
+    private Integer qt16_QuantTV;
+    @Column(name = "QT16_QUANTIDADE_MAQUINA_LAVAR")
+    private Integer qt16_QuantMaqLavar;
+    @Column(name = "QT16_QUANTIDADE_GELADEIRA")
+    private Integer qt16_QuantGeladeira;
+    @Column(name = "QT16_QUANTIDADE_TV_CABO")
+    private Integer qt16_QuantTVCabo;
+    @Column(name = "QT16_QUANTIDADE_COMPUTADOR")
+    private Integer qt16_QuantComputador;
+    @Column(name = "QT16_QUANTIDADE_INTERNET")
+    private Integer qt16_QuantInternetPaga;
+    @Column(name = "QT16_QUANTIDADE_EMPREGADA_MENSALISTA")
+    private Integer qt16_QuantEmpregadaMensalista;
+    @Column(name = "QT16_QUANTIDADE_EMPREGADA_DIARISTA")
+    private Integer qt16_QuantEmpregadaDiarista;
+    @Column(name = "QT16_QUANTIDADE_BANHEIRO")
+    private Integer qt16_QuantBanheiro;
+    @Column(name = "QT16_QUANTIDADE_QUARTO")
+    private Integer qt16_QuantQuarto;
 
     //--- Questão 17 ---
+    @Size(max = 45)
+    @Column(name = "QT17_PROBLEMA_SAUDE", length = 45)
     private String qt17_ProblemaSaude; // com ratio button de 'Sim' ou 'Não'
     //se 'Sim' acessar tabela separada para preencher seus campos
 
     //--- Questão 18 ---
     //acessar tabela separada
-    private double qt18_AluguelImoveis;
-    private double qt18_PensaoMorte;
-    private double qt18_PensaoAlimenticia;
-    private double qt18_AjudaTerceiros;
-    private double qt18_BeneficiosSociais;
-    private double qt18_OutraRenda;
+    @Column(name = "QT18_ALUGUEL_IMOVEIS")
+    private float qt18_AluguelImoveis;
+    @Column(name = "QT18_PENSAO_MORTE")
+    private float qt18_PensaoMorte;
+    @Column(name = "QT18_PENSAO_ALIMENTICIA")
+    private float qt18_PensaoAlimenticia;
+    @Column(name = "QT18_AJUDA_TERCEIROS")
+    private float qt18_AjudaTerceiros;
+    @Column(name = "QT18_BENEFICIOS_SOCIAIS")
+    private float qt18_BeneficiosSociais;
+    @Column(name = "QT18_OUTRA_RENDA")
+    private float qt18_OutraRenda;
+    @Size(max = 45)
+    @Column(name = "QT18_NOME_OUTRA_RENDA", length = 45)
     private String qt18_NomeOutraRenda;
-    private double qt18_TotalRenda;
-    private int qt18_NumeroResidentes;
+    @Column(name = "QT18_TOTAL_RENDA")
+    private float qt18_TotalRenda;
+    @Column(name = "QT18_NUMERO_RESIDENTES")
+    private Integer qt18_NumeroResidentes;
 
     //--- Questão 19 ---
-    private double qt19_ValorAgua;
-    private double qt19_ValorLuz;
-    private double qt19_ValorTelefone;
-    private double qt19_ValorCondominio;
-    private double qt19_ValorMensalidadeEscolar;
-    private double qt19_ValorAlimentacao;
-    private double qt19_ValorSaude;
-    private double qt19_ValorTransporte;
-    private double qt19_ValorIptuAnual;
-    private double qt19_ValorAluguel;
-    private double qt19_ValorPensao;
-    private double qt19_ValorOutros;
+    @Column(name = "QT19_VALOR_AGUA")
+    private float qt19_ValorAgua;
+    @Column(name = "QT19_VALOR_LUZ")
+    private float qt19_ValorLuz;
+    @Column(name = "QT19_VALOR_TELEFONE")
+    private float qt19_ValorTelefone;
+    @Column(name = "QT19_VALOR_CONDOMINIO")
+    private float qt19_ValorCondominio;
+    @Column(name = "QT19_VALOR_MENSALIDADE_ESCOLAR")
+    private float qt19_ValorMensalidadeEscolar;
+    @Column(name = "QT19_VALOR_ALIMENTACAO")
+    private float qt19_ValorAlimentacao;
+    @Column(name = "QT19_VALOR_SAUDE")
+    private float qt19_ValorSaude;
+    @Column(name = "QT19_VALOR_TRANSPORTE")
+    private float qt19_ValorTransporte;
+    @Column(name = "QT19_VALOR_IPTU_ANUAL")
+    private float qt19_ValorIptuAnual;
+    @Column(name = "QT19_VALOR_ALUGUEL")
+    private float qt19_ValorAluguel;
+    @Column(name = "QT19_VALOR_PENSAO")
+    private float qt19_ValorPensao;
+    @Column(name = "QT19_VALOR_OUTROS")
+    private float qt19_ValorOutros;
 
     //--- Questão 20 ---
-    private double qt20_ValorAgua;
-    private double qt20_ValorLuz;
-    private double qt20_ValorTelefone;
-    private double qt20_ValorCondominio;
-    private double qt20_ValorAluguel;
-    private double qt20_ValorIptuAnual;
+    @Column(name = "QT20_VALOR_AGUA")
+    private float qt20_ValorAgua;
+    @Column(name = "QT20_VALOR_LUZ")
+    private float qt20_ValorLuz;
+    @Column(name = "QT20_VALOR_TELEFONE")
+    private float qt20_ValorTelefone;
+    @Column(name = "QT20_VALOR_CONDOMINIO")
+    private float qt20_ValorCondominio;
+    @Column(name = "QT20_VALOR_ALUGUEL")
+    private float qt20_ValorAluguel;
+    @Column(name = "QT20_VALOR_IPTU_ANUAL")
+    private float qt20_ValorIptuAnual;
 
     //--- Questão 21 ---
+    @Size(max = 200)
+    @Column(name = "QT21_ESCLARECIMENTOS", length = 200)
     private String qt21_Esclarecimentos; 
+    
+    public Formulario(){
+    }
 
-    public Formulario(int codFormulario, Aluno aluno, Selecao selecao, String qt01_Resposta, String qt01_Nome, String qt01_Parentesco, String qt01_Programa,
+    public static List<Formulario> obterFormularios() throws ClassNotFoundException{
+        return FormularioDAO.obterFormularios();
+    }
+    
+    public static Formulario obterFormulario(int codFormulario) throws ClassNotFoundException{
+        return FormularioDAO.obterFormulario(codFormulario);
+    }
+    
+    public Formulario(Integer codFormulario, Aluno aluno, Selecao selecao, String qt01_Resposta, String qt01_Nome, String qt01_Parentesco, String qt01_Programa,
             String qt01_Ano, String qt02_Alimentacao, String qt02_Manutencao, String qt02_Moradia, String qt02_Transporte, String qt02_Outro, String qt03_Transporte,
-            String qt03_Tempo, String qt03_ValorGastoDiario, String qt03_ValorGastoMensal, String qt03_Outro, String qt04_InstituicaoEnsinoFundamental, 
-            String qt05_InstituicaoEnsinoMedio, String qt06_AtividadeRemunerada, String qt06_ValorBolsaEstagio, String qt06_ProjetoIniciacao, String qt06_ValorBolsaIniciacao, 
-            String qt06_ProjetoTreinamento, String qt06_ValorBolsaTreinamento, String qt06_Outro, String qt06_ValorBolsaOutro, String qt07_TrabalhoRemunerado, 
-            String qt07_HorasSemanais, String qt07_Salario, String qt08_Manutencao, String qt08_Outra, String qt09_Moradia, String qt09_Outra, 
+            String qt03_Tempo, float qt03_ValorGastoDiario, float qt03_ValorGastoMensal, String qt03_Outro, String qt04_InstituicaoEnsinoFundamental, 
+            String qt05_InstituicaoEnsinoMedio, String qt06_AtividadeRemunerada, float qt06_ValorBolsaEstagio, String qt06_ProjetoIniciacao, float qt06_ValorBolsaIniciacao, 
+            String qt06_ProjetoTreinamento, float qt06_ValorBolsaTreinamento, String qt06_Outro, float qt06_ValorBolsaOutro, String qt07_TrabalhoRemunerado, 
+            String qt07_HorasSemanais, float qt07_Salario, String qt08_Manutencao, String qt08_Outra, String qt09_Moradia, String qt09_Outra, 
             String qt10_ResponsavelFinanceiro, String qt10_Outros, String qt11_Esgoto, String qt11_Agua, String qt11_Iluminacao, String qt11_Lixo, 
-            String qt11_Pavimentacao, String qt12_Residencia, String qt12_Outro, String qt13_Imovel, String qt13_ValorAluguel, String qt13_ValorPrestacao, 
-            String qt13_Nome, String qt13_Outro, String qt14_Acabamento, String qt15_OutrosImoveis, String qt15_DescricaoImoveis, int qt16_QuantCarro, int qt16_QuantTV, 
-            int qt16_QuantMaqLavar, int qt16_QuantGeladeira, int qt16_QuantTVCabo, int qt16_QuantComputador, int qt16_QuantInternetPaga, int qt16_QuantEmpregadaMensalista, 
-            int qt16_QuantEmpregadaDiarista, int qt16_QuantBanheiro, int qt16_QuantQuarto, String qt17_ProblemaSaude, double qt18_AluguelImoveis, 
-            double qt18_PensaoMorte, double qt18_PensaoAlimenticia, double qt18_AjudaTerceiros, double qt18_BeneficiosSociais, double qt18_OutraRenda, 
-            String qt18_NomeOutraRenda, double qt18_TotalRenda, int qt18_NumeroResidentes, double qt19_ValorAgua, double qt19_ValorLuz, double qt19_ValorTelefone, double qt19_ValorCondominio, 
-            double qt19_ValorMensalidadeEscolar, double qt19_ValorAlimentacao, double qt19_ValorSaude, double qt19_ValorTransporte, double qt19_ValorIptuAnual, 
-            double qt19_ValorAluguel, double qt19_ValorPensao, double qt19_ValorOutros, double qt20_ValorAgua, double qt20_ValorLuz, double qt20_ValorTelefone, 
-            double qt20_ValorCondominio, double qt20_ValorAluguel, double qt20_ValorIptuAnual, String qt21_Esclarecimentos) {
+            String qt11_Pavimentacao, String qt12_Residencia, String qt12_Outro, String qt13_Imovel, float qt13_ValorAluguel, float qt13_ValorPrestacao, 
+            String qt13_Nome, String qt13_Outro, String qt14_Acabamento, String qt15_OutrosImoveis, String qt15_DescricaoImoveis, Integer qt16_QuantCarro, Integer qt16_QuantTV, 
+            Integer qt16_QuantMaqLavar, Integer qt16_QuantGeladeira, Integer qt16_QuantTVCabo, Integer qt16_QuantComputador, Integer qt16_QuantInternetPaga, Integer qt16_QuantEmpregadaMensalista, 
+            Integer qt16_QuantEmpregadaDiarista, Integer qt16_QuantBanheiro, Integer qt16_QuantQuarto, String qt17_ProblemaSaude, float qt18_AluguelImoveis, 
+            float qt18_PensaoMorte, float qt18_PensaoAlimenticia, float qt18_AjudaTerceiros, float qt18_BeneficiosSociais, float qt18_OutraRenda, 
+            String qt18_NomeOutraRenda, float qt18_TotalRenda, Integer qt18_NumeroResidentes, float qt19_ValorAgua, float qt19_ValorLuz, float qt19_ValorTelefone, float qt19_ValorCondominio, 
+            float qt19_ValorMensalidadeEscolar, float qt19_ValorAlimentacao, float qt19_ValorSaude, float qt19_ValorTransporte, float qt19_ValorIptuAnual, 
+            float qt19_ValorAluguel, float qt19_ValorPensao, float qt19_ValorOutros, float qt20_ValorAgua, float qt20_ValorLuz, float qt20_ValorTelefone, 
+            float qt20_ValorCondominio, float qt20_ValorAluguel, float qt20_ValorIptuAnual, String qt21_Esclarecimentos) {
         this.codFormulario = codFormulario;
         this.aluno = aluno;
         this.selecao = selecao;
@@ -255,27 +416,16 @@ public class Formulario {
         this.qt20_ValorIptuAnual = qt20_ValorIptuAnual;
         this.qt21_Esclarecimentos = qt21_Esclarecimentos;
     }
-
-    public static List<Formulario> obterFormularios() throws ClassNotFoundException{
-        return FormularioDAO.obterFormularios();
-    }
     
-    public static Formulario obterFormulario(int codFormulario) throws ClassNotFoundException{
-        return FormularioDAO.obterFormulario(codFormulario);
-    }
-    
-    public int getCodFormulario() {
+    public Integer getCodFormulario() {
         return codFormulario;
     }
 
-    public void setCodFormulario(int codFormulario) {
+    public void setCodFormulario(Integer codFormulario) {
         this.codFormulario = codFormulario;
     }
 
-    public Aluno getAluno() throws ClassNotFoundException {
-        if ((codAluno != 0) && (aluno == null)) {
-            aluno = AlunoDAO.obterAluno(codAluno);
-        }
+    public Aluno getAluno(){
         return aluno;
     }
 
@@ -283,31 +433,12 @@ public class Formulario {
         this.aluno = aluno;
     }
     
-    public Selecao getSelecao() throws ClassNotFoundException {
-        if ((codSelecao != 0) && (selecao == null)){
-            selecao = SelecaoDAO.obterSelecao(codSelecao);
-        }
+    public Selecao getSelecao(){
         return selecao;
     }
 
     public void setSelecao(Selecao selecao) {
         this.selecao = selecao;
-    }
-
-    public int getCodAluno() {
-        return codAluno;
-    }
-
-    public void setCodAluno(int codAluno) {
-        this.codAluno = codAluno;
-    }
-    
-    public int getCodSelecao() {
-        return codSelecao;
-    }
-
-    public void setCodSelecao(int codSelecao) {
-        this.codSelecao = codSelecao;
     }
 
     public String getQt01_Resposta() {
@@ -406,19 +537,19 @@ public class Formulario {
         this.qt03_Tempo = qt03_Tempo;
     }
 
-    public String getQt03_ValorGastoDiario() {
+    public float getQt03_ValorGastoDiario() {
         return qt03_ValorGastoDiario;
     }
 
-    public void setQt03_ValorGastoDiario(String qt03_ValorGastoDiario) {
+    public void setQt03_ValorGastoDiario(float qt03_ValorGastoDiario) {
         this.qt03_ValorGastoDiario = qt03_ValorGastoDiario;
     }
 
-    public String getQt03_ValorGastoMensal() {
+    public float getQt03_ValorGastoMensal() {
         return qt03_ValorGastoMensal;
     }
 
-    public void setQt03_ValorGastoMensal(String qt03_ValorGastoMensal) {
+    public void setQt03_ValorGastoMensal(float qt03_ValorGastoMensal) {
         this.qt03_ValorGastoMensal = qt03_ValorGastoMensal;
     }
 
@@ -454,11 +585,11 @@ public class Formulario {
         this.qt06_AtividadeRemunerada = qt06_AtividadeRemunerada;
     }
 
-    public String getQt06_ValorBolsaEstagio() {
+    public float getQt06_ValorBolsaEstagio() {
         return qt06_ValorBolsaEstagio;
     }
 
-    public void setQt06_ValorBolsaEstagio(String qt06_ValorBolsaEstagio) {
+    public void setQt06_ValorBolsaEstagio(float qt06_ValorBolsaEstagio) {
         this.qt06_ValorBolsaEstagio = qt06_ValorBolsaEstagio;
     }
 
@@ -470,11 +601,11 @@ public class Formulario {
         this.qt06_ProjetoIniciacao = qt06_ProjetoIniciacao;
     }
 
-    public String getQt06_ValorBolsaIniciacao() {
+    public float getQt06_ValorBolsaIniciacao() {
         return qt06_ValorBolsaIniciacao;
     }
 
-    public void setQt06_ValorBolsaIniciacao(String qt06_ValorBolsaIniciacao) {
+    public void setQt06_ValorBolsaIniciacao(float qt06_ValorBolsaIniciacao) {
         this.qt06_ValorBolsaIniciacao = qt06_ValorBolsaIniciacao;
     }
 
@@ -486,11 +617,11 @@ public class Formulario {
         this.qt06_ProjetoTreinamento = qt06_ProjetoTreinamento;
     }
 
-    public String getQt06_ValorBolsaTreinamento() {
+    public float getQt06_ValorBolsaTreinamento() {
         return qt06_ValorBolsaTreinamento;
     }
 
-    public void setQt06_ValorBolsaTreinamento(String qt06_ValorBolsaTreinamento) {
+    public void setQt06_ValorBolsaTreinamento(float qt06_ValorBolsaTreinamento) {
         this.qt06_ValorBolsaTreinamento = qt06_ValorBolsaTreinamento;
     }
 
@@ -502,11 +633,11 @@ public class Formulario {
         this.qt06_Outro = qt06_Outro;
     }
 
-    public String getQt06_ValorBolsaOutro() {
+    public float getQt06_ValorBolsaOutro() {
         return qt06_ValorBolsaOutro;
     }
 
-    public void setQt06_ValorBolsaOutro(String qt06_ValorBolsaOutro) {
+    public void setQt06_ValorBolsaOutro(float qt06_ValorBolsaOutro) {
         this.qt06_ValorBolsaOutro = qt06_ValorBolsaOutro;
     }
 
@@ -526,11 +657,11 @@ public class Formulario {
         this.qt07_HorasSemanais = qt07_HorasSemanais;
     }
 
-    public String getQt07_Salario() {
+    public float getQt07_Salario() {
         return qt07_Salario;
     }
 
-    public void setQt07_Salario(String qt07_Salario) {
+    public void setQt07_Salario(float qt07_Salario) {
         this.qt07_Salario = qt07_Salario;
     }
 
@@ -646,19 +777,19 @@ public class Formulario {
         this.qt13_Imovel = qt13_Imovel;
     }
 
-    public String getQt13_ValorAluguel() {
+    public float getQt13_ValorAluguel() {
         return qt13_ValorAluguel;
     }
 
-    public void setQt13_ValorAluguel(String qt13_ValorAluguel) {
+    public void setQt13_ValorAluguel(float qt13_ValorAluguel) {
         this.qt13_ValorAluguel = qt13_ValorAluguel;
     }
 
-    public String getQt13_ValorPrestacao() {
+    public float getQt13_ValorPrestacao() {
         return qt13_ValorPrestacao;
     }
 
-    public void setQt13_ValorPrestacao(String qt13_ValorPrestacao) {
+    public void setQt13_ValorPrestacao(float qt13_ValorPrestacao) {
         this.qt13_ValorPrestacao = qt13_ValorPrestacao;
     }
 
@@ -702,91 +833,91 @@ public class Formulario {
         this.qt15_DescricaoImoveis = qt15_DescricaoImoveis;
     }
     
-    public int getQt16_QuantCarro() {
+    public Integer getQt16_QuantCarro() {
         return qt16_QuantCarro;
     }
 
-    public void setQt16_QuantCarro(int qt16_QuantCarro) {
+    public void setQt16_QuantCarro(Integer qt16_QuantCarro) {
         this.qt16_QuantCarro = qt16_QuantCarro;
     }
 
-    public int getQt16_QuantTV() {
+    public Integer getQt16_QuantTV() {
         return qt16_QuantTV;
     }
 
-    public void setQt16_QuantTV(int qt16_QuantTV) {
+    public void setQt16_QuantTV(Integer qt16_QuantTV) {
         this.qt16_QuantTV = qt16_QuantTV;
     }
 
-    public int getQt16_QuantMaqLavar() {
+    public Integer getQt16_QuantMaqLavar() {
         return qt16_QuantMaqLavar;
     }
 
-    public void setQt16_QuantMaqLavar(int qt16_QuantMaqLavar) {
+    public void setQt16_QuantMaqLavar(Integer qt16_QuantMaqLavar) {
         this.qt16_QuantMaqLavar = qt16_QuantMaqLavar;
     }
 
-    public int getQt16_QuantGeladeira() {
+    public Integer getQt16_QuantGeladeira() {
         return qt16_QuantGeladeira;
     }
 
-    public void setQt16_QuantGeladeira(int qt16_QuantGeladeira) {
+    public void setQt16_QuantGeladeira(Integer qt16_QuantGeladeira) {
         this.qt16_QuantGeladeira = qt16_QuantGeladeira;
     }
 
-    public int getQt16_QuantTVCabo() {
+    public Integer getQt16_QuantTVCabo() {
         return qt16_QuantTVCabo;
     }
 
-    public void setQt16_QuantTVCabo(int qt16_QuantTVCabo) {
+    public void setQt16_QuantTVCabo(Integer qt16_QuantTVCabo) {
         this.qt16_QuantTVCabo = qt16_QuantTVCabo;
     }
 
-    public int getQt16_QuantComputador() {
+    public Integer getQt16_QuantComputador() {
         return qt16_QuantComputador;
     }
 
-    public void setQt16_QuantComputador(int qt16_QuantComputador) {
+    public void setQt16_QuantComputador(Integer qt16_QuantComputador) {
         this.qt16_QuantComputador = qt16_QuantComputador;
     }
 
-    public int getQt16_QuantInternetPaga() {
+    public Integer getQt16_QuantInternetPaga() {
         return qt16_QuantInternetPaga;
     }
 
-    public void setQt16_QuantInternetPaga(int qt16_QuantInternetPaga) {
+    public void setQt16_QuantInternetPaga(Integer qt16_QuantInternetPaga) {
         this.qt16_QuantInternetPaga = qt16_QuantInternetPaga;
     }
 
-    public int getQt16_QuantEmpregadaMensalista() {
+    public Integer getQt16_QuantEmpregadaMensalista() {
         return qt16_QuantEmpregadaMensalista;
     }
 
-    public void setQt16_QuantEmpregadaMensalista(int qt16_QuantEmpregadaMensalista) {
+    public void setQt16_QuantEmpregadaMensalista(Integer qt16_QuantEmpregadaMensalista) {
         this.qt16_QuantEmpregadaMensalista = qt16_QuantEmpregadaMensalista;
     }
 
-    public int getQt16_QuantEmpregadaDiarista() {
+    public Integer getQt16_QuantEmpregadaDiarista() {
         return qt16_QuantEmpregadaDiarista;
     }
 
-    public void setQt16_QuantEmpregadaDiarista(int qt16_QuantEmpregadaDiarista) {
+    public void setQt16_QuantEmpregadaDiarista(Integer qt16_QuantEmpregadaDiarista) {
         this.qt16_QuantEmpregadaDiarista = qt16_QuantEmpregadaDiarista;
     }
 
-    public int getQt16_QuantBanheiro() {
+    public Integer getQt16_QuantBanheiro() {
         return qt16_QuantBanheiro;
     }
 
-    public void setQt16_QuantBanheiro(int qt16_QuantBanheiro) {
+    public void setQt16_QuantBanheiro(Integer qt16_QuantBanheiro) {
         this.qt16_QuantBanheiro = qt16_QuantBanheiro;
     }
 
-    public int getQt16_QuantQuarto() {
+    public Integer getQt16_QuantQuarto() {
         return qt16_QuantQuarto;
     }
 
-    public void setQt16_QuantQuarto(int qt16_QuantQuarto) {
+    public void setQt16_QuantQuarto(Integer qt16_QuantQuarto) {
         this.qt16_QuantQuarto = qt16_QuantQuarto;
     }
 
@@ -798,51 +929,51 @@ public class Formulario {
         this.qt17_ProblemaSaude = qt17_ProblemaSaude;
     }
 
-    public double getQt18_AluguelImoveis() {
+    public float getQt18_AluguelImoveis() {
         return qt18_AluguelImoveis;
     }
 
-    public void setQt18_AluguelImoveis(double qt18_AluguelImoveis) {
+    public void setQt18_AluguelImoveis(float qt18_AluguelImoveis) {
         this.qt18_AluguelImoveis = qt18_AluguelImoveis;
     }
 
-    public double getQt18_PensaoMorte() {
+    public float getQt18_PensaoMorte() {
         return qt18_PensaoMorte;
     }
 
-    public void setQt18_PensaoMorte(double qt18_PensaoMorte) {
+    public void setQt18_PensaoMorte(float qt18_PensaoMorte) {
         this.qt18_PensaoMorte = qt18_PensaoMorte;
     }
 
-    public double getQt18_PensaoAlimenticia() {
+    public float getQt18_PensaoAlimenticia() {
         return qt18_PensaoAlimenticia;
     }
 
-    public void setQt18_PensaoAlimenticia(double qt18_PensaoAlimenticia) {
+    public void setQt18_PensaoAlimenticia(float qt18_PensaoAlimenticia) {
         this.qt18_PensaoAlimenticia = qt18_PensaoAlimenticia;
     }
 
-    public double getQt18_AjudaTerceiros() {
+    public float getQt18_AjudaTerceiros() {
         return qt18_AjudaTerceiros;
     }
 
-    public void setQt18_AjudaTerceiros(double qt18_AjudaTerceiros) {
+    public void setQt18_AjudaTerceiros(float qt18_AjudaTerceiros) {
         this.qt18_AjudaTerceiros = qt18_AjudaTerceiros;
     }
 
-    public double getQt18_BeneficiosSociais() {
+    public float getQt18_BeneficiosSociais() {
         return qt18_BeneficiosSociais;
     }
 
-    public void setQt18_BeneficiosSociais(double qt18_BeneficiosSociais) {
+    public void setQt18_BeneficiosSociais(float qt18_BeneficiosSociais) {
         this.qt18_BeneficiosSociais = qt18_BeneficiosSociais;
     }
 
-    public double getQt18_OutraRenda() {
+    public float getQt18_OutraRenda() {
         return qt18_OutraRenda;
     }
 
-    public void setQt18_OutraRenda(double qt18_OutraRenda) {
+    public void setQt18_OutraRenda(float qt18_OutraRenda) {
         this.qt18_OutraRenda = qt18_OutraRenda;
     }
 
@@ -854,163 +985,163 @@ public class Formulario {
         this.qt18_NomeOutraRenda = qt18_NomeOutraRenda;
     }
 
-    public double getQt18_TotalRenda() {
+    public float getQt18_TotalRenda() {
         return qt18_TotalRenda;
     }
 
-    public void setQt18_TotalRenda(double qt18_TotalRenda) {
+    public void setQt18_TotalRenda(float qt18_TotalRenda) {
         this.qt18_TotalRenda = qt18_TotalRenda;
     }
     
-    public int getQt18_NumeroResidentes() {
+    public Integer getQt18_NumeroResidentes() {
         return qt18_NumeroResidentes;
     }
 
-    public void setQt18_NumeroResidentes(int qt18_NumeroResidentes) {
+    public void setQt18_NumeroResidentes(Integer qt18_NumeroResidentes) {
         this.qt18_NumeroResidentes = qt18_NumeroResidentes;
     }
 
-    public double getQt19_ValorAgua() {
+    public float getQt19_ValorAgua() {
         return qt19_ValorAgua;
     }
 
-    public void setQt19_ValorAgua(double qt19_ValorAgua) {
+    public void setQt19_ValorAgua(float qt19_ValorAgua) {
         this.qt19_ValorAgua = qt19_ValorAgua;
     }
 
-    public double getQt19_ValorLuz() {
+    public float getQt19_ValorLuz() {
         return qt19_ValorLuz;
     }
 
-    public void setQt19_ValorLuz(double qt19_ValorLuz) {
+    public void setQt19_ValorLuz(float qt19_ValorLuz) {
         this.qt19_ValorLuz = qt19_ValorLuz;
     }
 
-    public double getQt19_ValorTelefone() {
+    public float getQt19_ValorTelefone() {
         return qt19_ValorTelefone;
     }
 
-    public void setQt19_ValorTelefone(double qt19_ValorTelefone) {
+    public void setQt19_ValorTelefone(float qt19_ValorTelefone) {
         this.qt19_ValorTelefone = qt19_ValorTelefone;
     }
 
-    public double getQt19_ValorCondominio() {
+    public float getQt19_ValorCondominio() {
         return qt19_ValorCondominio;
     }
 
-    public void setQt19_ValorCondominio(double qt19_ValorCondominio) {
+    public void setQt19_ValorCondominio(float qt19_ValorCondominio) {
         this.qt19_ValorCondominio = qt19_ValorCondominio;
     }
 
-    public double getQt19_ValorMensalidadeEscolar() {
+    public float getQt19_ValorMensalidadeEscolar() {
         return qt19_ValorMensalidadeEscolar;
     }
 
-    public void setQt19_ValorMensalidadeEscolar(double qt19_ValorMensalidadeEscolar) {
+    public void setQt19_ValorMensalidadeEscolar(float qt19_ValorMensalidadeEscolar) {
         this.qt19_ValorMensalidadeEscolar = qt19_ValorMensalidadeEscolar;
     }
 
-    public double getQt19_ValorAlimentacao() {
+    public float getQt19_ValorAlimentacao() {
         return qt19_ValorAlimentacao;
     }
 
-    public void setQt19_ValorAlimentacao(double qt19_ValorAlimentacao) {
+    public void setQt19_ValorAlimentacao(float qt19_ValorAlimentacao) {
         this.qt19_ValorAlimentacao = qt19_ValorAlimentacao;
     }
 
-    public double getQt19_ValorSaude() {
+    public float getQt19_ValorSaude() {
         return qt19_ValorSaude;
     }
 
-    public void setQt19_ValorSaude(double qt19_ValorSaude) {
+    public void setQt19_ValorSaude(float qt19_ValorSaude) {
         this.qt19_ValorSaude = qt19_ValorSaude;
     }
 
-    public double getQt19_ValorTransporte() {
+    public float getQt19_ValorTransporte() {
         return qt19_ValorTransporte;
     }
 
-    public void setQt19_ValorTransporte(double qt19_ValorTransporte) {
+    public void setQt19_ValorTransporte(float qt19_ValorTransporte) {
         this.qt19_ValorTransporte = qt19_ValorTransporte;
     }
 
-    public double getQt19_ValorIptuAnual() {
+    public float getQt19_ValorIptuAnual() {
         return qt19_ValorIptuAnual;
     }
 
-    public void setQt19_ValorIptuAnual(double qt19_ValorIptuAnual) {
+    public void setQt19_ValorIptuAnual(float qt19_ValorIptuAnual) {
         this.qt19_ValorIptuAnual = qt19_ValorIptuAnual;
     }
 
-    public double getQt19_ValorAluguel() {
+    public float getQt19_ValorAluguel() {
         return qt19_ValorAluguel;
     }
 
-    public void setQt19_ValorAluguel(double qt19_ValorAluguel) {
+    public void setQt19_ValorAluguel(float qt19_ValorAluguel) {
         this.qt19_ValorAluguel = qt19_ValorAluguel;
     }
 
-    public double getQt19_ValorPensao() {
+    public float getQt19_ValorPensao() {
         return qt19_ValorPensao;
     }
 
-    public void setQt19_ValorPensao(double qt19_ValorPensao) {
+    public void setQt19_ValorPensao(float qt19_ValorPensao) {
         this.qt19_ValorPensao = qt19_ValorPensao;
     }
 
-    public double getQt19_ValorOutros() {
+    public float getQt19_ValorOutros() {
         return qt19_ValorOutros;
     }
 
-    public void setQt19_ValorOutros(double qt19_ValorOutros) {
+    public void setQt19_ValorOutros(float qt19_ValorOutros) {
         this.qt19_ValorOutros = qt19_ValorOutros;
     }
 
-    public double getQt20_ValorAgua() {
+    public float getQt20_ValorAgua() {
         return qt20_ValorAgua;
     }
 
-    public void setQt20_ValorAgua(double qt20_ValorAgua) {
+    public void setQt20_ValorAgua(float qt20_ValorAgua) {
         this.qt20_ValorAgua = qt20_ValorAgua;
     }
 
-    public double getQt20_ValorLuz() {
+    public float getQt20_ValorLuz() {
         return qt20_ValorLuz;
     }
 
-    public void setQt20_ValorLuz(double qt20_ValorLuz) {
+    public void setQt20_ValorLuz(float qt20_ValorLuz) {
         this.qt20_ValorLuz = qt20_ValorLuz;
     }
 
-    public double getQt20_ValorTelefone() {
+    public float getQt20_ValorTelefone() {
         return qt20_ValorTelefone;
     }
 
-    public void setQt20_ValorTelefone(double qt20_ValorTelefone) {
+    public void setQt20_ValorTelefone(float qt20_ValorTelefone) {
         this.qt20_ValorTelefone = qt20_ValorTelefone;
     }
 
-    public double getQt20_ValorCondominio() {
+    public float getQt20_ValorCondominio() {
         return qt20_ValorCondominio;
     }
 
-    public void setQt20_ValorCondominio(double qt20_ValorCondominio) {
+    public void setQt20_ValorCondominio(float qt20_ValorCondominio) {
         this.qt20_ValorCondominio = qt20_ValorCondominio;
     }
 
-    public double getQt20_ValorAluguel() {
+    public float getQt20_ValorAluguel() {
         return qt20_ValorAluguel;
     }
 
-    public void setQt20_ValorAluguel(double qt20_ValorAluguel) {
+    public void setQt20_ValorAluguel(float qt20_ValorAluguel) {
         this.qt20_ValorAluguel = qt20_ValorAluguel;
     }
 
-    public double getQt20_ValorIptuAnual() {
+    public float getQt20_ValorIptuAnual() {
         return qt20_ValorIptuAnual;
     }
 
-    public void setQt20_ValorIptuAnual(double qt20_ValorIptuAnual) {
+    public void setQt20_ValorIptuAnual(float qt20_ValorIptuAnual) {
         this.qt20_ValorIptuAnual = qt20_ValorIptuAnual;
     }
 
@@ -1022,15 +1153,40 @@ public class Formulario {
         this.qt21_Esclarecimentos = qt21_Esclarecimentos;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codFormulario != null ? codFormulario.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Formulario)) {
+            return false;
+        }
+        Formulario other = (Formulario) object;
+        if ((this.codFormulario == null && other.codFormulario != null) || (this.codFormulario != null && !this.codFormulario.equals(other.codFormulario))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Formulario[ id=" + codFormulario + " ]";
+    }
+    
     public void gravar() throws SQLException, ClassNotFoundException {
-        FormularioDAO.gravar(this);
+        FormularioDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException{
-        FormularioDAO.alterar(this);
+        FormularioDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        FormularioDAO.excluir(this);
+        FormularioDAO.getInstance().excluir(this);
     }
 }

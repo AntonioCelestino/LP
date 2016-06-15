@@ -56,7 +56,7 @@ public class DoencaDAO {
         return doenca;
     }
     
-    public static void gravar(Doenca doenca){
+    public void gravar(Doenca doenca){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class DoencaDAO {
         }
     }
     
-    public static void alterar(Doenca doenca){
+    public void alterar(Doenca doenca){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class DoencaDAO {
         }
     }
  
-    public static void excluir(Doenca doenca){
+    public void excluir(Doenca doenca){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

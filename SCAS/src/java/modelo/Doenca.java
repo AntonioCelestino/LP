@@ -1,29 +1,48 @@
 package modelo;
 
 import dao.DoencaDAO;
-import dao.FormularioDAO;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-public class Doenca {
-    private int codDoenca;
-    private Formulario formulario;
-    private String qt17_Nome;
-    private String qt17_Doenca;
-    private String qt17_Trabalho;
-    private String qt17_Dependencia;
-    private double qt17_Gasto;
+@Entity
+@Table(name = "doenca")
+public class Doenca implements Serializable {
     
-    private int codFormulario;
-
-    public Doenca(int codDoenca, Formulario Formuario, String qt17_Nome, String qt17_Doenca, String qt17_Trabalho, String qt17_Dependencia, double qt17_Gasto) {
-        this.codDoenca = codDoenca;
-        this.formulario = Formuario;
-        this.qt17_Nome = qt17_Nome;
-        this.qt17_Doenca = qt17_Doenca;
-        this.qt17_Trabalho = qt17_Trabalho;
-        this.qt17_Dependencia = qt17_Dependencia;
-        this.qt17_Gasto = qt17_Gasto;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "DOENCA_ID", nullable = false)
+    private Integer codDoenca;
+    @JoinColumn(name = "FORMULARIO_ID", referencedColumnName = "FORMULARIO_ID", nullable = false)
+    @ManyToOne(optional = false)
+    private Formulario formulario;
+    @Size(max = 45)
+    @Column(name = "QT17_NOME", length = 45)
+    private String qt17_Nome;
+    @Size(max = 45)
+    @Column(name = "QT17_DOENCA", length = 45)
+    private String qt17_Doenca;
+    @Size(max = 45)
+    @Column(name = "QT17_TRABALHO", length = 45)
+    private String qt17_Trabalho;
+    @Size(max = 45)
+    @Column(name = "QT17_DEPENDENCIA", length = 45)
+    private String qt17_Dependencia;
+    @Column(name = "QT17_GASTO")
+    private float qt17_Gasto;
+    
+    public Doenca(){
     }
 
     public static List<Doenca> obterDoencas() throws ClassNotFoundException{
@@ -34,18 +53,25 @@ public class Doenca {
         return DoencaDAO.obterDoenca(codDoenca);
     }
     
-    public int getCodDoenca() {
+    public Doenca(Integer codDoenca, Formulario Formuario, String qt17_Nome, String qt17_Doenca, String qt17_Trabalho, String qt17_Dependencia, float qt17_Gasto) {
+        this.codDoenca = codDoenca;
+        this.formulario = Formuario;
+        this.qt17_Nome = qt17_Nome;
+        this.qt17_Doenca = qt17_Doenca;
+        this.qt17_Trabalho = qt17_Trabalho;
+        this.qt17_Dependencia = qt17_Dependencia;
+        this.qt17_Gasto = qt17_Gasto;
+    }
+    
+    public Integer getCodDoenca() {
         return codDoenca;
     }
 
-    public void setCodDoenca(int codDoenca) {
+    public void setCodDoenca(Integer codDoenca) {
         this.codDoenca = codDoenca;
     }
 
-    public Formulario getFormulario() throws ClassNotFoundException {
-        if ((codFormulario != 0) && (formulario == null)){
-            formulario = FormularioDAO.obterFormulario(codFormulario);
-        }
+    public Formulario getFormulario(){
         return formulario;
     }
 
@@ -85,31 +111,48 @@ public class Doenca {
         this.qt17_Dependencia = qt17_Dependencia;
     }
 
-    public double getQt17_Gasto() {
+    public float getQt17_Gasto() {
         return qt17_Gasto;
     }
 
-    public void setQt17_Gasto(double qt17_Gasto) {
+    public void setQt17_Gasto(float qt17_Gasto) {
         this.qt17_Gasto = qt17_Gasto;
     }
-
-    public int getCodFormulario() {
-        return codFormulario;
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (codDoenca != null ? codDoenca.hashCode() : 0);
+        return hash;
     }
 
-    public void setCodFormulario(int codFormulario) {
-        this.codFormulario = codFormulario;
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Doenca)) {
+            return false;
+        }
+        Doenca other = (Doenca) object;
+        if ((this.codDoenca == null && other.codDoenca != null) || (this.codDoenca != null && !this.codDoenca.equals(other.codDoenca))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "modelo.Doenca[ id=" + codDoenca + " ]";
     }
     
     public void gravar() throws SQLException, ClassNotFoundException {
-        DoencaDAO.gravar(this);
+        DoencaDAO.getInstance().gravar(this);
     }
 
     public void alterar() throws SQLException, ClassNotFoundException {
-        DoencaDAO.alterar(this);
+        DoencaDAO.getInstance().alterar(this);
     }
 
     public void excluir() throws SQLException, ClassNotFoundException{
-        DoencaDAO.excluir(this);
+        DoencaDAO.getInstance().excluir(this);
     }
 }

@@ -56,7 +56,7 @@ public class SelecaoDAO {
         return selecao;
     }
 
-    public static void gravar(Selecao selecao){
+    public void gravar(Selecao selecao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -73,7 +73,7 @@ public class SelecaoDAO {
         }
     }
 
-    public static void alterar(Selecao selecao){
+    public void alterar(Selecao selecao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -90,7 +90,7 @@ public class SelecaoDAO {
         }
     }
 
-    public static void excluir(Selecao selecao){
+    public void excluir(Selecao selecao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {

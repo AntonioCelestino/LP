@@ -36,9 +36,9 @@
                     <td>Nome da Modalidade:</td> 
                     <td>
                         <select name="optModalidade" <c:if test="${operacao != 'Editar'}"> readonly</c:if>>
-                            <option value="0" <c:if test="${recurso.codModalidade == null}"> selected</c:if>> </option>  
+                            <option value="0" <c:if test="${recurso.modalidade.codModalidade == null}"> selected</c:if>> </option>  
                             <c:forEach items="${modalidades}" var="modalidade">
-                                <option value="${modalidade.codModalidade}" <c:if test="${recurso.codModalidade == modalidade.codModalidade}"> selected</c:if>>${modalidade.nome}</option>  
+                                <option value="${modalidade.codModalidade}" <c:if test="${recurso.modalidade.codModalidade == modalidade.codModalidade}"> selected</c:if>>${modalidade.nome}</option>  
                             </c:forEach>
                         </select>
                     </td>
