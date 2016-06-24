@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-
 <!DOCTYPE HTML>
 <html>
     <head>
@@ -10,7 +9,7 @@
     </head>
     <body>
         <h1>Manter Aluno - ${operacao}</h1>
-        <form action="ManterAlunoController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterAluno" onsubmit="return validarFormulario(this)">
+        <form action="ManterAlunoController?acao=confirmarOperacao&operacao=${operacao}" method="post" id = "formulario" name="frmManterAluno" onsubmit="return validarFormulario(this)">
             <table>
                 <tr> 
                     <td>Nome do Usuário: 
@@ -43,8 +42,8 @@
                 </tr>
                 <tr>
                     <td><br />O endereço da sua família é diferente do seu?
-                        <input type="radio" name="endereco" value="Sim" onclick="if(document.getElementById('FamiliaEndereco').disabled==true){document.getElementById('FamiliaEndereco').disabled=false}; if(document.getElementById('FamiliaNumero').disabled==true){document.getElementById('FamiliaNumero').disabled=false}; if(document.getElementById('FamiliaComplemento').disabled==true){document.getElementById('FamiliaComplemento').disabled=false}; if(document.getElementById('FamiliaBairro').disabled==true){document.getElementById('FamiliaBairro').disabled=false}; if(document.getElementById('FamiliaCep').disabled==true){document.getElementById('FamiliaCep').disabled=false}; if(document.getElementById('FamiliaCidade').disabled==true){document.getElementById('FamiliaCidade').disabled=false}; if(document.getElementById('FamiliaUF').disabled==true){document.getElementById('FamiliaUF').disabled=false};" <c:if test="${(aluno.familia_endereco != '' && aluno.familia_endereco != null) || (aluno.familia_numero != '' && aluno.familia_numero != null) || (aluno.familia_complemento != '' && aluno.familia_complemento != null) || (aluno.familia_bairro != '' && aluno.familia_bairro != null) || (aluno.familia_cep != '' && aluno.familia_cep != null) || (aluno.familia_cidade != '' && aluno.familia_cidade != null) || (aluno.familia_uf != '' && aluno.familia_uf != null)}"> checked</c:if>>Sim
-                        <input type="radio" name="endereco" value="Não" onclick="if(document.getElementById('FamiliaEndereco').disabled==false){document.getElementById('FamiliaEndereco').disabled=true}; if(document.getElementById('FamiliaNumero').disabled==false){document.getElementById('FamiliaNumero').disabled=true}; if(document.getElementById('FamiliaComplemento').disabled==false){document.getElementById('FamiliaComplemento').disabled=true}; if(document.getElementById('FamiliaBairro').disabled==false){document.getElementById('FamiliaBairro').disabled=true}; if(document.getElementById('FamiliaCep').disabled==false){document.getElementById('FamiliaCep').disabled=true}; if(document.getElementById('FamiliaCidade').disabled==false){document.getElementById('FamiliaCidade').disabled=true}; if(document.getElementById('FamiliaUF').disabled==false){document.getElementById('FamiliaUF').disabled=true};" <c:if test="${(aluno.familia_endereco == '' || aluno.familia_endereco == null) && (aluno.familia_numero == '' || aluno.familia_numero == null) && (aluno.familia_complemento == '' || aluno.familia_complemento == null) && (aluno.familia_bairro == '' || aluno.familia_bairro == null) && (aluno.familia_cep == '' || aluno.familia_cep == null) && (aluno.familia_cidade == '' || aluno.familia_cidade == null) && (aluno.familia_uf == '' || aluno.familia_uf == null)}"> checked</c:if>>Não</td>
+                        <input type="radio" name="endereco" value="Sim" onclick="habilitaCampos(1)" <c:if test="${(aluno.familia_endereco != '' && aluno.familia_endereco != null) || (aluno.familia_numero != '' && aluno.familia_numero != null) || (aluno.familia_complemento != '' && aluno.familia_complemento != null) || (aluno.familia_bairro != '' && aluno.familia_bairro != null) || (aluno.familia_cep != '' && aluno.familia_cep != null) || (aluno.familia_cidade != '' && aluno.familia_cidade != null) || (aluno.familia_uf != '' && aluno.familia_uf != null)}"> checked</c:if>>Sim
+                        <input type="radio" name="endereco" value="Não" onclick="desabilitaCampos(1)" <c:if test="${(aluno.familia_endereco == '' || aluno.familia_endereco == null) && (aluno.familia_numero == '' || aluno.familia_numero == null) && (aluno.familia_complemento == '' || aluno.familia_complemento == null) && (aluno.familia_bairro == '' || aluno.familia_bairro == null) && (aluno.familia_cep == '' || aluno.familia_cep == null) && (aluno.familia_cidade == '' || aluno.familia_cidade == null) && (aluno.familia_uf == '' || aluno.familia_uf == null)}"> checked</c:if>>Não</td>
                 </tr>
                 <tr>
                     <td>(Caso seja diferente, informe abaixo o endereço da sua família) </td>
@@ -75,6 +74,47 @@
         </form>
         <SCRIPT language="JavaScript">
             <!--
+            //------------------------------------------------------------------
+            window.onload = function(){verificaCampos()};
+            function verificaCampos(){
+                if(document.getElementById("formulario").endereco.value == "Sim"){
+                    habilitaCampos(1);
+                }
+            }
+            
+            function habilita(id){
+                if(document.getElementById(id).disabled==true){
+                    document.getElementById(id).disabled=false;
+                }
+            }
+            function desabilita(id){
+                if(document.getElementById(id).disabled==false){
+                    document.getElementById(id).disabled=true;
+                }
+            }
+            function habilitaCampos(num){
+                if(num == 1){
+                    habilita('FamiliaEndereco'); 
+                    habilita('FamiliaNumero'); 
+                    habilita('FamiliaComplemento'); 
+                    habilita('FamiliaBairro'); 
+                    habilita('FamiliaCep'); 
+                    habilita('FamiliaCidade'); 
+                    habilita('FamiliaUF'); 
+                }
+            }
+            function desabilitaCampos(num){
+                if(num == 1){
+                    desabilita('FamiliaEndereco'); 
+                    desabilita('FamiliaNumero'); 
+                    desabilita('FamiliaComplemento'); 
+                    desabilita('FamiliaBairro'); 
+                    desabilita('FamiliaCep'); 
+                    desabilita('FamiliaCidade'); 
+                    desabilita('FamiliaUF');
+                }
+            }
+            //------------------------------------------------------------------
             
             function campoNumerico(valor)
             {
@@ -91,7 +131,7 @@
                 }
                 return ehNumero;
             }
-
+            
             function validarFormulario(form) { 
                 var mensagem;
                 mensagem = "";

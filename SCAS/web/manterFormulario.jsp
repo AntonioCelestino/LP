@@ -10,7 +10,7 @@
     </head>
     <body>
         <h1>Formulário Sócioeconômico - ${operacao}</h1>
-        <form action="ManterFormularioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFormulario" onsubmit="return validarFormulario(this)">
+        <form action="ManterFormularioController?acao=confirmarOperacao&operacao=${operacao}" method="post" name="frmManterFormulario" id = "formulario" onsubmit="return validarFormulario(this)">
             <table>
                 <tr> 
                     <td><hr />Confirme o nome do aluno (nome | matrícula):
@@ -37,8 +37,8 @@
                 </tr>
                 <tr>
                     <td>Você ou alguém da sua família é ou já foi atendido em algum programa de Assistência Estudantil do IF Sudeste MG ou do antigo CTU?
-                        <br /><input type="radio" name="opt_qt01_Resposta" value="Sim" onclick="if(document.getElementById('qt01_Nome').disabled==true){document.getElementById('qt01_Nome').disabled=false}; if(document.getElementById('qt01_Parentesco').disabled==true){document.getElementById('qt01_Parentesco').disabled=false}; if(document.getElementById('qt01_Programa').disabled==true){document.getElementById('qt01_Programa').disabled=false}; if(document.getElementById('qt01_Ano').disabled==true){document.getElementById('qt01_Ano').disabled=false}" <c:if test="${formulario.qt01_Resposta == 'Sim'}"> checked</c:if>>Sim
-                        <input type="radio" name="opt_qt01_Resposta" value="Não" onclick="if(document.getElementById('qt01_Nome').disabled==false){document.getElementById('qt01_Nome').disabled=true}; if(document.getElementById('qt01_Parentesco').disabled==false){document.getElementById('qt01_Parentesco').disabled=true}; if(document.getElementById('qt01_Programa').disabled==false){document.getElementById('qt01_Programa').disabled=true}; if(document.getElementById('qt01_Ano').disabled==false){document.getElementById('qt01_Ano').disabled=true}" <c:if test="${formulario.qt01_Resposta == 'Não'}"> checked</c:if>>Não
+                        <br /><input type="radio" name="opt_qt01_Resposta" value="Sim" onclick="habilitaCampos(1)" <c:if test="${formulario.qt01_Resposta == 'Sim'}"> checked</c:if>>Sim
+                        <input type="radio" name="opt_qt01_Resposta" value="Não" onclick="desabilitaCampos(1)" <c:if test="${formulario.qt01_Resposta == 'Não'}"> checked</c:if>>Não
                         <br />Se Sim, informe:
                         <br />Quem&nbsp;<input type="text" id="qt01_Nome" name="txt_qt01_Nome" value="${formulario.qt01_Nome}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                         <br />Parentesco&nbsp;<input type="text" id="qt01_Parentesco" name="txt_qt01_Parentesco" value="${formulario.qt01_Parentesco}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
@@ -73,13 +73,13 @@
                 </tr>
                 <tr>
                     <td>Qual o principal meio de transporte utilizado para chegar ao IF Sudeste MG?
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="a pé / de bicicleta" onclick="if(document.getElementById('qt03_Tempo').disabled==true){document.getElementById('qt03_Tempo').disabled=false}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'a pé / de bicicleta'}"> checked</c:if>>A pé / de bicicleta - Tempo gasto no trajeto&nbsp;<input type="text" id="qt03_Tempo" name="txt_qt03_Tempo" value="${formulario.qt03_Tempo}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="carona" onclick="if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'carona'}"> checked</c:if>>Carona
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte coletivo com recursos próprios" onclick="if(document.getElementById('qt03_ValorGastoDiario').disabled==true){document.getElementById('qt03_ValorGastoDiario').disabled=false}; if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'transporte coletivo com recursos próprios'}"> checked</c:if>>Transporte coletivo com recursos próprios - Gasto diário (R$):&nbsp;<input type="text" id="qt03_ValorGastoDiario" name="txt_qt03_ValorGastoDiario" value="${formulario.qt03_ValorGastoDiario}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte locado" onclick="if(document.getElementById('qt03_ValorGastoMensal').disabled==true){document.getElementById('qt03_ValorGastoMensal').disabled=false}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'transporte locado'}"> checked</c:if>>Transporte locado - Gasto mensal (R$):&nbsp;<input type="text" id="qt03_ValorGastoMensal" name="txt_qt03_ValorGastoMensal" value="${formulario.qt03_ValorGastoMensal}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte gratuito de Prefeitura / Escola" onclick="if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'transporte gratuito de Prefeitura / Escola'}"> checked</c:if>>Transporte gratuito de Prefeitura / Escola
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte próprio" onclick="if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Outro').disabled==false){document.getElementById('qt03_Outro').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'transporte próprio'}"> checked</c:if>>Transporte próprio
-                        <br /><input type="radio" name="opt_qt03_Transporte" value="Outro" onclick="if(document.getElementById('qt03_Outro').disabled==true){document.getElementById('qt03_Outro').disabled=false}; if(document.getElementById('qt03_ValorGastoDiario').disabled==false){document.getElementById('qt03_ValorGastoDiario').disabled=true}; if(document.getElementById('qt03_ValorGastoMensal').disabled==false){document.getElementById('qt03_ValorGastoMensal').disabled=true}; if(document.getElementById('qt03_Tempo').disabled==false){document.getElementById('qt03_Tempo').disabled=true}" <c:if test="${formulario.qt03_Transporte == 'Outro'}"> checked</c:if>>Outro - Especifique&nbsp;<input type="text" id="qt03_Outro" name="txt_qt03_Outro" value="${formulario.qt03_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="a pé / de bicicleta" onclick="habilitaCampos(31)" <c:if test="${formulario.qt03_Transporte == 'a pé / de bicicleta'}"> checked</c:if>>A pé / de bicicleta - Tempo gasto no trajeto&nbsp;<input type="text" id="qt03_Tempo" name="txt_qt03_Tempo" value="${formulario.qt03_Tempo}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="carona" onclick="desabilitaCampos(3)" <c:if test="${formulario.qt03_Transporte == 'carona'}"> checked</c:if>>Carona
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte coletivo com recursos próprios" onclick="habilitaCampos(33)" <c:if test="${formulario.qt03_Transporte == 'transporte coletivo com recursos próprios'}"> checked</c:if>>Transporte coletivo com recursos próprios - Gasto diário (R$):&nbsp;<input type="text" id="qt03_ValorGastoDiario" name="txt_qt03_ValorGastoDiario" value="${formulario.qt03_ValorGastoDiario}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte locado" onclick="habilitaCampos(34)" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>Transporte locado - Gasto mensal (R$):&nbsp;<input type="text" id="qt03_ValorGastoMensal" name="txt_qt03_ValorGastoMensal" value="${formulario.qt03_ValorGastoMensal}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte gratuito de Prefeitura / Escola" onclick="desabilitaCampos(3)" <c:if test="${formulario.qt03_Transporte == 'transporte gratuito de Prefeitura / Escola'}"> checked</c:if>>Transporte gratuito de Prefeitura / Escola
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="transporte próprio" onclick="desabilitaCampos(3)" <c:if test="${formulario.qt03_Transporte == 'transporte próprio'}"> checked</c:if>>Transporte próprio
+                        <br /><input type="radio" name="opt_qt03_Transporte" value="Outro" onclick="habilitaCampos(37)" <c:if test="${formulario.qt03_Transporte == 'Outro'}"> checked</c:if>>Outro - Especifique&nbsp;<input type="text" id="qt03_Outro" name="txt_qt03_Outro" value="${formulario.qt03_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -117,11 +117,11 @@
                 </tr>
                 <tr>
                     <td>Você está inserido em alguma atividade acadêmica remunerada?
-                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, estágio" onclick="if(document.getElementById('qt06_ValorBolsaEstagio').disabled==true){document.getElementById('qt06_ValorBolsaEstagio').disabled=false}; if(document.getElementById('qt06_ProjetoIniciacao').disabled==false){document.getElementById('qt06_ProjetoIniciacao').disabled=true}; if(document.getElementById('qt06_ValorBolsaIniciacao').disabled==false){document.getElementById('qt06_ValorBolsaIniciacao').disabled=true}; if(document.getElementById('qt06_ProjetoTreinamento').disabled==false){document.getElementById('qt06_ProjetoTreinamento').disabled=true}; if(document.getElementById('qt06_ValorBolsaTreinamento').disabled==false){document.getElementById('qt06_ValorBolsaTreinamento').disabled=true}; if(document.getElementById('qt06_Outro').disabled==false){document.getElementById('qt06_Outro').disabled=true}; if(document.getElementById('qt06_ValorBolsaOutro').disabled==false){document.getElementById('qt06_ValorBolsaOutro').disabled=true}" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, estágio'}"> checked</c:if>>Sim, estágio - Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaEstagio" name="txt_qt06_ValorBolsaEstagio" value="${formulario.qt06_ValorBolsaEstagio}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, iniciação científica" onclick="if(document.getElementById('qt06_ValorBolsaEstagio').disabled==false){document.getElementById('qt06_ValorBolsaEstagio').disabled=true}; if(document.getElementById('qt06_ProjetoIniciacao').disabled==true){document.getElementById('qt06_ProjetoIniciacao').disabled=false}; if(document.getElementById('qt06_ValorBolsaIniciacao').disabled==true){document.getElementById('qt06_ValorBolsaIniciacao').disabled=false}; if(document.getElementById('qt06_ProjetoTreinamento').disabled==false){document.getElementById('qt06_ProjetoTreinamento').disabled=true}; if(document.getElementById('qt06_ValorBolsaTreinamento').disabled==false){document.getElementById('qt06_ValorBolsaTreinamento').disabled=true}; if(document.getElementById('qt06_Outro').disabled==false){document.getElementById('qt06_Outro').disabled=true}; if(document.getElementById('qt06_ValorBolsaOutro').disabled==false){document.getElementById('qt06_ValorBolsaOutro').disabled=true}" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, iniciação científica'}"> checked</c:if>>Sim, iniciação científica - Qual:&nbsp;<input type="text" id="qt06_ProjetoIniciacao" name="txt_qt06_ProjetoIniciacao" value="${formulario.qt06_ProjetoIniciacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaIniciacao" name="txt_qt06_ValorBolsaIniciacao" value="${formulario.qt06_ValorBolsaIniciacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, treinamento profissional" onclick="if(document.getElementById('qt06_ValorBolsaEstagio').disabled==false){document.getElementById('qt06_ValorBolsaEstagio').disabled=true}; if(document.getElementById('qt06_ProjetoIniciacao').disabled==false){document.getElementById('qt06_ProjetoIniciacao').disabled=true}; if(document.getElementById('qt06_ValorBolsaIniciacao').disabled==false){document.getElementById('qt06_ValorBolsaIniciacao').disabled=true}; if(document.getElementById('qt06_ProjetoTreinamento').disabled==true){document.getElementById('qt06_ProjetoTreinamento').disabled=false}; if(document.getElementById('qt06_ValorBolsaTreinamento').disabled==true){document.getElementById('qt06_ValorBolsaTreinamento').disabled=false}; if(document.getElementById('qt06_Outro').disabled==false){document.getElementById('qt06_Outro').disabled=true}; if(document.getElementById('qt06_ValorBolsaOutro').disabled==false){document.getElementById('qt06_ValorBolsaOutro').disabled=true}" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, treinamento profissional'}"> checked</c:if>>Sim, treinamento profissional - Qual:&nbsp;<input type="text" id="qt06_ProjetoTreinamento" name="txt_qt06_ProjetoTreinamento" value="${formulario.qt06_ProjetoTreinamento}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaTreinamento" name="txt_qt06_ValorBolsaTreinamento" value="${formulario.qt06_ValorBolsaTreinamento}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, outra" onclick="if(document.getElementById('qt06_ValorBolsaEstagio').disabled==false){document.getElementById('qt06_ValorBolsaEstagio').disabled=true}; if(document.getElementById('qt06_ProjetoIniciacao').disabled==false){document.getElementById('qt06_ProjetoIniciacao').disabled=true}; if(document.getElementById('qt06_ValorBolsaIniciacao').disabled==false){document.getElementById('qt06_ValorBolsaIniciacao').disabled=true}; if(document.getElementById('qt06_ProjetoTreinamento').disabled==false){document.getElementById('qt06_ProjetoTreinamento').disabled=true}; if(document.getElementById('qt06_ValorBolsaTreinamento').disabled==false){document.getElementById('qt06_ValorBolsaTreinamento').disabled=true}; if(document.getElementById('qt06_Outro').disabled==true){document.getElementById('qt06_Outro').disabled=false}; if(document.getElementById('qt06_ValorBolsaOutro').disabled==true){document.getElementById('qt06_ValorBolsaOutro').disabled=false}" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, outra'}"> checked</c:if>>Sim, outra - Qual:&nbsp;<input type="text" id="qt06_Outro" name="txt_qt06_Outro" value="${formulario.qt06_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaOutro" name="txt_qt06_ValorBolsaOutro" value="${formulario.qt06_ValorBolsaOutro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Não" onclick="if(document.getElementById('qt06_ValorBolsaEstagio').disabled==false){document.getElementById('qt06_ValorBolsaEstagio').disabled=true}; if(document.getElementById('qt06_ProjetoIniciacao').disabled==false){document.getElementById('qt06_ProjetoIniciacao').disabled=true}; if(document.getElementById('qt06_ValorBolsaIniciacao').disabled==false){document.getElementById('qt06_ValorBolsaIniciacao').disabled=true}; if(document.getElementById('qt06_ProjetoTreinamento').disabled==false){document.getElementById('qt06_ProjetoTreinamento').disabled=true}; if(document.getElementById('qt06_ValorBolsaTreinamento').disabled==false){document.getElementById('qt06_ValorBolsaTreinamento').disabled=true}; if(document.getElementById('qt06_Outro').disabled==false){document.getElementById('qt06_Outro').disabled=true}; if(document.getElementById('qt06_ValorBolsaOutro').disabled==false){document.getElementById('qt06_ValorBolsaOutro').disabled=true}" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Não'}"> checked</c:if>>Não
+                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, estágio" onclick="habilitaCampos(61)" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, estágio'}"> checked</c:if>>Sim, estágio - Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaEstagio" name="txt_qt06_ValorBolsaEstagio" value="${formulario.qt06_ValorBolsaEstagio}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, iniciação científica" onclick="habilitaCampos(62)" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, iniciação científica'}"> checked</c:if>>Sim, iniciação científica - Qual:&nbsp;<input type="text" id="qt06_ProjetoIniciacao" name="txt_qt06_ProjetoIniciacao" value="${formulario.qt06_ProjetoIniciacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaIniciacao" name="txt_qt06_ValorBolsaIniciacao" value="${formulario.qt06_ValorBolsaIniciacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, treinamento profissional" onclick="habilitaCampos(63)" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, treinamento profissional'}"> checked</c:if>>Sim, treinamento profissional - Qual:&nbsp;<input type="text" id="qt06_ProjetoTreinamento" name="txt_qt06_ProjetoTreinamento" value="${formulario.qt06_ProjetoTreinamento}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaTreinamento" name="txt_qt06_ValorBolsaTreinamento" value="${formulario.qt06_ValorBolsaTreinamento}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Sim, outra" onclick="habilitaCampos(64)" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Sim, outra'}"> checked</c:if>>Sim, outra - Qual:&nbsp;<input type="text" id="qt06_Outro" name="txt_qt06_Outro" value="${formulario.qt06_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>&nbsp;e&nbsp;Valor mensal (R$):&nbsp;<input type="text" id="qt06_ValorBolsaOutro" name="txt_qt06_ValorBolsaOutro" value="${formulario.qt06_ValorBolsaOutro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt06_AtividadeRemunerada" value="Não" onclick="desabilitaCampos(6)" <c:if test="${formulario.qt06_AtividadeRemunerada == 'Não'}"> checked</c:if>>Não
                     </td>
                 </tr>
                 <tr> 
@@ -129,8 +129,8 @@
                 </tr>
                 <tr>
                     <td>Você trabalha atualmente em alguma outra atividade remunerada?<br />
-                        <input type="radio" name="opt_qt07_TrabalhoRemunerado" value="Sim" onclick="if(document.getElementById('qt07_HorasSemanais').disabled==true){document.getElementById('qt07_HorasSemanais').disabled=false}; if(document.getElementById('qt07_Salario').disabled==true){document.getElementById('qt07_Salario').disabled=false}" <c:if test="${formulario.qt07_TrabalhoRemunerado == 'Sim'}"> checked</c:if>>Sim
-                        <input type="radio" name="opt_qt07_TrabalhoRemunerado" value="Não" onclick="if(document.getElementById('qt07_HorasSemanais').disabled==false){document.getElementById('qt07_HorasSemanais').disabled=true}; if(document.getElementById('qt07_Salario').disabled==false){document.getElementById('qt07_Salario').disabled=true}" <c:if test="${formulario.qt07_TrabalhoRemunerado == 'Não'}"> checked</c:if>>Não
+                        <input type="radio" name="opt_qt07_TrabalhoRemunerado" value="Sim" onclick="habilitaCampos(7)" <c:if test="${formulario.qt07_TrabalhoRemunerado == 'Sim'}"> checked</c:if>>Sim
+                        <input type="radio" name="opt_qt07_TrabalhoRemunerado" value="Não" onclick="desabilitaCampos(7)" <c:if test="${formulario.qt07_TrabalhoRemunerado == 'Não'}"> checked</c:if>>Não
                         <br />Se Sim, informe:
                         <br />Qual a carga horária mensal?&nbsp;<input type="text" id="qt07_HorasSemanais" name="txt_qt07_HorasSemanais" value="${formulario.qt07_HorasSemanais}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                         <br />Qual o salário mensal? - Valor R$:&nbsp;<input type="text" id="qt07_Salario" name="txt_qt07_Salario" value="${formulario.qt07_Salario}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
@@ -141,11 +141,11 @@
                 </tr>
                 <tr>
                     <td>Qual a sua condição de manutenção?
-                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Sou responsável pelo meu próprio sustento" onclick="if(document.getElementById('qt08_Outra').disabled==false){document.getElementById('qt08_Outra').disabled=true}" <c:if test="${formulario.qt08_Manutencao == 'Sou responsável pelo meu próprio sustento'}"> checked</c:if>>Sou responsável pelo meu próprio sustento
-                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Sou sustentado pelos meus pais" onclick="if(document.getElementById('qt08_Outra').disabled==false){document.getElementById('qt08_Outra').disabled=true}" <c:if test="${formulario.qt08_Manutencao == 'Sou sustentado pelos meus pais'}"> checked</c:if>>Sou sustentado pelos meus pais
-                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Recebo ajuda de parentes" onclick="if(document.getElementById('qt08_Outra').disabled==false){document.getElementById('qt08_Outra').disabled=true}" <c:if test="${formulario.qt08_Manutencao == 'Recebo ajuda de parentes'}"> checked</c:if>>Recebo ajuda de parentes
-                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Tenho bolsa de estudo" onclick="if(document.getElementById('qt08_Outra').disabled==false){document.getElementById('qt08_Outra').disabled=true}" <c:if test="${formulario.qt08_Manutencao == 'Tenho bolsa de estudo'}"> checked</c:if>>Tenho bolsa de estudo
-                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Outra" onclick="if(document.getElementById('qt08_Outra').disabled==true){document.getElementById('qt08_Outra').disabled=false}" <c:if test="${formulario.qt08_Manutencao == 'Outra'}"> checked</c:if>>Outra - informe qual:&nbsp;<input type="text" id="qt08_Outra" name="txt_qt08_Outra" value="${formulario.qt08_Outra}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Sou responsável pelo meu próprio sustento" onclick="desabilitaCampos(8)" <c:if test="${formulario.qt08_Manutencao == 'Sou responsável pelo meu próprio sustento'}"> checked</c:if>>Sou responsável pelo meu próprio sustento
+                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Sou sustentado pelos meus pais" onclick="desabilitaCampos(8)" <c:if test="${formulario.qt08_Manutencao == 'Sou sustentado pelos meus pais'}"> checked</c:if>>Sou sustentado pelos meus pais
+                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Recebo ajuda de parentes" onclick="desabilitaCampos(8)" <c:if test="${formulario.qt08_Manutencao == 'Recebo ajuda de parentes'}"> checked</c:if>>Recebo ajuda de parentes
+                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Tenho bolsa de estudo" onclick="desabilitaCampos(8)" <c:if test="${formulario.qt08_Manutencao == 'Tenho bolsa de estudo'}"> checked</c:if>>Tenho bolsa de estudo
+                        <br /><input type="radio" name="opt_qt08_Manutencao" value="Outra" onclick="habilitaCampos(8)" <c:if test="${formulario.qt08_Manutencao == 'Outra'}"> checked</c:if>>Outra - informe qual:&nbsp;<input type="text" id="qt08_Outra" name="txt_qt08_Outra" value="${formulario.qt08_Outra}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -153,12 +153,12 @@
                 </tr>
                 <tr>
                     <td>Você mora:
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Sozinho" onclick="if(document.getElementById('qt09_Outra').disabled==false){document.getElementById('qt09_Outra').disabled=true}" <c:if test="${formulario.qt09_Moradia == 'Sozinho'}"> checked</c:if>>Sozinho
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Com pais" onclick="if(document.getElementById('qt09_Outra').disabled==false){document.getElementById('qt09_Outra').disabled=true}" <c:if test="${formulario.qt09_Moradia == 'Com pais'}"> checked</c:if>>Com pais
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Com cônjuge/companheiro(a)" onclick="if(document.getElementById('qt09_Outra').disabled==false){document.getElementById('qt09_Outra').disabled=true}" <c:if test="${formulario.qt09_Moradia == 'Com cônjuge/companheiro(a)'}"> checked</c:if>>Com cônjuge/companheiro(a)
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Em casa de familiares ou amigos da família" onclick="if(document.getElementById('qt09_Outra').disabled==false){document.getElementById('qt09_Outra').disabled=true}" <c:if test="${formulario.qt09_Moradia == 'Em casa de familiares ou amigos da família'}"> checked</c:if>>Em casa de familiares ou amigos da família
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Em repúnlica/quarto/pensão/pensionato" onclick="if(document.getElementById('qt09_Outra').disabled==false){document.getElementById('qt09_Outra').disabled=true}" <c:if test="${formulario.qt09_Moradia == 'Em repúnlica/quarto/pensão/pensionato'}"> checked</c:if>>Em repúnlica/quarto/pensão/pensionato
-                        <br /><input type="radio" name="opt_qt09_Moradia" value="Outra situação" onclick="if(document.getElementById('qt09_Outra').disabled==true){document.getElementById('qt09_Outra').disabled=false}" <c:if test="${formulario.qt09_Moradia == 'Outra situação'}"> checked</c:if>>Outra situação - informe qual:&nbsp;<input type="text" id="qt09_Outra" name="txt_qt09_Outra" value="${formulario.qt09_Outra}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Sozinho" onclick="desabilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Sozinho'}"> checked</c:if>>Sozinho
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Com pais" onclick="desabilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Com pais'}"> checked</c:if>>Com pais
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Com cônjuge/companheiro(a)" onclick="desabilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Com cônjuge/companheiro(a)'}"> checked</c:if>>Com cônjuge/companheiro(a)
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Em casa de familiares ou amigos da família" onclick="desabilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Em casa de familiares ou amigos da família'}"> checked</c:if>>Em casa de familiares ou amigos da família
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Em repúnlica/quarto/pensão/pensionato" onclick="desabilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Em repúnlica/quarto/pensão/pensionato'}"> checked</c:if>>Em repúnlica/quarto/pensão/pensionato
+                        <br /><input type="radio" name="opt_qt09_Moradia" value="Outra situação" onclick="habilitaCampos(9)" <c:if test="${formulario.qt09_Moradia == 'Outra situação'}"> checked</c:if>>Outra situação - informe qual:&nbsp;<input type="text" id="qt09_Outra" name="txt_qt09_Outra" value="${formulario.qt09_Outra}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -166,11 +166,11 @@
                 </tr>
                 <tr>
                     <td>Quem é(são) o(s) responsável(is) pela manutenção financeira do grupo familiar?
-                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Pai e mãe" onclick="if(document.getElementById('qt10_Outros').disabled==false){document.getElementById('qt10_Outros').disabled=true}" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Pai e mãe'}"> checked</c:if>>Pai e mãe
-                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Um dos pais" onclick="if(document.getElementById('qt10_Outros').disabled==false){document.getElementById('qt10_Outros').disabled=true}" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Um dos pais'}"> checked</c:if>>Um dos pais
-                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Outros membros do grupo familiar" onclick="if(document.getElementById('qt10_Outros').disabled==false){document.getElementById('qt10_Outros').disabled=true}" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Outros membros do grupo familiar'}"> checked</c:if>>Outros membros do grupo familiar
-                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Próprio estudante" onclick="if(document.getElementById('qt10_Outros').disabled==false){document.getElementById('qt10_Outros').disabled=true}" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Próprio estudante'}"> checked</c:if>>Próprio estudante
-                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Outros" onclick="if(document.getElementById('qt10_Outros').disabled==true){document.getElementById('qt10_Outros').disabled=false}" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Outros'}"> checked</c:if>>Outros - informe quem:&nbsp;<input type="text" id="qt10_Outros" name="txt_qt10_Outros" value="${formulario.qt10_Outros}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Pai e mãe" onclick="desabilitaCampos(10)" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Pai e mãe'}"> checked</c:if>>Pai e mãe
+                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Um dos pais" onclick="desabilitaCampos(10)" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Um dos pais'}"> checked</c:if>>Um dos pais
+                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Outros membros do grupo familiar" onclick="desabilitaCampos(10)" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Outros membros do grupo familiar'}"> checked</c:if>>Outros membros do grupo familiar
+                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Próprio estudante" onclick="desabilitaCampos(10)" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Próprio estudante'}"> checked</c:if>>Próprio estudante
+                        <br /><input type="radio" name="opt_qt10_ResponsavelFinanceiro" value="Outros" onclick="habilitaCampos(10)" <c:if test="${formulario.qt10_ResponsavelFinanceiro == 'Outros'}"> checked</c:if>>Outros - informe quem:&nbsp;<input type="text" id="qt10_Outros" name="txt_qt10_Outros" value="${formulario.qt10_Outros}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -201,12 +201,12 @@
                 </tr>
                 <tr>
                     <td>Sua família reside em:
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Vila ou aglomerado" onclick="if(document.getElementById('qt12_Outro').disabled==false){document.getElementById('qt12_Outro').disabled=true}" <c:if test="${formulario.qt12_Residencia == 'Vila ou aglomerado'}"> checked</c:if>>Vila ou aglomerado
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão popular" onclick="if(document.getElementById('qt12_Outro').disabled==false){document.getElementById('qt12_Outro').disabled=true}" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão popular'}"> checked</c:if>>Bairro padrão popular
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão médio" onclick="if(document.getElementById('qt12_Outro').disabled==false){document.getElementById('qt12_Outro').disabled=true}" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão médio'}"> checked</c:if>>Bairro padrão médio
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão alto e luxo" onclick="if(document.getElementById('qt12_Outro').disabled==false){document.getElementById('qt12_Outro').disabled=true}" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão alto e luxo'}"> checked</c:if>>Bairro padrão alto e luxo
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Fora do perímetro urbano" onclick="if(document.getElementById('qt12_Outro').disabled==false){document.getElementById('qt12_Outro').disabled=true}" <c:if test="${formulario.qt12_Residencia == 'Fora do perímetro urbano'}"> checked</c:if>>Fora do perímetro urbano
-                        <br /><input type="radio" name="opt_qt12_Residencia" value="Outro" onclick="if(document.getElementById('qt12_Outro').disabled==true){document.getElementById('qt12_Outro').disabled=false}" <c:if test="${formulario.qt12_Residencia == 'Outro'}"> checked</c:if>>Outro - especifique:&nbsp;<input type="text" id="qt12_Outro" name="txt_qt12_Outro" value="${formulario.qt12_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Vila ou aglomerado" onclick="desabilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Vila ou aglomerado'}"> checked</c:if>>Vila ou aglomerado
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão popular" onclick="desabilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão popular'}"> checked</c:if>>Bairro padrão popular
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão médio" onclick="desabilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão médio'}"> checked</c:if>>Bairro padrão médio
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Bairro padrão alto e luxo" onclick="desabilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Bairro padrão alto e luxo'}"> checked</c:if>>Bairro padrão alto e luxo
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Fora do perímetro urbano" onclick="desabilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Fora do perímetro urbano'}"> checked</c:if>>Fora do perímetro urbano
+                        <br /><input type="radio" name="opt_qt12_Residencia" value="Outro" onclick="habilitaCampos(12)" <c:if test="${formulario.qt12_Residencia == 'Outro'}"> checked</c:if>>Outro - especifique:&nbsp;<input type="text" id="qt12_Outro" name="txt_qt12_Outro" value="${formulario.qt12_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -214,13 +214,13 @@
                 </tr>
                 <tr>
                     <td>Sua família reside em imóvel:<br />
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Alugado" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==true){document.getElementById('qt13_ValorAluguel').disabled=false}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Alugado'}"> checked</c:if>>Alugado - Valor do aluguel (R$):&nbsp;<input type="text" id="qt13_ValorAluguel" name="txt_qt13_ValorAluguel" value="${formulario.qt13_ValorAluguel}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - já quitado" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Próprio - já quitado'}"> checked</c:if>>Próprio - já quitado
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - por herança" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Próprio - por herança'}"> checked</c:if>>Próprio - por herança
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - em pagamento" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==true){document.getElementById('qt13_ValorPrestacao').disabled=false}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Próprio - em pagamento'}"> checked</c:if>>Próprio - em pagamento - Valor da prestação (R$):&nbsp;<input type="text" id="qt13_ValorPrestacao" name="txt_qt13_ValorPrestacao" value="${formulario.qt13_ValorPrestacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Emprestado ou cedido" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==true){document.getElementById('qt13_Nome').disabled=false}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Emprestado ou cedido'}"> checked</c:if>>Emprestado ou cedido - Por quem?&nbsp;<input type="text" id="qt13_Nome" name="txt_qt13_Nome" value="${formulario.qt13_Nome}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Construído em lote de parente" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==false){document.getElementById('qt13_Outro').disabled=true}" <c:if test="${formulario.qt13_Imovel == 'Construído em lote de parente'}"> checked</c:if>>Construído em lote de parente
-                        <br /><input type="radio" name="opt_qt13_Imovel" value="Outra situação" onclick="if(document.getElementById('qt13_ValorAluguel').disabled==false){document.getElementById('qt13_ValorAluguel').disabled=true}; if(document.getElementById('qt13_ValorPrestacao').disabled==false){document.getElementById('qt13_ValorPrestacao').disabled=true}; if(document.getElementById('qt13_Nome').disabled==false){document.getElementById('qt13_Nome').disabled=true}; if(document.getElementById('qt13_Outro').disabled==true){document.getElementById('qt13_Outro').disabled=false}" <c:if test="${formulario.qt13_Imovel == 'Outra situação'}"> checked</c:if>>Outra situação - Qual?&nbsp;<input type="text" id="qt13_Outro" name="txt_qt13_Outro" value="${formulario.qt13_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Alugado" onclick="habilitaCampos(131)" <c:if test="${formulario.qt13_Imovel == 'Alugado'}"> checked</c:if>>Alugado - Valor do aluguel (R$):&nbsp;<input type="text" id="qt13_ValorAluguel" name="txt_qt13_ValorAluguel" value="${formulario.qt13_ValorAluguel}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - já quitado" onclick="desabilitaCampos(13)" <c:if test="${formulario.qt13_Imovel == 'Próprio - já quitado'}"> checked</c:if>>Próprio - já quitado
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - por herança" onclick="desabilitaCampos(13)" <c:if test="${formulario.qt13_Imovel == 'Próprio - por herança'}"> checked</c:if>>Próprio - por herança
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Próprio - em pagamento" onclick="habilitaCampos(132)" <c:if test="${formulario.qt13_Imovel == 'Próprio - em pagamento'}"> checked</c:if>>Próprio - em pagamento - Valor da prestação (R$):&nbsp;<input type="text" id="qt13_ValorPrestacao" name="txt_qt13_ValorPrestacao" value="${formulario.qt13_ValorPrestacao}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Emprestado ou cedido" onclick="habilitaCampos(133)" <c:if test="${formulario.qt13_Imovel == 'Emprestado ou cedido'}"> checked</c:if>>Emprestado ou cedido - Por quem?&nbsp;<input type="text" id="qt13_Nome" name="txt_qt13_Nome" value="${formulario.qt13_Nome}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Construído em lote de parente" onclick="desabilitaCampos(13)" <c:if test="${formulario.qt13_Imovel == 'Construído em lote de parente'}"> checked</c:if>>Construído em lote de parente
+                        <br /><input type="radio" name="opt_qt13_Imovel" value="Outra situação" onclick="habilitaCampos(134)" <c:if test="${formulario.qt13_Imovel == 'Outra situação'}"> checked</c:if>>Outra situação - Qual?&nbsp;<input type="text" id="qt13_Outro" name="txt_qt13_Outro" value="${formulario.qt13_Outro}" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
                     </td>
                 </tr>
                 <tr> 
@@ -238,10 +238,10 @@
                 </tr>
                 <tr>
                     <td>A família possui outros imóveis além do que habita? (lotes, sítios, fazendas, casa na praia, aptos, salas, barracões ou outros)<br />
-                        <input type="radio" name="opt_qt15_OutrosImoveis" value="Sim" onclick="if(document.getElementById('qt15_DescricaoImoveis').disabled==true){document.getElementById('qt15_DescricaoImoveis').disabled=false}" <c:if test="${formulario.qt15_OutrosImoveis == 'Sim'}"> checked</c:if>>Sim
-                        <input type="radio" name="opt_qt15_OutrosImoveis" value="Não" onclick="if(document.getElementById('qt15_DescricaoImoveis').disabled==false){document.getElementById('qt15_DescricaoImoveis').disabled=true}" <c:if test="${formulario.qt15_OutrosImoveis == 'Não'}"> checked</c:if>>Não
+                        <input type="radio" name="opt_qt15_OutrosImoveis" value="Sim" onclick="habilitaCampos(15)" <c:if test="${formulario.qt15_OutrosImoveis == 'Sim'}"> checked</c:if>>Sim
+                        <input type="radio" name="opt_qt15_OutrosImoveis" value="Não" onclick="desabilitaCampos(15)" <c:if test="${formulario.qt15_OutrosImoveis == 'Não'}"> checked</c:if>>Não
                         <br /> Se sim - especifique tipo e local de cada imóvel
-                        <br /><textarea rows="2" cols="100" id="qt15_DescricaoImoveis" name="txt_qt15_DescricaoImoveis" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>${formulario.qt15_DescricaoImoveis}</textarea>
+                        <br /><textarea rows="2" cols="100" id="qt15_DescricaoImoveis" name="txt_qt15_DescricaoImoveis" disabled="disabled" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>${formulario.qt15_DescricaoImoveis}</textarea>
                     </td>
                 </tr>
                 <tr> 
@@ -349,6 +349,206 @@
         </form>
         <SCRIPT language="JavaScript">
             <!--
+            window.onload = function(){verificaCampos()};
+            function verificaCampos(){
+                if(document.getElementById("formulario").opt_qt01_Resposta.value == "Sim"){
+                    habilitaCampos(1);
+                }
+                if(document.getElementById("formulario").opt_qt03_Transporte.value == "a pé / de bicicleta"){
+                    habilitaCampos(31);
+                }
+                if(document.getElementById("formulario").opt_qt03_Transporte.value == "transporte coletivo com recursos próprios"){
+                    habilitaCampos(33);
+                }
+                if(document.getElementById("formulario").opt_qt03_Transporte.value == "transporte locado"){
+                    habilitaCampos(34);
+                }
+                if(document.getElementById("formulario").opt_qt03_Transporte.value == "outro"){
+                    habilitaCampos(37);
+                }
+                if(document.getElementById("formulario").opt_qt06_AtividadeRemunerada.value == "Sim, estágio"){
+                    habilitaCampos(61);
+                }
+                if(document.getElementById("formulario").opt_qt06_AtividadeRemunerada.value == "Sim, iniciação científica"){
+                    habilitaCampos(62);
+                }
+                if(document.getElementById("formulario").opt_qt06_AtividadeRemunerada.value == "Sim, treinamento profissional"){
+                    habilitaCampos(63);
+                }
+                if(document.getElementById("formulario").opt_qt06_AtividadeRemunerada.value == "Sim, outra"){
+                    habilitaCampos(64);
+                }
+                if(document.getElementById("formulario").opt_qt06_AtividadeRemunerada.value == "Não"){
+                    habilitaCampos(6);
+                }
+                if(document.getElementById("formulario").opt_qt07_TrabalhoRemunerado.value == "Sim"){
+                    habilitaCampos(7);
+                }
+                if(document.getElementById("formulario").opt_qt08_Manutencao.value == "Outra"){
+                    habilitaCampos(8);
+                }
+                if(document.getElementById("formulario").opt_qt09_Moradia.value == "Outra situação"){
+                    habilitaCampos(9);
+                }
+                if(document.getElementById("formulario").opt_qt10_ResponsavelFinanceiro.value == "Outros"){
+                    habilitaCampos(10);
+                }
+                if(document.getElementById("formulario").opt_qt12_Residencia.value == "Outro"){
+                    habilitaCampos(12);
+                }
+                if(document.getElementById("formulario").opt_qt13_Imovel.value == "Alugado"){
+                    habilitaCampos(131);
+                }
+                if(document.getElementById("formulario").opt_qt13_Imovel.value == "Próprio - em pagamento"){
+                    habilitaCampos(132);
+                }
+                if(document.getElementById("formulario").opt_qt13_Imovel.value == "Emprestado ou cedido"){
+                    habilitaCampos(133);
+                }
+                if(document.getElementById("formulario").opt_qt13_Imovel.value == "Outra situação"){
+                    habilitaCampos(134);
+                }
+                if(document.getElementById("formulario").opt_qt15_OutrosImoveis.value == "Sim"){
+                    habilitaCampos(15);
+                }
+            }
+            
+            function habilita(id){
+                if(document.getElementById(id).disabled==true){
+                    document.getElementById(id).disabled=false;
+                }
+            }
+            function desabilita(id){
+                if(document.getElementById(id).disabled==false){
+                    document.getElementById(id).disabled=true;
+                }
+            }
+            function habilitaCampos(num){
+                if(num == 1){
+                    habilita("qt01_Nome"); 
+                    habilita('qt01_Parentesco'); 
+                    habilita('qt01_Programa'); 
+                    habilita('qt01_Ano');  
+                }
+                if(num == 31){
+                    desabilitaCampos(3);
+                    habilita('qt03_Tempo'); 
+                }
+                if(num == 33){
+                    desabilitaCampos(3);
+                    habilita('qt03_ValorGastoDiario'); 
+                }
+                if(num == 34){
+                    desabilitaCampos(3);
+                    habilita('qt03_ValorGastoMensal'); 
+                }
+                if(num == 37){
+                    desabilitaCampos(3);
+                    habilita('qt03_Outro'); 
+                }
+                if(num == 61){
+                    desabilitaCampos(6);
+                    habilita('qt06_ValorBolsaEstagio'); 
+                }
+                if(num == 62){
+                    desabilitaCampos(6);
+                    habilita('qt06_ProjetoIniciacao'); 
+                    habilita('qt06_ValorBolsaIniciacao');  
+                }
+                if(num == 63){
+                    desabilitaCampos(6);
+                    habilita('qt06_ProjetoTreinamento');
+                    habilita('qt06_ValorBolsaTreinamento'); 
+                }
+                if(num == 64){
+                    desabilitaCampos(6);
+                    habilita('qt06_Outro'); 
+                    habilita('qt06_ValorBolsaOutro');  
+                }
+                if(num == 7){
+                    habilita('qt07_HorasSemanais'); 
+                    habilita('qt07_Salario');
+                }
+                if(num == 8){
+                    habilita('qt08_Outra'); 
+                }
+                if(num == 9){
+                    habilita('qt09_Outra'); 
+                }
+                if(num == 10){
+                    habilita('qt10_Outros'); 
+                }
+                if(num == 12){
+                    habilita('qt12_Outro'); 
+                }
+                if(num == 131){
+                    desabilitaCampos(13); 
+                    habilita('qt13_ValorAluguel'); 
+                }
+                if(num == 132){
+                    desabilitaCampos(13);
+                    habilita('qt13_ValorPrestacao'); 
+                }
+                if(num == 133){
+                    desabilitaCampos(13);
+                    habilita('qt13_Nome'); 
+                }
+                if(num == 134){
+                    desabilitaCampos(13); 
+                    habilita('qt13_Outro'); 
+                }
+                if(num == 15){
+                    habilita('qt15_DescricaoImoveis'); 
+                }
+            }
+            function desabilitaCampos(num){
+                if(num == 1){
+                    desabilita('qt01_Nome'); 
+                    desabilita('qt01_Parentesco'); 
+                    desabilita('qt01_Programa'); 
+                    desabilita('qt01_Ano');
+                }
+                if(num == 3){
+                    desabilita('qt03_Tempo'); 
+                    desabilita('qt03_ValorGastoDiario'); 
+                    desabilita('qt03_ValorGastoMensal'); 
+                    desabilita('qt03_Outro'); 
+                }
+                if(num == 6){
+                    desabilita('qt06_ValorBolsaEstagio'); 
+                    desabilita('qt06_ProjetoIniciacao'); 
+                    desabilita('qt06_ValorBolsaIniciacao'); 
+                    desabilita('qt06_ProjetoTreinamento');
+                    desabilita('qt06_ValorBolsaTreinamento'); 
+                    desabilita('qt06_Outro'); 
+                    desabilita('qt06_ValorBolsaOutro'); 
+                }
+                if(num == 7){
+                    desabilita('qt07_HorasSemanais'); 
+                    desabilita('qt07_Salario');
+                }
+                if(num == 8){
+                    desabilita('qt08_Outra'); 
+                }
+                if(num == 9){
+                    desabilita('qt09_Outra'); 
+                }
+                if(num == 10){
+                    desabilita('qt10_Outros'); 
+                }
+                if(num == 12){
+                    desabilita('qt12_Outro'); 
+                }
+                if(num == 13){
+                    desabilita('qt13_ValorAluguel');
+                    desabilita('qt13_ValorPrestacao'); 
+                    desabilita('qt13_Nome'); 
+                    desabilita('qt13_Outro'); 
+                }
+                if(num == 15){
+                    desabilita('qt15_DescricaoImoveis'); 
+                }
+            }
             function campoNumerico(valor)
             {
                 var caracteresValidos = ".0123456789";
@@ -375,7 +575,21 @@
                 }
                 if (form.opt_qt01_Resposta.value == ""){
                     mensagem = mensagem + "Informe Sim ou Não na Questão 01\n";
-                }                             
+                }
+                if (form.opt_qt01_Resposta.value == "Sim"){
+                    if(form.txt_qt01_Nome.value == ""){
+                        mensagem = mensagem + "Informe o nome do parente na Questão 01\n";
+                    }
+                    if(form.txt_qt01_Parentesco.value == ""){
+                        mensagem = mensagem + "Informe o parentesco na Questão 01\n";
+                    }
+                    if(form.txt_qt01_Programa.value == ""){
+                        mensagem = mensagem + "Informe o programa na Questão 01\n";
+                    }
+                    if(form.txt_qt01_Ano.value == ""){
+                        mensagem = mensagem + "Informe o ano na Questão 01\n";
+                    }
+                }
                 if (form.opt_qt02_Alimentacao.value == ""){
                     mensagem = mensagem + "Informe Sim ou Não em Alimentação na Questão 02\n";
                 }
@@ -390,6 +604,16 @@
                 }
                 if (form.opt_qt03_Transporte.value == ""){
                     mensagem = mensagem + "Selecione um Transporte na Questão 03\n";
+                }
+                if (form.opt_qt03_Transporte.value == "a pé / de bicicleta"){
+                    if(form.txt_qt03_Tempo.value == ""){
+                        mensagem = mensagem + "Informe o tempo do trajeto na Questão 03\n";
+                    }
+                }
+                if (form.opt_qt03_Transporte.value == "Outro"){
+                    if(form.txt_qt03_Outro.value == ""){
+                        mensagem = mensagem + "Especifique o outro meio de transporte na Questão 03\n";
+                    }
                 }
                 if (form.txt_qt03_ValorGastoDiario.value == ""){
                     form.txt_qt03_ValorGastoDiario.value = 0.0;
@@ -454,8 +678,28 @@
                 if (form.opt_qt06_AtividadeRemunerada.value == ""){
                     mensagem = mensagem + "Selecione uma Atividade Remunerada na Questão 06\n";
                 }
+                if (form.opt_qt06_AtividadeRemunerada.value == "Sim, iniciação científica"){
+                    if(form.txt_qt06_ProjetoIniciacao.value == ""){
+                        mensagem = mensagem + "Informe qual iniciação científica na Questão 06\n";
+                    }
+                }
+                if (form.opt_qt06_AtividadeRemunerada.value == "Sim, treinamento profissional"){
+                    if(form.txt_qt06_ProjetoTreinamento.value == ""){
+                        mensagem = mensagem + "Informe qual treinamento profissional na Questão 06\n";
+                    }
+                }
+                if (form.opt_qt06_AtividadeRemunerada.value == "Sim, outra"){
+                    if(form.txt_qt06_Outro.value == ""){
+                        mensagem = mensagem + "Informe qual outra atividade na Questão 06\n";
+                    }
+                }
                 if (form.opt_qt07_TrabalhoRemunerado.value == ""){
                     mensagem = mensagem + "Informe Sim ou Não em Trabalho Remunerado na Questão 07\n";
+                }
+                if (form.opt_qt07_TrabalhoRemunerado.value == "Sim"){
+                    if(form.txt_qt07_HorasSemanais.value == ""){
+                        mensagem = mensagem + "Informe as horas semanais na Questão 07\n";
+                    }
                 }
                 if (form.txt_qt07_Salario.value == ""){
                     form.txt_qt07_Salario.value = 0.0;
@@ -469,11 +713,26 @@
                 if (form.opt_qt08_Manutencao.value == ""){
                     mensagem = mensagem + "Selecione uma Manutenção na Questão 08\n";
                 }
+                if (form.opt_qt08_Manutencao.value == "Outra"){
+                    if(form.txt_qt08_Outra.value == ""){
+                        mensagem = mensagem + "Informe a outra situação na Questão 08\n";
+                    }
+                }
                 if (form.opt_qt09_Moradia.value == ""){
                     mensagem = mensagem + "Selecione uma Moradia na Questão 09\n";
                 }
+                if (form.opt_qt09_Moradia.value == "Outra situação"){
+                    if(form.txt_qt09_Outra.value == ""){
+                        mensagem = mensagem + "Informe a outra situação na Questão 09\n";
+                    }
+                }
                 if (form.opt_qt10_ResponsavelFinanceiro.value == ""){
                     mensagem = mensagem + "Selecione um Responsavel Financeiro na Questão 10\n";
+                }
+                if (form.opt_qt10_ResponsavelFinanceiro.value == "Outros"){
+                    if(form.txt_qt10_Outros.value == ""){
+                        mensagem = mensagem + "Informe os outros responsáveis na Questão 10\n";
+                    }
                 }
                 if (form.opt_qt11_Esgoto.value == ""){
                     mensagem = mensagem + "Informe Sim ou Não em Esgoto na Questão 11\n";
@@ -493,8 +752,23 @@
                 if (form.opt_qt12_Residencia.value == ""){
                     mensagem = mensagem + "Selecione um Local de Residência na Questão 12\n";
                 }
+                if (form.opt_qt12_Residencia.value == "Outro"){
+                    if(form.txt_qt12_Outro.value == ""){
+                        mensagem = mensagem + "Informe o outro local de residência na Questão 12\n";
+                    }
+                }
                 if (form.opt_qt13_Imovel.value == ""){
                     mensagem = mensagem + "Selecione um Tipo de Imóvel na Questão 13\n";
+                }
+                if (form.opt_qt13_Imovel.value == "Emprestado ou cedido"){
+                    if(form.txt_qt13_Nome.value == ""){
+                        mensagem = mensagem + "Informe quem emprestou ou cedeu o imóvel na Questão 13\n";
+                    }
+                }
+                if (form.opt_qt13_Imovel.value == "Outra situação"){
+                    if(form.txt_qt13_Outro.value == ""){
+                        mensagem = mensagem + "Informe a outra situação de residência na Questão 13\n";
+                    }
                 }
                 if (form.txt_qt13_ValorAluguel.value == ""){
                     form.txt_qt13_ValorAluguel.value = 0.0;
@@ -519,6 +793,11 @@
                 }
                 if (form.opt_qt15_OutrosImoveis.value == ""){
                     mensagem = mensagem + "Informe Sim ou Não em Outros Imóveis na Questão 15\n";
+                }
+                if (form.opt_qt15_OutrosImoveis.value == "Sim"){
+                    if(form.txt_qt15_DescricaoImoveis.value == ""){
+                        mensagem = mensagem + "Informe o tipo e o local dos outros imóveis na Questão 15\n";
+                    }
                 }
                 if (form.txt_qt16_QuantCarro.value == ""){
                     mensagem = mensagem + "Informe a quantidade de carros na Questão 16\n";
