@@ -74,10 +74,16 @@
                     </td>
                 </tr>
                 <tr>
+                    <td><h3>Criar nova Senha</h3></td>
+                </tr>
+                <tr>
                     <td>Login: <input type="text" name="txtLogin" value="${usuario.login}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>
                 <tr>
-                    <td>Senha: <input type="password" name="txtSenha" value="${usuario.senha}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
+                    <td>Senha Anterior: <input type="password" name="txtSenhaAnterior" <c:if test="${operacao != 'Editar'}"> readonly</c:if>></td>
+                </tr>
+                <tr>
+                    <td>Nova Senha: <input type="password" name="txtSenha" value="${usuario.senha}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>
                 <tr>
                     <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
@@ -155,7 +161,7 @@
                     mensagem = mensagem + "Informe um Login para o Usuário\n";
                 }
                 if (form.txtSenha.value == ""){
-                    mensagem = mensagem + "Informe uma Senha para o Usuário\n";
+                    mensagem = mensagem + "Informe uma nova Senha para o Usuário\n";
                 }
                 if (!campoNumerico(form.txtCodUsuario.value)){
                     mensagem = mensagem + "Código do Usuário deve ser somente numérico\n";

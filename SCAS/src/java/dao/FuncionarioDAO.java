@@ -1,5 +1,10 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -7,6 +12,28 @@ import javax.persistence.TypedQuery;
 import modelo.Funcionario;
 
 public class FuncionarioDAO {
+    
+    public static boolean verificarFuncionario(int codUsuario) throws ClassNotFoundException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        boolean resultado = false;
+        try {
+            conexao = BD.getConexao();
+            String sql = "select * from funcionario where USUARIO_ID = ?";
+            comando = conexao.prepareStatement(sql);
+            comando.setInt(1, codUsuario);
+            ResultSet rs = comando.executeQuery();
+            rs.last();
+            if (rs.getRow() != 0) {
+                resultado = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(conexao, comando);
+        }
+        return resultado;
+    }
     
     private static FuncionarioDAO instance = new FuncionarioDAO();
 
@@ -104,6 +131,18 @@ public class FuncionarioDAO {
             throw new RuntimeException(e);
         } finally {
             PersistenceUtil.close(em);
+        }
+    }
+    
+    private static void fecharConexao(Connection conexao, Statement comando) {
+        try {
+            if (comando != null) {
+                comando.close();
+            }
+            if (conexao != null) {
+                conexao.close();
+            }
+        } catch (SQLException e) {
         }
     }
 }

@@ -5,16 +5,21 @@
  */
 package controller;
 
+import dao.AlunoDAO;
+import dao.FuncionarioDAO;
 import dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Usuario;
+import util.Criptografia;
 
 /**
  *
@@ -34,7 +39,7 @@ public class ManterUsuarioController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ClassNotFoundException {
         request.setCharacterEncoding( "UTF-8" );
         response.setContentType("text/html;charset=UTF-8");
         String acao = request.getParameter("acao");
@@ -58,7 +63,11 @@ public class ManterUsuarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -72,7 +81,11 @@ public class ManterUsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterUsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -92,6 +105,7 @@ public class ManterUsuarioController extends HttpServlet {
             if(!operacao.equals("Incluir")){
                 int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
                 usuario = UsuarioDAO.obterUsuario(codUsuario);
+                usuario.setSenha("0");
                 request.setAttribute("usuario", usuario);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
@@ -103,7 +117,7 @@ public class ManterUsuarioController extends HttpServlet {
         }
     }
 
-    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
         try{
             String operacao = request.getParameter("operacao");
             int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
@@ -123,10 +137,12 @@ public class ManterUsuarioController extends HttpServlet {
             String cidade = request.getParameter("txtCidade");
             String uf = request.getParameter("txtUF");
             String login = request.getParameter("txtLogin");
+            String senhaAnterior = request.getParameter("txtSenhaAnterior");
             String senha = request.getParameter("txtSenha");
             
             if(operacao.equals("Incluir")){
-                usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, complemento, bairro, cep, cidade, uf, login, senha);
+                usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, 
+                        complemento, bairro, cep, cidade, uf, login, Criptografia.criptografar(senha));
                 UsuarioDAO.getInstance().gravar(usuario);
             }else if(operacao.equals("Editar")){
                 usuario.setDataNasc(dataNasc);
@@ -145,13 +161,32 @@ public class ManterUsuarioController extends HttpServlet {
                 usuario.setCidade(cidade);
                 usuario.setUf(uf);
                 usuario.setLogin(login);
-                usuario.setSenha(senha);
-                UsuarioDAO.getInstance().alterar(usuario);
+                usuario.setSenha(Criptografia.criptografar(senha));
+                if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senhaAnterior))) {
+                    UsuarioDAO.getInstance().alterar(usuario);
+                } else {
+                    request.setAttribute("operacao", operacao);
+                    usuario.setSenha("0");
+                    request.setAttribute("usuario", usuario);
+                    RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
+                    view.forward(request, response);
+                }
             }else if (operacao.equals("Excluir")){
                 UsuarioDAO.getInstance().excluir(usuario);
             }
-            RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
-            view.forward(request, response);
+            if(AlunoDAO.verificarAluno(codUsuario)){
+                request.setAttribute("codUsuario", codUsuario);
+                RequestDispatcher view = request.getRequestDispatcher("/menuAluno.jsp");
+                view.forward(request, response);
+            }else{
+                if(FuncionarioDAO.verificarFuncionario(codUsuario)){
+                    RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
+                    view.forward(request, response);
+                }else{
+                    RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
+                    view.forward(request, response);
+                }
+            }
         }catch(ServletException e){
             throw e;
         }catch(IOException ex){

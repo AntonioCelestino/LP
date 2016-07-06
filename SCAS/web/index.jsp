@@ -2,37 +2,49 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title></title>
+        <title>IF Sudeste MG</title>
+        <meta name="author" content="Antonio & Nathan" />
+        <meta name="keywords" content="bolsa, IF Sudeste" />
+        <meta charset="UTF-8" />
     </head>
     <body>
-        <h1></h1>
-        <a href="PesquisaUsuarioController">Manter Usuário</a><br>
-        <a href="PesquisaFuncionarioController">Manter Funcionário</a><br>
-        <a href="PesquisaCursoController">Manter Curso</a><br>
-        <a href="PesquisaModalidadeController">Manter Modalidade</a><br>
-        <a href="PesquisaRecursoController">Manter Recurso</a><br>
-        <a href="PesquisaAlunoController">Manter Aluno</a><br>
-        <a href="PesquisaSelecaoController">Manter Seleção</a><br>
-        <a href="PesquisaFormularioController">Manter Formulário</a><br>
-        <a href="PesquisaDoencaController">Manter Doença</a><br>
-        <a href="PesquisaRendaController">Manter Renda</a><br>
-        <a href="PesquisaBolsaController">Manter Bolsa</a><br>
-        <br/>
-        <h3>Gerar Relatórios:</h3>
-        <a href="RelatorioUsuariosController">Relatório Usuário</a><br>
-        <a href="RelatorioFuncionariosController">Relatório Funcionário</a><br>
-        <a href="RelatorioCursosController">Relatório Curso</a><br>
-        <a href="RelatorioModalidadesController">Relatório Modalidade</a><br>
-        <a href="RelatorioRecursosController">Relatório Recurso</a><br>
-        <a href="RelatorioAlunosController">Relatório Aluno</a><br>
-        <a href="RelatorioSelecoesController">Relatório Seleção</a><br>
-        <a href="RelatorioFormulariosController">Relatório Formulário</a><br>
-        <a href="RelatorioDoencasController">Relatório Doença</a><br>
-        <a href="RelatorioRendaController">Relatório Renda</a><br>
-        <a href="RelatorioBolsasController">Relatório Bolsa</a><br>
-        <a href="AlunosBolsistas">Relatório Bolsistas</a><br>
-        <a href="PesquisaAlunoPorCursoController">Relatório Aluno por Curso</a><br>
-        <a href="PesquisaBolsaPorModalidadeController">Relatório Bolsa por Modalidade</a><br>
+        <h1>Login</h1>
+        <form name="input" action="LoginController" method="post" onsubmit="return validarFormulario(this)">
+            <table>
+                <tr>
+                    <td>Login: <input type="text" name="txtLogin" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Senha: <input type="password" name="txtSenha" /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
+                </tr>
+                <tr>
+                    <td><input name="senha" type="button" value="Esqueci minha senha" /></td>
+                </tr>
+            </table>
+        </form>
+        <SCRIPT language="JavaScript">
+            <!--
+            
+            function validarFormulario(form) { 
+                var mensagem;
+                mensagem = "";
+                if (form.txtLogin.value == ""){
+                    mensagem = mensagem + "Informe o Login\n";
+                }                             
+                if (form.txtSenha.value == ""){
+                    mensagem = mensagem + "Informe a Senha\n";
+                }                             
+                if (mensagem == ""){
+                    return true;
+                }else{
+                    alert(mensagem);
+                    return false;
+                }                
+            } 
+            //-->
+        </SCRIPT>
     </body>
 </html>
