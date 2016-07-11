@@ -20,9 +20,6 @@
                 <tr>
                     <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
                 </tr>
-                <tr>
-                    <td><input name="senha" type="button" value="Esqueci minha senha" /></td>
-                </tr>
             </table>
         </form>
         <SCRIPT language="JavaScript">
