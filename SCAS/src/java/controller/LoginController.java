@@ -37,9 +37,13 @@ public class LoginController extends HttpServlet {
             if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senha))) {
                 if(AlunoDAO.verificarAluno(UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)))){
                     request.setAttribute("codUsuario", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
+                    request.setAttribute("codUsuarioLogado", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
+                    request.setAttribute("loginUsuarioLogado", login);
                     view = request.getRequestDispatcher("/menuAluno.jsp");
                 }else{
                     if(FuncionarioDAO.verificarFuncionario(UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)))){
+                        request.setAttribute("codUsuarioLogado", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
+                        request.setAttribute("loginUsuarioLogado", login);
                         view = request.getRequestDispatcher("/menuFuncionario.jsp");
                     }else{
                        view = request.getRequestDispatcher("/index.jsp"); 

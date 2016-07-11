@@ -102,12 +102,14 @@ public class ManterUsuarioController extends HttpServlet {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
+            int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
             if(!operacao.equals("Incluir")){
                 int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
                 usuario = UsuarioDAO.obterUsuario(codUsuario);
                 usuario.setSenha("0");
                 request.setAttribute("usuario", usuario);
             }
+            request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
             view.forward(request, response);
         }catch(ServletException ex){
@@ -120,6 +122,7 @@ public class ManterUsuarioController extends HttpServlet {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
         try{
             String operacao = request.getParameter("operacao");
+            int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
             int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
             String dataNasc = request.getParameter("txtDataNasc");
             String nome = request.getParameter("txtNome");
@@ -168,22 +171,26 @@ public class ManterUsuarioController extends HttpServlet {
                     request.setAttribute("operacao", operacao);
                     usuario.setSenha("0");
                     request.setAttribute("usuario", usuario);
+                    request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                     RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
                     view.forward(request, response);
                 }
             }else if (operacao.equals("Excluir")){
                 UsuarioDAO.getInstance().excluir(usuario);
             }
-            if(AlunoDAO.verificarAluno(codUsuario)){
+            if(AlunoDAO.verificarAluno(codUsuarioLogado)){
                 request.setAttribute("codUsuario", codUsuario);
+                request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                 RequestDispatcher view = request.getRequestDispatcher("/menuAluno.jsp");
                 view.forward(request, response);
             }else{
-                if(FuncionarioDAO.verificarFuncionario(codUsuario)){
+                if(FuncionarioDAO.verificarFuncionario(codUsuarioLogado)){
+                    request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                     RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
                     view.forward(request, response);
                 }else{
-                    RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
+                    request.setAttribute("codUsuarioLogado", codUsuarioLogado);
+                    RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
                     view.forward(request, response);
                 }
             }

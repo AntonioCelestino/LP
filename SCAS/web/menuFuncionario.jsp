@@ -9,8 +9,8 @@
     </head>
     <body>
         <h1>Menu Usuário Funcionário</h1>
-        <h3><a href="index.jsp">Logout</a></h3>
-        <a href="PesquisaUsuarioController">Manter Usuário</a><br>
+        <h3>Usuário Logado: ${loginUsuarioLogado} - <a href="index.jsp">Logout</a></h3>
+        <a href="PesquisaUsuarioController?codUsuarioLogado=${codUsuarioLogado}">Manter Usuário</a><br>
         <a href="PesquisaFuncionarioController">Manter Funcionário</a><br>
         <a href="PesquisaCursoController">Manter Curso</a><br>
         <a href="PesquisaModalidadeController">Manter Modalidade</a><br>

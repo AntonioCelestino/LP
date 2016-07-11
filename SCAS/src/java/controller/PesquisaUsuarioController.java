@@ -31,8 +31,10 @@ public class PesquisaUsuarioController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
         try{
             request.setAttribute("usuarios", Usuario.obterUsuarios());
+            request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view=
                     request.getRequestDispatcher("/pesquisaUsuario.jsp");
             view.forward(request, response);

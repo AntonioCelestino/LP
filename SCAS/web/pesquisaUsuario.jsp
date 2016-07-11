@@ -21,15 +21,15 @@
                     <td><c:out value="${usuario.codUsuario}"/></td>
                     <td><c:out value="${usuario.nome}"/></td>
                     <td>
-                        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Editar&codUsuario=<c:out value="${usuario.codUsuario}"/>">Editar</a>
+                        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Editar&codUsuario=<c:out value="${usuario.codUsuario}"/>&codUsuarioLogado=${codUsuarioLogado}">Editar</a>
                     </td>
                     <td>
-                        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Excluir&codUsuario=<c:out value="${usuario.codUsuario}"/>">Excluir</a>
+                        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Excluir&codUsuario=<c:out value="${usuario.codUsuario}"/>&codUsuarioLogado=${codUsuarioLogado}">Excluir</a>
                     </td>
                 </tr>
             </c:forEach>
         </table>
-        <form action="ManterUsuarioController?acao=prepararOperacao&operacao=Incluir" method="post">
+        <form action="ManterUsuarioController?acao=prepararOperacao&operacao=Incluir&codUsuarioLogado=${codUsuarioLogado}" method="post">
             <input type="submit" name="btnIncluir" value="Incluir"/>
         </form>
     </body>

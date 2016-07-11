@@ -83,6 +83,10 @@ public class ManterRendaController extends HttpServlet {
             if(!operacao.equals("Incluir")){
                 int codRenda = Integer.parseInt(request.getParameter("codRenda"));
                 renda = RendaDAO.obterRenda(codRenda);
+                String r = Integer.toString(codRenda);
+                String f = Integer.toString(renda.getFormulario().getCodFormulario());
+                renda.setCodRenda(Integer.parseInt(r.substring(f.length())));
+                request.setAttribute("formulario", renda.getFormulario());
                 request.setAttribute("renda", renda);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterRenda.jsp");
@@ -115,6 +119,7 @@ public class ManterRendaController extends HttpServlet {
                 renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
                 RendaDAO.getInstance().gravar(renda);
             }else if(operacao.equals("Editar")){
+                renda.setCodRenda(codRenda);
                 renda.setFormulario(formulario);
                 renda.setQt18_Nome(qt18_Nome);
                 renda.setQt18_DataNasc(qt18_DataNasc);
@@ -126,6 +131,7 @@ public class ManterRendaController extends HttpServlet {
                 renda.setQt18_RendaBruta(qt18_RendaBruta);
                 RendaDAO.getInstance().alterar(renda);
             }else if (operacao.equals("Excluir")){
+                renda.setCodRenda(codRenda);
                 RendaDAO.getInstance().excluir(renda);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");

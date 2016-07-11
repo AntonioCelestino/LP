@@ -83,6 +83,10 @@ public class ManterDoencaController extends HttpServlet {
             if(!operacao.equals("Incluir")){
                 int codDoenca = Integer.parseInt(request.getParameter("codDoenca"));
                 doenca = DoencaDAO.obterDoenca(codDoenca);
+                String d = Integer.toString(codDoenca);
+                String f = Integer.toString(doenca.getFormulario().getCodFormulario());
+                doenca.setCodDoenca(Integer.parseInt(d.substring(f.length())));
+                request.setAttribute("formulario", doenca.getFormulario());
                 request.setAttribute("doenca", doenca);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterDoenca.jsp");
@@ -112,6 +116,7 @@ public class ManterDoencaController extends HttpServlet {
                 doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
                 DoencaDAO.getInstance().gravar(doenca);
             }else if(operacao.equals("Editar")){
+                doenca.setCodDoenca(codDoenca);
                 doenca.setFormulario(formulario);
                 doenca.setQt17_Nome(qt17_Nome);
                 doenca.setQt17_Doenca(qt17_Doenca);
@@ -120,6 +125,7 @@ public class ManterDoencaController extends HttpServlet {
                 doenca.setQt17_Gasto(qt17_Gasto);
                 DoencaDAO.getInstance().alterar(doenca);
             }else if (operacao.equals("Excluir")){
+                doenca.setCodDoenca(codDoenca);
                 DoencaDAO.getInstance().excluir(doenca);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");

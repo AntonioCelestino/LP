@@ -28,13 +28,14 @@
                     <td>Digite sequência numérica para cada membro familiar (1, 2, ...):<input type="text" size="10" name="txtCodRenda" value="${renda.codRenda}" <c:if test="${operacao != 'Incluir'}"> readonly</c:if>></td>
                 </tr>
                 <tr> 
-                    <td>Formulário: (Nome do Aluno | Seleção Modalidade): 
-                        <select name="optFormulario" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>>
+                    <td>Formulário: (Nome do Aluno | Seleção Modalidade | Código Formulário): 
+                        <select name="optFormulario" <c:if test="${operacao != 'Incluir'}"> disabled</c:if>>
                             <option value="0" <c:if test="${renda.formulario.codFormulario == null}"> selected</c:if>> </option>  
                             <c:forEach items="${formularios}" var="formulario">
-                                <option value="${formulario.codFormulario}" <c:if test="${renda.formulario.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome}</option>  
+                                <option value="${formulario.codFormulario}" <c:if test="${renda.formulario.codFormulario == formulario.codFormulario}"> selected</c:if>>${formulario.aluno.usuario.nome} | ${formulario.selecao.numeroEdital} | ${formulario.selecao.modalidade.nome} | ${formulario.codFormulario}</option>  
                             </c:forEach>
                         </select>
+                        <input type="hidden" name="optFormulario" value="${formulario.codFormulario}"/>
                     </td>
                 </tr>
                 <tr>

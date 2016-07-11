@@ -9,8 +9,8 @@
     </head>
     <body>
         <h1>Menu Usuário Aluno</h1>
-        <h3><a href="index.jsp">Logout</a></h3>
-        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Editar&codUsuario=${codUsuario}">Manter Usuário</a><br>
+        <h3>Usuário Logado: ${loginUsuarioLogado} - <a href="index.jsp">Logout</a></h3>
+        <a href="ManterUsuarioController?acao=prepararOperacao&operacao=Editar&codUsuario=${codUsuario}&codUsuarioLogado=${codUsuarioLogado}">Manter Usuário</a><br>
         <br/>
         <h3>Gerar Relatórios:</h3>
         <a href="RelatorioBolsasController">Relatório Bolsa</a><br>
