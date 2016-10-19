@@ -348,7 +348,6 @@
             </table>
         </form>
         <SCRIPT language="JavaScript">
-            <!--
             window.onload = function(){verificaCampos()};
             function verificaCampos(){
                 if(document.getElementById("formulario").opt_qt01_Resposta.value == "Sim"){
@@ -1106,7 +1105,6 @@
                     return false;
                 }                
             } 
-            //-->
         </SCRIPT>
     </body>
 </html>

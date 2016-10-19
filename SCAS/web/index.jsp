@@ -22,9 +22,7 @@
                 </tr>
             </table>
         </form>
-        <SCRIPT language="JavaScript">
-            <!--
-            
+        <SCRIPT language="JavaScript">            
             function validarFormulario(form) { 
                 var mensagem;
                 mensagem = "";
@@ -41,7 +39,6 @@
                     return false;
                 }                
             } 
-            //-->
         </SCRIPT>
     </body>
 </html>

@@ -73,7 +73,6 @@
             </table>
         </form>
         <SCRIPT language="JavaScript">
-            <!--
             //------------------------------------------------------------------
             window.onload = function(){verificaCampos()};
             function verificaCampos(){
@@ -189,7 +188,6 @@
                     return false;
                 }                
             } 
-            //-->
         </SCRIPT>
     </body>
 </html>

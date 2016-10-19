@@ -11,6 +11,7 @@ import dao.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.Bolsa;
 import modelo.Usuario;
 import util.Criptografia;
 
@@ -28,6 +30,7 @@ import util.Criptografia;
 public class ManterUsuarioController extends HttpServlet {
 
     private Usuario usuario;
+    private String senhaOriginal;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -98,7 +101,7 @@ public class ManterUsuarioController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
@@ -106,8 +109,9 @@ public class ManterUsuarioController extends HttpServlet {
             if(!operacao.equals("Incluir")){
                 int codUsuario = Integer.parseInt(request.getParameter("codUsuario"));
                 usuario = UsuarioDAO.obterUsuario(codUsuario);
-                usuario.setSenha("0");
-                request.setAttribute("usuario", usuario);
+                senhaOriginal = usuario.getSenha();
+                usuario.setSenha("");
+                impostos(request, response, codUsuario);
             }
             request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
@@ -117,6 +121,19 @@ public class ManterUsuarioController extends HttpServlet {
         }catch(IOException ex){
             throw new ServletException(ex);
         }
+    }
+    
+    public void impostos(HttpServletRequest request, HttpServletResponse response, int codUsuario) throws ClassNotFoundException{
+        List<Bolsa> bolsa = Bolsa.obterBolsas();
+        double valor = 0;
+        for (Bolsa b : bolsa) {
+            if(b.getFormulario().getAluno().getUsuario().getCodUsuario().equals(codUsuario)){
+                valor += b.getFormulario().getSelecao().getModalidade().getValorMensal();
+            }
+        }
+        request.setAttribute("valor", valor);
+        request.setAttribute("imposto", usuario.calculaImposto(valor));
+        request.setAttribute("usuario", usuario);
     }
 
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
@@ -164,16 +181,22 @@ public class ManterUsuarioController extends HttpServlet {
                 usuario.setCidade(cidade);
                 usuario.setUf(uf);
                 usuario.setLogin(login);
-                usuario.setSenha(Criptografia.criptografar(senha));
-                if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senhaAnterior))) {
+                if(senha == null && senhaAnterior == null){
+                    usuario.setSenha(senhaOriginal);
                     UsuarioDAO.getInstance().alterar(usuario);
-                } else {
-                    request.setAttribute("operacao", operacao);
-                    usuario.setSenha("0");
-                    request.setAttribute("usuario", usuario);
-                    request.setAttribute("codUsuarioLogado", codUsuarioLogado);
-                    RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
-                    view.forward(request, response);
+                }else{
+                    if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senhaAnterior))) {
+                        usuario.setSenha(Criptografia.criptografar(senha));
+                        UsuarioDAO.getInstance().alterar(usuario);
+                    } else {
+                        request.setAttribute("operacao", operacao);
+                        usuario.setSenha("");
+                        impostos(request, response, codUsuario);
+                        request.setAttribute("usuario", usuario);
+                        request.setAttribute("codUsuarioLogado", codUsuarioLogado);
+                        RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
+                        view.forward(request, response);
+                    }
                 }
             }else if (operacao.equals("Excluir")){
                 UsuarioDAO.getInstance().excluir(usuario);

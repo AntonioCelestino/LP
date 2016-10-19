@@ -74,16 +74,26 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><h3>Criar nova Senha</h3></td>
-                </tr>
-                <tr>
                     <td>Login: <input type="text" name="txtLogin" value="${usuario.login}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>
                 <tr>
-                    <td>Senha Anterior: <input type="password" name="txtSenhaAnterior" <c:if test="${operacao != 'Editar'}"> readonly</c:if>></td>
+                    <td>
+                        <p id="div" <c:if test="${operacao != 'Editar'}">style="display: none"</c:if>>
+                        <b>Criar nova Senha:</b>
+                        <input type="radio" name="novaSenha" value="Sim" onclick="habilitaCampos(1)" checked>Sim
+                        <input type="radio" name="novaSenha" value="Não" onclick="desabilitaCampos(1)">Não
+                        </p>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Nova Senha: <input type="password" name="txtSenha" value="${usuario.senha}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
+                <tr <c:if test="${operacao != 'Editar'}">style="display: none"</c:if>>
+                    <td>Senha Anterior: <input type="password" id="SenhaAnterior" name="txtSenhaAnterior" <c:if test="${operacao != 'Editar'}"> readonly</c:if>></td>
+                </tr>
+                <tr <c:if test="${operacao == 'Excluir'}">style="display: none"</c:if>>
+                    <td>Nova Senha: <input type="password" id="NovaSenha" name="txtSenha" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
+                </tr>
+                <tr <c:if test="${operacao == 'Incluir'}">style="display: none"</c:if>>
+                    <td>Valor total recebido em bolsa: R$ ${valor}</td>
+                    <td>Imposto a ser pago: R$ ${imposto}</td>
                 </tr>
                 <tr>
                     <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
@@ -91,8 +101,30 @@
             </table>
         </form>
         <SCRIPT language="JavaScript">
-            <!--
+            function habilita(id){
+                if(document.getElementById(id).disabled==true){
+                    document.getElementById(id).disabled=false;
+                }
+            }
+            function desabilita(id){
+                if(document.getElementById(id).disabled==false){
+                    document.getElementById(id).disabled=true;
+                }
+            }
             
+            function habilitaCampos(num){
+                if(num == 1){
+                    habilita('SenhaAnterior'); 
+                    habilita('NovaSenha');  
+                }
+            }
+            function desabilitaCampos(num){
+                if(num == 1){
+                    desabilita('SenhaAnterior'); 
+                    desabilita('NovaSenha');  
+                }
+            }
+    
             function campoNumerico(valor)
             {
                 var caracteresValidos = "0123456789";
@@ -160,8 +192,13 @@
                 if (form.txtLogin.value == ""){
                     mensagem = mensagem + "Informe um Login para o Usuário\n";
                 }
-                if (form.txtSenha.value == ""){
-                    mensagem = mensagem + "Informe uma nova Senha para o Usuário\n";
+                if((document.getElementById("div").style.display) != "none" && form.novaSenha.value == "Sim"){
+                    if (form.txtSenhaAnterior.value == ""){
+                        mensagem = mensagem + "Informe a Senha Anterior do Usuário\n";
+                    }
+                    if (form.txtSenha.value == ""){
+                        mensagem = mensagem + "Informe uma nova Senha para o Usuário\n";
+                    }
                 }
                 if (!campoNumerico(form.txtCodUsuario.value)){
                     mensagem = mensagem + "Código do Usuário deve ser somente numérico\n";
@@ -173,7 +210,6 @@
                     return false;
                 }                
             } 
-            //-->
         </SCRIPT>
     </body>
 </html>

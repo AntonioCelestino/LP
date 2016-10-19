@@ -53,8 +53,6 @@
             </table>
         </form>
         <SCRIPT language="JavaScript">
-            <!--
-            
             function campoNumerico(valor)
             {
                 var caracteresValidos = "0123456789";
@@ -96,7 +94,6 @@
                     return false;
                 }                
             } 
-            //-->
         </SCRIPT>
     </body>
 </html>
