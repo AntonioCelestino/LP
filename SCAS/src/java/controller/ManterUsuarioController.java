@@ -29,7 +29,6 @@ import util.Criptografia;
  * @author Nathan
  */
 public class ManterUsuarioController extends HttpServlet {
-    private Modalidade modalidade;
     private Usuario usuario;
     private String senhaOriginal;
     
@@ -112,7 +111,7 @@ public class ManterUsuarioController extends HttpServlet {
                 usuario = UsuarioDAO.obterUsuario(codUsuario);
                 senhaOriginal = usuario.getSenha();
                 usuario.setSenha("");
-                impostos(request, response, codUsuario);
+                request.setAttribute("usuario", usuario);
             }
             request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
@@ -122,19 +121,6 @@ public class ManterUsuarioController extends HttpServlet {
         }catch(IOException ex){
             throw new ServletException(ex);
         }
-    }
-    
-    public void impostos(HttpServletRequest request, HttpServletResponse response, int codUsuario) throws ClassNotFoundException{
-        List<Bolsa> bolsa = Bolsa.obterBolsas();
-        double valor = 0;
-        for (Bolsa b : bolsa) {
-            if(b.getFormulario().getAluno().getUsuario().getCodUsuario().equals(codUsuario)){
-                valor += b.getFormulario().getSelecao().getModalidade().getValorMensal();
-            }
-        }
-        request.setAttribute("valor", valor);
-        request.setAttribute("imposto", modalidade.calculaImposto(valor));
-        request.setAttribute("usuario", usuario);
     }
 
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
@@ -192,7 +178,6 @@ public class ManterUsuarioController extends HttpServlet {
                     } else {
                         request.setAttribute("operacao", operacao);
                         usuario.setSenha("");
-                        impostos(request, response, codUsuario);
                         request.setAttribute("usuario", usuario);
                         request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                         RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");

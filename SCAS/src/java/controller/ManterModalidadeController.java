@@ -106,7 +106,8 @@ public class ManterModalidadeController extends HttpServlet {
         double valor = 0;
         for (Modalidade m : modal) {
             if(m.getCodModalidade() == codModalidade){
-                valor += m.getValorMensal();
+                valor = m.getValorMensal();
+                break;
             }
         } 
         request.setAttribute("imposto", modalidade.calculaImposto(valor));

@@ -124,6 +124,7 @@ public class ManterAlunoController extends HttpServlet {
                 aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
                 AlunoDAO.getInstance().gravar(aluno);
             }else if(operacao.equals("Editar")){
+                aluno.setAnoIngresso(anoIngresso);
                 aluno.setPeriodoCurso(periodoCurso);
                 aluno.setFamilia_endereco(familia_endereco);
                 aluno.setFamilia_numero(familia_numero);

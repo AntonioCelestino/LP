@@ -91,10 +91,6 @@
                 <tr <c:if test="${operacao == 'Excluir'}">style="display: none"</c:if>>
                     <td>Nova Senha: <input type="password" id="NovaSenha" name="txtSenha" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>
-                <tr <c:if test="${operacao == 'Incluir'}">style="display: none"</c:if>>
-                    <td>Valor total recebido em bolsa: R$ ${valor}</td>
-                    <td>Imposto a ser pago: R$ ${imposto}</td>
-                </tr>
                 <tr>
                     <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
                 </tr>
