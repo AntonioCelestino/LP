@@ -2,11 +2,15 @@ package controller;
 
 import dao.ModalidadeDAO;
 import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.Bolsa;
 import modelo.Modalidade;
 
 public class ManterModalidadeController extends HttpServlet {
@@ -81,6 +85,11 @@ public class ManterModalidadeController extends HttpServlet {
                 int codModalidade = Integer.parseInt(request.getParameter("codModalidade"));
                 modalidade = ModalidadeDAO.obterModalidade(codModalidade);
                 request.setAttribute("modalidade", modalidade);
+                try {
+                    impostos(request, response, codModalidade);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ManterModalidadeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterModalidade.jsp");
             view.forward(request, response);
@@ -89,6 +98,18 @@ public class ManterModalidadeController extends HttpServlet {
         }catch(IOException ex){
             throw new ServletException(ex);
         }
+    }
+    
+    public void impostos(HttpServletRequest request, HttpServletResponse response, int codModalidade) throws ClassNotFoundException{
+        
+        List<Modalidade> modal = Modalidade.obterModalidades();
+        double valor = 0;
+        for (Modalidade m : modal) {
+            if(m.getCodModalidade() == codModalidade){
+                valor += m.getValorMensal();
+            }
+        } 
+        request.setAttribute("imposto", modalidade.calculaImposto(valor));
     }
 
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

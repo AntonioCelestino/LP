@@ -28,6 +28,11 @@
                     <td>Descrição da Modalidade:</td> 
                     <td><input type="text" name="txtDescricaoModalidade" value="${modalidade.descricao}" <c:if test="${operacao == 'Excluir'}"> readonly</c:if>></td>
                 </tr>
+                
+                <tr <c:if test="${operacao == 'Incluir'}">style="display: none"</c:if>>
+                    <td>Imposto a ser pago nesta modalidade é: R$ ${imposto}</td>
+                </tr>                
+            
                 <tr>
                     <td><input type="submit" name="btnConfirmar" value="Confirmar"></td>
                 </tr>

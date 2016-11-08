@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Bolsa;
+import modelo.Modalidade;
 import modelo.Usuario;
 import util.Criptografia;
 
@@ -28,7 +29,7 @@ import util.Criptografia;
  * @author Nathan
  */
 public class ManterUsuarioController extends HttpServlet {
-
+    private Modalidade modalidade;
     private Usuario usuario;
     private String senhaOriginal;
     
@@ -132,7 +133,7 @@ public class ManterUsuarioController extends HttpServlet {
             }
         }
         request.setAttribute("valor", valor);
-        request.setAttribute("imposto", usuario.calculaImposto(valor));
+        request.setAttribute("imposto", modalidade.calculaImposto(valor));
         request.setAttribute("usuario", usuario);
     }
 

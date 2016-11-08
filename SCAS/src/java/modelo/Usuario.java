@@ -247,34 +247,6 @@ public class Usuario implements Serializable {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
-    public double calculaImposto(double valor){
-        double taxa;
-        if(valor < 100){//1
-            taxa = 0;//2
-        }else if(valor < 200){//3
-            taxa = 0.05;//4
-        }else if(valor < 300){//5
-            taxa = 0.1;//6
-        }else if(valor < 400){//7
-            taxa = 0.15;//8
-        }else if(valor < 500){//9
-            taxa = 0.17;//10
-        }else if(valor < 600){//11
-            taxa = 0.19;//12
-        }else if(valor < 700){//13
-            taxa = 0.21;//14
-        }else if(valor < 800){//15
-            taxa = 0.23;//16
-        }else if(valor < 900){//17
-            taxa = 0.25;//18
-        }else if(valor < 1000){//19
-            taxa = 0.27;//20
-        }else{
-            taxa = 0.3;//21
-        }
-        return valor * taxa;//22
-    }
 
     @Override
     public int hashCode() {
