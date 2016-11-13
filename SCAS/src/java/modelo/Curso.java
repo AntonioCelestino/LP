@@ -32,6 +32,13 @@ public class Curso implements Serializable {
     public Curso(){
     }
     
+    public boolean persistir(DAO cursoDAO) throws SQLException, ClassNotFoundException {
+        return cursoDAO.persistir(this);
+    }
+    public boolean eliminar(DAO cursoDAO) throws SQLException, ClassNotFoundException {
+        return cursoDAO.eliminar(this);
+    }
+    
     public static List<Curso> obterCursos() throws ClassNotFoundException{
         return CursoDAO.obterCursos();
     }

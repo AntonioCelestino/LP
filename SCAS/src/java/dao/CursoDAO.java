@@ -1,12 +1,14 @@
 package dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import modelo.Curso;
+import modelo.DAO;
 
-public class CursoDAO {
+public class CursoDAO implements DAO {
     
     private static CursoDAO instance = new CursoDAO();
 
@@ -106,4 +108,46 @@ public class CursoDAO {
             PersistenceUtil.close(em);
         }
     }   
+
+    @Override
+    public boolean persistir(Curso curso) throws SQLException, ClassNotFoundException {
+        boolean retorno = false;
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(curso);
+            tx.commit();
+            retorno = true;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
+        }
+        return retorno;
+    }
+
+    @Override
+    public boolean eliminar(Curso curso) throws SQLException, ClassNotFoundException {
+        boolean retorno = false;
+        EntityManager em = PersistenceUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.remove(em.getReference(Curso.class, curso.getCodCurso()));
+            tx.commit();
+            retorno = true;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw new RuntimeException(e);
+        } finally {
+            PersistenceUtil.close(em);
+        }
+        return retorno;
+    }
 }
