@@ -56,46 +56,18 @@ public class SelecaoDAO {
         return selecao;
     }
 
-    public void gravar(Selecao selecao){
+    public void operacao(Selecao selecao, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(selecao);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void alterar(Selecao selecao){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(selecao);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void excluir(Selecao selecao){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Selecao.class, selecao.getCodSelecao()));
+            if(operacao.equals("gravar")){
+                em.persist(selecao);
+            } else if(operacao.equals("alterar")){
+                em.merge(selecao);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Selecao.class, selecao.getCodSelecao()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

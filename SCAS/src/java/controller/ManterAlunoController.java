@@ -122,7 +122,7 @@ public class ManterAlunoController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-                AlunoDAO.getInstance().gravar(aluno);
+                AlunoDAO.getInstance().operacao(aluno, "gravar");
             }else if(operacao.equals("Editar")){
                 aluno.setAnoIngresso(anoIngresso);
                 aluno.setPeriodoCurso(periodoCurso);
@@ -135,9 +135,9 @@ public class ManterAlunoController extends HttpServlet {
                 aluno.setFamilia_uf(familia_uf);
                 aluno.setCurso(curso);
                 aluno.setUsuario(usuario);
-                AlunoDAO.getInstance().alterar(aluno);
+                AlunoDAO.getInstance().operacao(aluno, "alterar");
             }else if (operacao.equals("Excluir")){
-                AlunoDAO.getInstance().excluir(aluno);
+                AlunoDAO.getInstance().operacao(aluno, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
             view.forward(request, response);

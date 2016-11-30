@@ -56,46 +56,18 @@ public class ModalidadeDAO {
         return modalidade;
     }
     
-    public void gravar(Modalidade modalidade){
+    public void operacao(Modalidade modalidade, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(modalidade);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-    
-    public void alterar(Modalidade modalidade){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(modalidade);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
- 
-    public void excluir(Modalidade modalidade){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Modalidade.class, modalidade.getCodModalidade()));
+            if(operacao.equals("gravar")){
+                em.persist(modalidade);
+            } else if(operacao.equals("alterar")){
+                em.merge(modalidade);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Modalidade.class, modalidade.getCodModalidade()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

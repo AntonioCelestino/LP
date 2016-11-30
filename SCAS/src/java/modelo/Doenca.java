@@ -143,16 +143,4 @@ public class Doenca implements Serializable {
     public String toString() {
         return "modelo.Doenca[ id=" + codDoenca + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        DoencaDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException {
-        DoencaDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        DoencaDAO.getInstance().excluir(this);
-    }
 }

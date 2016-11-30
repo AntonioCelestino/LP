@@ -203,17 +203,4 @@ public class Aluno implements Serializable {
     public String toString() {
         return "modelo.Aluno[ id=" + matricula + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        AlunoDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        AlunoDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        AlunoDAO.getInstance().excluir(this);
-    }
-    
 }

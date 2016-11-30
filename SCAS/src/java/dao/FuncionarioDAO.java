@@ -83,46 +83,18 @@ public class FuncionarioDAO {
         return funcionario;
     }
     
-    public void gravar(Funcionario funcionario){
+    public void operacao(Funcionario funcionario, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(funcionario);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-    
-    public void alterar(Funcionario funcionario){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(funcionario);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
- 
-    public void excluir(Funcionario funcionario){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Funcionario.class, funcionario.getRegistro()));
+            if(operacao.equals("gravar")){
+                em.persist(funcionario);
+            } else if(operacao.equals("alterar")){
+                em.merge(funcionario);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Funcionario.class, funcionario.getRegistro()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

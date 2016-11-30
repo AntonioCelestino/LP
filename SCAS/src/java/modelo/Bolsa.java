@@ -107,18 +107,5 @@ public class Bolsa implements Serializable {
     @Override
     public String toString() {
         return "modelo.Bolsa[ id=" + codBolsa + " ]";
-    }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        BolsaDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException {
-        BolsaDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        BolsaDAO.getInstance().excluir(this);
-    }
-    
+    }    
 }

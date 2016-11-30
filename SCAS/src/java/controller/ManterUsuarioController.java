@@ -150,7 +150,7 @@ public class ManterUsuarioController extends HttpServlet {
             if(operacao.equals("Incluir")){
                 usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, 
                         complemento, bairro, cep, cidade, uf, login, Criptografia.criptografar(senha));
-                UsuarioDAO.getInstance().gravar(usuario);
+                UsuarioDAO.getInstance().operacao(usuario, "gravar");
             }else if(operacao.equals("Editar")){
                 usuario.setDataNasc(dataNasc);
                 usuario.setNome(nome);
@@ -170,11 +170,11 @@ public class ManterUsuarioController extends HttpServlet {
                 usuario.setLogin(login);
                 if(senha == null && senhaAnterior == null){
                     usuario.setSenha(senhaOriginal);
-                    UsuarioDAO.getInstance().alterar(usuario);
+                    UsuarioDAO.getInstance().operacao(usuario, "alterar");
                 }else{
                     if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senhaAnterior))) {
                         usuario.setSenha(Criptografia.criptografar(senha));
-                        UsuarioDAO.getInstance().alterar(usuario);
+                        UsuarioDAO.getInstance().operacao(usuario, "alterar");
                     } else {
                         request.setAttribute("operacao", operacao);
                         usuario.setSenha("");
@@ -185,7 +185,7 @@ public class ManterUsuarioController extends HttpServlet {
                     }
                 }
             }else if (operacao.equals("Excluir")){
-                UsuarioDAO.getInstance().excluir(usuario);
+                UsuarioDAO.getInstance().operacao(usuario, "excluir");
             }
             if(AlunoDAO.verificarAluno(codUsuarioLogado)){
                 request.setAttribute("codUsuario", codUsuario);

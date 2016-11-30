@@ -122,14 +122,14 @@ public class ManterModalidadeController extends HttpServlet {
             String descricao = request.getParameter("txtDescricaoModalidade"); 
             if(operacao.equals("Incluir")){
                 modalidade = new Modalidade(codModalidade, valorMensal, nome, descricao);
-                ModalidadeDAO.getInstance().gravar(modalidade);
+                ModalidadeDAO.getInstance().operacao(modalidade, "gravar");
             }else if(operacao.equals("Editar")){
                 modalidade.setValorMensal(valorMensal);
                 modalidade.setNome(nome);
                 modalidade.setDescricao(descricao);
-                ModalidadeDAO.getInstance().alterar(modalidade);
+                ModalidadeDAO.getInstance().operacao(modalidade, "alterar");
             }else if (operacao.equals("Excluir")){
-                ModalidadeDAO.getInstance().excluir(modalidade);
+                ModalidadeDAO.getInstance().operacao(modalidade, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);

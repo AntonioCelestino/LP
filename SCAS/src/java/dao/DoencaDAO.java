@@ -56,46 +56,18 @@ public class DoencaDAO {
         return doenca;
     }
     
-    public void gravar(Doenca doenca){
+    public void operacao(Doenca doenca, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(doenca);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-    
-    public void alterar(Doenca doenca){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(doenca);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
- 
-    public void excluir(Doenca doenca){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Doenca.class, doenca.getCodDoenca()));
+            if(operacao.equals("gravar")){
+                em.persist(doenca);
+            } else if(operacao.equals("alterar")){
+                em.merge(doenca);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Doenca.class, doenca.getCodDoenca()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

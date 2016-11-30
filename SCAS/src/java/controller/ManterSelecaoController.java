@@ -108,15 +108,15 @@ public class ManterSelecaoController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-                SelecaoDAO.getInstance().gravar(selecao);
+                SelecaoDAO.getInstance().operacao(selecao, "gravar");
             }else if(operacao.equals("Editar")){
                 selecao.setDataInicioSelecao(dataInicioSelecao);
                 selecao.setDataFimSelecao(dataFimSelecao);
                 selecao.setNumeroEdital(numeroEdital);
                 selecao.setModalidade(modalidade);
-                SelecaoDAO.getInstance().alterar(selecao);
+                SelecaoDAO.getInstance().operacao(selecao, "alterar");
             }else if (operacao.equals("Excluir")){
-                SelecaoDAO.getInstance().excluir(selecao);
+                SelecaoDAO.getInstance().operacao(selecao, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
             view.forward(request, response);

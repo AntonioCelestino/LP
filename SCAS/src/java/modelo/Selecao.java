@@ -120,17 +120,4 @@ public class Selecao implements Serializable {
     public String toString() {
         return "modelo.Selecao[ id=" + codSelecao + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        SelecaoDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        SelecaoDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        SelecaoDAO.getInstance().excluir(this);
-    }
-    
 }

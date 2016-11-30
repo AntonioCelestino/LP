@@ -100,14 +100,14 @@ public class ManterCursoController extends HttpServlet {
             String turno = request.getParameter("optTurno"); 
             if(operacao.equals("Incluir")){
                 curso = new Curso(codCurso, nome, tipoEnsino, turno);
-                CursoDAO.getInstance().gravar(curso);
+                CursoDAO.getInstance().operacao(curso, "gravar");
             }else if(operacao.equals("Editar")){
                 curso.setNome(nome);
                 curso.setTipoEnsino(tipoEnsino);
                 curso.setTurno(turno);
-                CursoDAO.getInstance().alterar(curso);
+                CursoDAO.getInstance().operacao(curso, "alterar");
             }else if (operacao.equals("Excluir")){
-                CursoDAO.getInstance().excluir(curso);
+                CursoDAO.getInstance().operacao(curso, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaCursoController");
             view.forward(request, response);

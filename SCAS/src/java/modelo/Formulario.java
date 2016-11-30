@@ -1177,16 +1177,4 @@ public class Formulario implements Serializable {
     public String toString() {
         return "modelo.Formulario[ id=" + codFormulario + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        FormularioDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        FormularioDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        FormularioDAO.getInstance().excluir(this);
-    }
 }

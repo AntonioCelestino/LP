@@ -83,46 +83,18 @@ public class AlunoDAO {
         return aluno;
     }
     
-    public void gravar(Aluno aluno){
+    public void operacao(Aluno aluno, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(aluno);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-    
-    public void alterar(Aluno aluno){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(aluno);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
- 
-    public void excluir(Aluno aluno){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Aluno.class, aluno.getMatricula()));
+            if(operacao.equals("gravar")){
+                em.persist(aluno);
+            } else if(operacao.equals("alterar")){
+                em.merge(aluno);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Aluno.class, aluno.getMatricula()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

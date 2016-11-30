@@ -56,46 +56,18 @@ public class RecursoDAO {
         return recurso;
     }
 
-    public void gravar(Recurso recurso){
+    public void operacao(Recurso recurso, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(recurso);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void alterar(Recurso recurso){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(recurso);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void excluir(Recurso recurso){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Recurso.class, recurso.getCodRecurso()));
+            if(operacao.equals("gravar")){
+                em.persist(recurso);
+            } else if(operacao.equals("alterar")){
+                em.merge(recurso);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Recurso.class, recurso.getCodRecurso()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

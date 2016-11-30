@@ -58,46 +58,18 @@ public class CursoDAO implements DAO {
         return curso;
     }
     
-    public void gravar(Curso curso){
+    public void operacao(Curso curso, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(curso);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-    
-    public void alterar(Curso curso){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(curso);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
- 
-    public void excluir(Curso curso){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Curso.class, curso.getCodCurso()));
+            if(operacao.equals("gravar")){
+                em.persist(curso);
+            } else if(operacao.equals("alterar")){
+                em.merge(curso);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Curso.class, curso.getCodCurso()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

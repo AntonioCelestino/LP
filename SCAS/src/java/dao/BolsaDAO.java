@@ -56,46 +56,18 @@ public class BolsaDAO {
         return bolsa;
     }
 
-    public void gravar(Bolsa bolsa){
+    public void operacao(Bolsa bolsa, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(bolsa);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void alterar(Bolsa bolsa){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(bolsa);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void excluir(Bolsa bolsa){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Bolsa.class, bolsa.getCodBolsa()));
+            if(operacao.equals("gravar")){
+                em.persist(bolsa);
+            } else if(operacao.equals("alterar")){
+                em.merge(bolsa);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Bolsa.class, bolsa.getCodBolsa()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

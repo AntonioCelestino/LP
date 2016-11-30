@@ -129,18 +129,5 @@ public class Modalidade implements Serializable {
     public String toString() {
         return "modelo.Modalidade[ id=" + codModalidade + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        ModalidadeDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        ModalidadeDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        ModalidadeDAO.getInstance().excluir(this);
-    }
-    
 }
 

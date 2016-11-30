@@ -127,17 +127,4 @@ public class Recurso implements Serializable {
     public String toString() {
         return "modelo.Recurso[ id=" + codRecurso + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        RecursoDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        RecursoDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        RecursoDAO.getInstance().excluir(this);
-    }
-    
 }

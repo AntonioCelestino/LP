@@ -107,14 +107,14 @@ public class ManterBolsaController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 bolsa = new Bolsa(codBolsa, dataInicio, dataFim, formulario);
-                BolsaDAO.getInstance().gravar(bolsa);
+                BolsaDAO.getInstance().operacao(bolsa, "gravar");
             }else if(operacao.equals("Editar")){
                 bolsa.setDataInicio(dataInicio);
                 bolsa.setDataFim(dataFim);
                 bolsa.setFormulario(formulario);
-                BolsaDAO.getInstance().alterar(bolsa);
+                BolsaDAO.getInstance().operacao(bolsa, "alterar");
             }else if (operacao.equals("Excluir")){
-                BolsaDAO.getInstance().excluir(bolsa);
+                BolsaDAO.getInstance().operacao(bolsa, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaBolsaController");
             view.forward(request, response);

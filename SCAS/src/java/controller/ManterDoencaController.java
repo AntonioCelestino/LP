@@ -114,7 +114,7 @@ public class ManterDoencaController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 doenca = new Doenca(codDoenca, formulario, qt17_Nome, qt17_Doenca, qt17_Trabalho, qt17_Dependencia, qt17_Gasto);
-                DoencaDAO.getInstance().gravar(doenca);
+                DoencaDAO.getInstance().operacao(doenca, "gravar");
             }else if(operacao.equals("Editar")){
                 doenca.setCodDoenca(codDoenca);
                 doenca.setFormulario(formulario);
@@ -123,10 +123,10 @@ public class ManterDoencaController extends HttpServlet {
                 doenca.setQt17_Trabalho(qt17_Trabalho);
                 doenca.setQt17_Dependencia(qt17_Dependencia);
                 doenca.setQt17_Gasto(qt17_Gasto);
-                DoencaDAO.getInstance().alterar(doenca);
+                DoencaDAO.getInstance().operacao(doenca, "alterar");
             }else if (operacao.equals("Excluir")){
                 doenca.setCodDoenca(codDoenca);
-                DoencaDAO.getInstance().excluir(doenca);
+                DoencaDAO.getInstance().operacao(doenca, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");
             view.forward(request, response);

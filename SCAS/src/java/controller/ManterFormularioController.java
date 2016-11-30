@@ -223,7 +223,7 @@ public class ManterFormularioController extends HttpServlet {
                         qt19_ValorLuz, qt19_ValorTelefone, qt19_ValorCondominio, qt19_ValorMensalidadeEscolar, qt19_ValorAlimentacao, qt19_ValorSaude, qt19_ValorTransporte, 
                         qt19_ValorIptuAnual, qt19_ValorAluguel, qt19_ValorPensao, qt19_ValorOutros, qt20_ValorAgua, qt20_ValorLuz, qt20_ValorTelefone, qt20_ValorCondominio, 
                         qt20_ValorAluguel, qt20_ValorIptuAnual, qt21_Esclarecimentos);
-                FormularioDAO.getInstance().gravar(formulario);
+                FormularioDAO.getInstance().operacao(formulario, "gravar");
             }else if(operacao.equals("Editar")){
                 formulario.setQt01_Resposta(qt01_Resposta);
                 formulario.setQt01_Nome(qt01_Nome);
@@ -314,9 +314,9 @@ public class ManterFormularioController extends HttpServlet {
                 formulario.setQt20_ValorAluguel(qt20_ValorAluguel);
                 formulario.setQt20_ValorIptuAnual(qt20_ValorIptuAnual);
                 formulario.setQt21_Esclarecimentos(qt21_Esclarecimentos);
-                FormularioDAO.getInstance().alterar(formulario);
+                FormularioDAO.getInstance().operacao(formulario, "alterar");
             }else if (operacao.equals("Excluir")){
-                FormularioDAO.getInstance().excluir(formulario);
+                FormularioDAO.getInstance().operacao(formulario, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFormularioController");
             view.forward(request, response);

@@ -272,18 +272,5 @@ public class Usuario implements Serializable {
     public String toString() {
         return "modelo.Usuario[ id=" + codUsuario + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        UsuarioDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        UsuarioDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        UsuarioDAO.getInstance().excluir(this);
-    }
-    
 }
 

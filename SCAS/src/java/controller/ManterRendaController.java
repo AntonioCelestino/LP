@@ -117,7 +117,7 @@ public class ManterRendaController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-                RendaDAO.getInstance().gravar(renda);
+                RendaDAO.getInstance().operacao(renda, "gravar");
             }else if(operacao.equals("Editar")){
                 renda.setCodRenda(codRenda);
                 renda.setFormulario(formulario);
@@ -129,10 +129,10 @@ public class ManterRendaController extends HttpServlet {
                 renda.setQt18_Trabalho(qt18_Trabalho);
                 renda.setQt18_Ocupacao(qt18_Ocupacao);
                 renda.setQt18_RendaBruta(qt18_RendaBruta);
-                RendaDAO.getInstance().alterar(renda);
+                RendaDAO.getInstance().operacao(renda, "alterar");
             }else if (operacao.equals("Excluir")){
                 renda.setCodRenda(codRenda);
-                RendaDAO.getInstance().excluir(renda);
+                RendaDAO.getInstance().operacao(renda, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
             view.forward(request, response);

@@ -120,14 +120,14 @@ public class ManterFuncionarioController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 funcionario = new Funcionario(registro, cargo, usuario);
-                FuncionarioDAO.getInstance().gravar(funcionario);
+                FuncionarioDAO.getInstance().operacao(funcionario, "gravar");
             }else if(operacao.equals("Editar")){
                 funcionario.setRegistro(registro);
                 funcionario.setCargo(cargo);
                 funcionario.setUsuario(usuario);
-                FuncionarioDAO.getInstance().alterar(funcionario);
+                FuncionarioDAO.getInstance().operacao(funcionario, "alterar");
             }else if (operacao.equals("Excluir")){
-                FuncionarioDAO.getInstance().excluir(funcionario);
+                FuncionarioDAO.getInstance().operacao(funcionario, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFuncionarioController");
             view.forward(request, response);

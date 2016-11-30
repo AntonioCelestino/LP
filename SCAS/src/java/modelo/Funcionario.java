@@ -94,17 +94,4 @@ public class Funcionario implements Serializable {
     public String toString() {
         return "modelo.Funcionario[ id=" + registro + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        FuncionarioDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        FuncionarioDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        FuncionarioDAO.getInstance().excluir(this);
-    }
-    
 }

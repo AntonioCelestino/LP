@@ -120,46 +120,18 @@ public class UsuarioDAO {
         return usuario;
     }
 
-    public void gravar(Usuario usuario){
+    public void operacao(Usuario usuario, String operacao){
         EntityManager em = PersistenceUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.persist(usuario);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void alterar(Usuario usuario){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.merge(usuario);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        } finally {
-            PersistenceUtil.close(em);
-        }
-    }
-
-    public void excluir(Usuario usuario){
-        EntityManager em = PersistenceUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        try {
-            tx.begin();
-            em.remove(em.getReference(Usuario.class, usuario.getCodUsuario()));
+            if(operacao.equals("gravar")){
+                em.persist(usuario);
+            } else if(operacao.equals("alterar")){
+                em.merge(usuario);
+            } else if(operacao.equals("excluir")){
+                em.remove(em.getReference(Usuario.class, usuario.getCodUsuario()));
+            }            
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {

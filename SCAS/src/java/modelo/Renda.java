@@ -179,16 +179,4 @@ public class Renda implements Serializable {
     public String toString() {
         return "modelo.Renda[ id=" + codRenda + " ]";
     }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        RendaDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException {
-        RendaDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        RendaDAO.getInstance().excluir(this);
-    }
 }

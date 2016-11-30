@@ -109,16 +109,16 @@ public class ManterRecursoController extends HttpServlet {
             }
             if(operacao.equals("Incluir")){
                 recurso = new Recurso(codRecurso, ano, creditos, debitos, saldo, modalidade);
-                RecursoDAO.getInstance().gravar(recurso);
+                RecursoDAO.getInstance().operacao(recurso, "gravar");
             }else if(operacao.equals("Editar")){
                 recurso.setAno(ano);
                 recurso.setCreditos(creditos);
                 recurso.setDebitos(debitos);
                 recurso.setSaldo(saldo);
                 recurso.setModalidade(modalidade);
-                RecursoDAO.getInstance().alterar(recurso);
+                RecursoDAO.getInstance().operacao(recurso, "alterar");
             }else if (operacao.equals("Excluir")){
-                RecursoDAO.getInstance().excluir(recurso);
+                RecursoDAO.getInstance().operacao(recurso, "excluir");
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRecursoController");
             view.forward(request, response);

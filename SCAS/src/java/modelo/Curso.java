@@ -109,18 +109,5 @@ public class Curso implements Serializable {
     @Override
     public String toString() {
         return "modelo.Curso[ id=" + codCurso + " ]";
-    }
-    
-    public void gravar() throws SQLException, ClassNotFoundException {
-        CursoDAO.getInstance().gravar(this);
-    }
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        CursoDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        CursoDAO.getInstance().excluir(this);
-    }
-    
+    }    
 }
