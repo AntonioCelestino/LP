@@ -209,20 +209,28 @@ public class ManterFormularioController extends HttpServlet {
                 selecao = SelecaoDAO.obterSelecao(codSelecao);
             }
             if(operacao.equals("Incluir")){
-                formulario = new Formulario(codFormulario, aluno, selecao, qt01_Resposta, qt01_Nome, qt01_Parentesco, qt01_Programa, 
-                        qt01_Ano, qt02_Alimentacao, qt02_Manutencao, qt02_Moradia, qt02_Transporte, qt02_Outro, qt03_Transporte, 
-                        qt03_Tempo, qt03_ValorGastoDiario, qt03_ValorGastoMensal, qt03_Outro, qt04_InstituicaoEnsinoFundamental, 
-                        qt05_InstituicaoEnsinoMedio, qt06_AtividadeRemunerada, qt06_ValorBolsaEstagio, qt06_ProjetoIniciacao, qt06_ValorBolsaIniciacao, 
-                        qt06_ProjetoTreinamento, qt06_ValorBolsaTreinamento, qt06_Outro, qt06_ValorBolsaOutro, qt07_TrabalhoRemunerado, qt07_HorasSemanais, 
-                        qt07_Salario, qt08_Manutencao, qt08_Outra, qt09_Moradia, qt09_Outra, qt10_ResponsavelFinanceiro, qt10_Outros, qt11_Esgoto, qt11_Agua, 
-                        qt11_Iluminacao, qt11_Lixo, qt11_Pavimentacao, qt12_Residencia, qt12_Outro, qt13_Imovel, qt13_ValorAluguel, qt13_ValorPrestacao,
-                        qt13_Nome, qt13_Outro, qt14_Acabamento, qt15_OutrosImoveis, qt15_DescricaoImoveis, qt16_QuantCarro, qt16_QuantTV, qt16_QuantMaqLavar, 
-                        qt16_QuantGeladeira, qt16_QuantTVCabo, qt16_QuantComputador, qt16_QuantInternetPaga, qt16_QuantEmpregadaMensalista, qt16_QuantEmpregadaDiarista, 
-                        qt16_QuantBanheiro, qt16_QuantQuarto, qt17_ProblemaSaude, qt18_AluguelImoveis, qt18_PensaoMorte, qt18_PensaoAlimenticia, 
-                        qt18_AjudaTerceiros, qt18_BeneficiosSociais, qt18_OutraRenda, qt18_NomeOutraRenda, qt18_TotalRenda, qt18_NumeroResidentes, qt19_ValorAgua, 
-                        qt19_ValorLuz, qt19_ValorTelefone, qt19_ValorCondominio, qt19_ValorMensalidadeEscolar, qt19_ValorAlimentacao, qt19_ValorSaude, qt19_ValorTransporte, 
-                        qt19_ValorIptuAnual, qt19_ValorAluguel, qt19_ValorPensao, qt19_ValorOutros, qt20_ValorAgua, qt20_ValorLuz, qt20_ValorTelefone, qt20_ValorCondominio, 
-                        qt20_ValorAluguel, qt20_ValorIptuAnual, qt21_Esclarecimentos);
+                formulario = new Formulario(codFormulario, aluno, selecao)
+                        .questao_01(qt01_Resposta, qt01_Nome, qt01_Parentesco, qt01_Programa, qt01_Ano)
+                        .questao_02(qt02_Alimentacao, qt02_Manutencao, qt02_Moradia, qt02_Transporte, qt02_Outro)
+                        .questao_03(qt03_Transporte, qt03_Tempo, qt03_ValorGastoDiario, qt03_ValorGastoMensal, qt03_Outro)
+                        .questao_04(qt04_InstituicaoEnsinoFundamental)
+                        .questao_05(qt05_InstituicaoEnsinoMedio)
+                        .questao_06(qt06_AtividadeRemunerada, qt06_ValorBolsaEstagio, qt06_ProjetoIniciacao, qt06_ValorBolsaIniciacao, qt06_ProjetoTreinamento, qt06_ValorBolsaTreinamento, qt06_Outro, qt06_ValorBolsaOutro)
+                        .questao_07(qt07_TrabalhoRemunerado, qt07_HorasSemanais, qt07_Salario)
+                        .questao_08(qt08_Manutencao, qt08_Outra)
+                        .questao_09(qt09_Moradia, qt09_Outra)
+                        .questao_10(qt10_ResponsavelFinanceiro, qt10_Outros)
+                        .questao_11(qt11_Esgoto, qt11_Agua, qt11_Iluminacao, qt11_Lixo, qt11_Pavimentacao)
+                        .questao_12(qt12_Residencia, qt12_Outro)
+                        .questao_13(qt13_Imovel, qt13_ValorAluguel, qt13_ValorPrestacao, qt13_Nome, qt13_Outro)
+                        .questao_14(qt14_Acabamento)
+                        .questao_15(qt15_OutrosImoveis, qt15_DescricaoImoveis)
+                        .questao_16(qt16_QuantCarro, qt16_QuantTV, qt16_QuantMaqLavar, qt16_QuantGeladeira, qt16_QuantTVCabo, qt16_QuantComputador, qt16_QuantInternetPaga, qt16_QuantEmpregadaMensalista, qt16_QuantEmpregadaDiarista, qt16_QuantBanheiro, qt16_QuantQuarto)
+                        .questao_17(qt17_ProblemaSaude)
+                        .questao_18(qt18_AluguelImoveis, qt18_PensaoMorte, qt18_PensaoAlimenticia, qt18_AjudaTerceiros, qt18_BeneficiosSociais, qt18_OutraRenda, qt18_NomeOutraRenda, qt18_TotalRenda, qt18_NumeroResidentes)
+                        .questao_19(qt19_ValorAgua, qt19_ValorLuz, qt19_ValorTelefone, qt19_ValorCondominio, qt19_ValorMensalidadeEscolar, qt19_ValorAlimentacao, qt19_ValorSaude, qt19_ValorTransporte, qt19_ValorIptuAnual, qt19_ValorAluguel, qt19_ValorPensao, qt19_ValorOutros)
+                        .questao_20(qt20_ValorAgua, qt20_ValorLuz, qt20_ValorTelefone, qt20_ValorCondominio, qt20_ValorAluguel, qt20_ValorIptuAnual)
+                        .questao_21(qt21_Esclarecimentos);
                 FormularioDAO.getInstance().operacao(formulario, "gravar");
             }else if(operacao.equals("Editar")){
                 formulario.setQt01_Resposta(qt01_Resposta);

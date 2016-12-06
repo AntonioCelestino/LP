@@ -306,43 +306,45 @@ public class Formulario implements Serializable {
     public static Formulario obterFormulario(int codFormulario) throws ClassNotFoundException{
         return FormularioDAO.obterFormulario(codFormulario);
     }
-    
-    public Formulario(Integer codFormulario, Aluno aluno, Selecao selecao, String qt01_Resposta, String qt01_Nome, String qt01_Parentesco, String qt01_Programa,
-            String qt01_Ano, String qt02_Alimentacao, String qt02_Manutencao, String qt02_Moradia, String qt02_Transporte, String qt02_Outro, String qt03_Transporte,
-            String qt03_Tempo, float qt03_ValorGastoDiario, float qt03_ValorGastoMensal, String qt03_Outro, String qt04_InstituicaoEnsinoFundamental, 
-            String qt05_InstituicaoEnsinoMedio, String qt06_AtividadeRemunerada, float qt06_ValorBolsaEstagio, String qt06_ProjetoIniciacao, float qt06_ValorBolsaIniciacao, 
-            String qt06_ProjetoTreinamento, float qt06_ValorBolsaTreinamento, String qt06_Outro, float qt06_ValorBolsaOutro, String qt07_TrabalhoRemunerado, 
-            String qt07_HorasSemanais, float qt07_Salario, String qt08_Manutencao, String qt08_Outra, String qt09_Moradia, String qt09_Outra, 
-            String qt10_ResponsavelFinanceiro, String qt10_Outros, String qt11_Esgoto, String qt11_Agua, String qt11_Iluminacao, String qt11_Lixo, 
-            String qt11_Pavimentacao, String qt12_Residencia, String qt12_Outro, String qt13_Imovel, float qt13_ValorAluguel, float qt13_ValorPrestacao, 
-            String qt13_Nome, String qt13_Outro, String qt14_Acabamento, String qt15_OutrosImoveis, String qt15_DescricaoImoveis, Integer qt16_QuantCarro, Integer qt16_QuantTV, 
-            Integer qt16_QuantMaqLavar, Integer qt16_QuantGeladeira, Integer qt16_QuantTVCabo, Integer qt16_QuantComputador, Integer qt16_QuantInternetPaga, Integer qt16_QuantEmpregadaMensalista, 
-            Integer qt16_QuantEmpregadaDiarista, Integer qt16_QuantBanheiro, Integer qt16_QuantQuarto, String qt17_ProblemaSaude, float qt18_AluguelImoveis, 
-            float qt18_PensaoMorte, float qt18_PensaoAlimenticia, float qt18_AjudaTerceiros, float qt18_BeneficiosSociais, float qt18_OutraRenda, 
-            String qt18_NomeOutraRenda, float qt18_TotalRenda, Integer qt18_NumeroResidentes, float qt19_ValorAgua, float qt19_ValorLuz, float qt19_ValorTelefone, float qt19_ValorCondominio, 
-            float qt19_ValorMensalidadeEscolar, float qt19_ValorAlimentacao, float qt19_ValorSaude, float qt19_ValorTransporte, float qt19_ValorIptuAnual, 
-            float qt19_ValorAluguel, float qt19_ValorPensao, float qt19_ValorOutros, float qt20_ValorAgua, float qt20_ValorLuz, float qt20_ValorTelefone, 
-            float qt20_ValorCondominio, float qt20_ValorAluguel, float qt20_ValorIptuAnual, String qt21_Esclarecimentos) {
+
+    public Formulario(Integer codFormulario, Aluno aluno, Selecao selecao) {
         this.codFormulario = codFormulario;
         this.aluno = aluno;
         this.selecao = selecao;
+    }
+    public Formulario questao_01(String qt01_Resposta, String qt01_Nome, String qt01_Parentesco, String qt01_Programa, String qt01_Ano) {
         this.qt01_Resposta = qt01_Resposta;
         this.qt01_Nome = qt01_Nome;
         this.qt01_Parentesco = qt01_Parentesco;
         this.qt01_Programa = qt01_Programa;
         this.qt01_Ano = qt01_Ano;
+        return this;
+    }
+    public Formulario questao_02(String qt02_Alimentacao, String qt02_Manutencao, String qt02_Moradia, String qt02_Transporte, String qt02_Outro) {
         this.qt02_Alimentacao = qt02_Alimentacao;
         this.qt02_Manutencao = qt02_Manutencao;
         this.qt02_Moradia = qt02_Moradia;
         this.qt02_Transporte = qt02_Transporte;
         this.qt02_Outro = qt02_Outro;
+        return this;
+    }
+    public Formulario questao_03(String qt03_Transporte, String qt03_Tempo, float qt03_ValorGastoDiario, float qt03_ValorGastoMensal, String qt03_Outro) {
         this.qt03_Transporte = qt03_Transporte;
         this.qt03_Tempo = qt03_Tempo;
         this.qt03_ValorGastoDiario = qt03_ValorGastoDiario;
         this.qt03_ValorGastoMensal = qt03_ValorGastoMensal;
         this.qt03_Outro = qt03_Outro;
+        return this;
+    }
+    public Formulario questao_04(String qt04_InstituicaoEnsinoFundamental) {
         this.qt04_InstituicaoEnsinoFundamental = qt04_InstituicaoEnsinoFundamental;
+        return this;
+    }
+    public Formulario questao_05(String qt05_InstituicaoEnsinoMedio) {
         this.qt05_InstituicaoEnsinoMedio = qt05_InstituicaoEnsinoMedio;
+        return this;
+    }
+    public Formulario questao_06(String qt06_AtividadeRemunerada, float qt06_ValorBolsaEstagio, String qt06_ProjetoIniciacao, float qt06_ValorBolsaIniciacao, String qt06_ProjetoTreinamento, float qt06_ValorBolsaTreinamento, String qt06_Outro, float qt06_ValorBolsaOutro) {
         this.qt06_AtividadeRemunerada = qt06_AtividadeRemunerada;
         this.qt06_ValorBolsaEstagio = qt06_ValorBolsaEstagio;
         this.qt06_ProjetoIniciacao = qt06_ProjetoIniciacao;
@@ -351,30 +353,60 @@ public class Formulario implements Serializable {
         this.qt06_ValorBolsaTreinamento = qt06_ValorBolsaTreinamento;
         this.qt06_Outro = qt06_Outro;
         this.qt06_ValorBolsaOutro = qt06_ValorBolsaOutro;
+        return this;
+    }
+    public Formulario questao_07(String qt07_TrabalhoRemunerado, String qt07_HorasSemanais, float qt07_Salario) {
         this.qt07_TrabalhoRemunerado = qt07_TrabalhoRemunerado;
         this.qt07_HorasSemanais = qt07_HorasSemanais;
         this.qt07_Salario = qt07_Salario;
+        return this;
+    }
+    public Formulario questao_08(String qt08_Manutencao, String qt08_Outra) {
         this.qt08_Manutencao = qt08_Manutencao;
         this.qt08_Outra = qt08_Outra;
+        return this;
+    }
+    public Formulario questao_09(String qt09_Moradia, String qt09_Outra) {
         this.qt09_Moradia = qt09_Moradia;
         this.qt09_Outra = qt09_Outra;
+        return this;
+    }
+    public Formulario questao_10(String qt10_ResponsavelFinanceiro, String qt10_Outros) {
         this.qt10_ResponsavelFinanceiro = qt10_ResponsavelFinanceiro;
         this.qt10_Outros = qt10_Outros;
+        return this;
+    }
+    public Formulario questao_11(String qt11_Esgoto, String qt11_Agua, String qt11_Iluminacao, String qt11_Lixo, String qt11_Pavimentacao) {
         this.qt11_Esgoto = qt11_Esgoto;
         this.qt11_Agua = qt11_Agua;
         this.qt11_Iluminacao = qt11_Iluminacao;
         this.qt11_Lixo = qt11_Lixo;
         this.qt11_Pavimentacao = qt11_Pavimentacao;
+        return this;
+    }
+    public Formulario questao_12(String qt12_Residencia, String qt12_Outro) {
         this.qt12_Residencia = qt12_Residencia;
         this.qt12_Outro = qt12_Outro;
+        return this;
+    }
+    public Formulario questao_13(String qt13_Imovel, float qt13_ValorAluguel, float qt13_ValorPrestacao, String qt13_Nome, String qt13_Outro) {
         this.qt13_Imovel = qt13_Imovel;
         this.qt13_ValorAluguel = qt13_ValorAluguel;
         this.qt13_ValorPrestacao = qt13_ValorPrestacao;
         this.qt13_Nome = qt13_Nome;
         this.qt13_Outro = qt13_Outro;
+        return this;
+    }
+    public Formulario questao_14(String qt14_Acabamento) {
         this.qt14_Acabamento = qt14_Acabamento;
+        return this;
+    }
+    public Formulario questao_15(String qt15_OutrosImoveis, String qt15_DescricaoImoveis) {
         this.qt15_OutrosImoveis = qt15_OutrosImoveis;
         this.qt15_DescricaoImoveis = qt15_DescricaoImoveis;
+        return this;
+    }
+    public Formulario questao_16(Integer qt16_QuantCarro, Integer qt16_QuantTV, Integer qt16_QuantMaqLavar, Integer qt16_QuantGeladeira, Integer qt16_QuantTVCabo, Integer qt16_QuantComputador, Integer qt16_QuantInternetPaga, Integer qt16_QuantEmpregadaMensalista, Integer qt16_QuantEmpregadaDiarista, Integer qt16_QuantBanheiro, Integer qt16_QuantQuarto) {
         this.qt16_QuantCarro = qt16_QuantCarro;
         this.qt16_QuantTV = qt16_QuantTV;
         this.qt16_QuantMaqLavar = qt16_QuantMaqLavar;
@@ -386,7 +418,13 @@ public class Formulario implements Serializable {
         this.qt16_QuantEmpregadaDiarista = qt16_QuantEmpregadaDiarista;
         this.qt16_QuantBanheiro = qt16_QuantBanheiro;
         this.qt16_QuantQuarto = qt16_QuantQuarto;
+        return this;
+    }
+    public Formulario questao_17(String qt17_ProblemaSaude) {
         this.qt17_ProblemaSaude = qt17_ProblemaSaude;
+        return this;
+    }
+    public Formulario questao_18(float qt18_AluguelImoveis, float qt18_PensaoMorte, float qt18_PensaoAlimenticia, float qt18_AjudaTerceiros, float qt18_BeneficiosSociais, float qt18_OutraRenda, String qt18_NomeOutraRenda, float qt18_TotalRenda, Integer qt18_NumeroResidentes) {
         this.qt18_AluguelImoveis = qt18_AluguelImoveis;
         this.qt18_PensaoMorte = qt18_PensaoMorte;
         this.qt18_PensaoAlimenticia = qt18_PensaoAlimenticia;
@@ -396,6 +434,9 @@ public class Formulario implements Serializable {
         this.qt18_NomeOutraRenda = qt18_NomeOutraRenda;
         this.qt18_TotalRenda = qt18_TotalRenda;
         this.qt18_NumeroResidentes = qt18_NumeroResidentes;
+        return this;
+    }
+    public Formulario questao_19(float qt19_ValorAgua, float qt19_ValorLuz, float qt19_ValorTelefone, float qt19_ValorCondominio, float qt19_ValorMensalidadeEscolar, float qt19_ValorAlimentacao, float qt19_ValorSaude, float qt19_ValorTransporte, float qt19_ValorIptuAnual, float qt19_ValorAluguel, float qt19_ValorPensao, float qt19_ValorOutros) {
         this.qt19_ValorAgua = qt19_ValorAgua;
         this.qt19_ValorLuz = qt19_ValorLuz;
         this.qt19_ValorTelefone = qt19_ValorTelefone;
@@ -408,14 +449,22 @@ public class Formulario implements Serializable {
         this.qt19_ValorAluguel = qt19_ValorAluguel;
         this.qt19_ValorPensao = qt19_ValorPensao;
         this.qt19_ValorOutros = qt19_ValorOutros;
+        return this;
+    }
+    public Formulario questao_20(float qt20_ValorAgua, float qt20_ValorLuz, float qt20_ValorTelefone, float qt20_ValorCondominio, float qt20_ValorAluguel, float qt20_ValorIptuAnual) {
         this.qt20_ValorAgua = qt20_ValorAgua;
         this.qt20_ValorLuz = qt20_ValorLuz;
         this.qt20_ValorTelefone = qt20_ValorTelefone;
         this.qt20_ValorCondominio = qt20_ValorCondominio;
         this.qt20_ValorAluguel = qt20_ValorAluguel;
         this.qt20_ValorIptuAnual = qt20_ValorIptuAnual;
-        this.qt21_Esclarecimentos = qt21_Esclarecimentos;
+        return this;
     }
+    public Formulario questao_21(String qt21_Esclarecimentos) {
+        this.qt21_Esclarecimentos = qt21_Esclarecimentos;
+        return this;
+    }
+    
     
     public Integer getCodFormulario() {
         return codFormulario;
