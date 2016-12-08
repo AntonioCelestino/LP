@@ -49,6 +49,29 @@ public class UsuarioDAO {
         return resultado;
     }
     
+    public static boolean verificarTipoUsuario(int codUsuario, String tipoUsuario) 
+            throws ClassNotFoundException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        boolean resultado = false;
+        try {
+            conexao = BD.getConexao();
+            String sql = "select * from "+tipoUsuario+" where USUARIO_ID = ?";
+            comando = conexao.prepareStatement(sql);
+            comando.setInt(1, codUsuario);
+            ResultSet rs = comando.executeQuery();
+            rs.last();
+            if (rs.getRow() != 0) {
+                resultado = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(conexao, comando);
+        }
+        return resultado;
+    }
+    
     public static int getCodUsuarioPorLogin(String login, String senha) throws ClassNotFoundException{
         Connection conexao = null;
         PreparedStatement comando = null;

@@ -1,15 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
-import dao.AlunoDAO;
-import dao.FuncionarioDAO;
 import dao.UsuarioDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,21 +20,21 @@ public class LoginController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher view = null;
         try {
             String login = request.getParameter("txtLogin");
             String senha = request.getParameter("txtSenha");
+            int codigo = UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha));
             if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senha))) {
-                if(AlunoDAO.verificarAluno(UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)))){
-                    request.setAttribute("codUsuario", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
-                    request.setAttribute("codUsuarioLogado", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
+                if(UsuarioDAO.verificarTipoUsuario(codigo, "aluno")){         
+                    request.setAttribute("codUsuario", codigo);
+                    request.setAttribute("codUsuarioLogado", codigo);
                     request.setAttribute("loginUsuarioLogado", login);
                     view = request.getRequestDispatcher("/menuAluno.jsp");
                 }else{
-                    if(FuncionarioDAO.verificarFuncionario(UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)))){
-                        request.setAttribute("codUsuarioLogado", UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha)));
+                    if(UsuarioDAO.verificarTipoUsuario(codigo, "funcionario")){
+                        request.setAttribute("codUsuarioLogado", codigo);
                         request.setAttribute("loginUsuarioLogado", login);
                         view = request.getRequestDispatcher("/menuFuncionario.jsp");
                     }else{

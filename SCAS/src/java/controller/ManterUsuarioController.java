@@ -1,17 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
-import dao.AlunoDAO;
-import dao.FuncionarioDAO;
 import dao.UsuarioDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -19,15 +9,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import modelo.Bolsa;
-import modelo.Modalidade;
 import modelo.Usuario;
 import util.Criptografia;
 
-/**
- *
- * @author Nathan
- */
 public class ManterUsuarioController extends HttpServlet {
     private Usuario usuario;
     private String senhaOriginal;
@@ -187,13 +171,13 @@ public class ManterUsuarioController extends HttpServlet {
             }else if (operacao.equals("Excluir")){
                 UsuarioDAO.getInstance().operacao(usuario, "excluir");
             }
-            if(AlunoDAO.verificarAluno(codUsuarioLogado)){
+            if(UsuarioDAO.verificarTipoUsuario(codUsuarioLogado, "aluno")){
                 request.setAttribute("codUsuario", codUsuario);
                 request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                 RequestDispatcher view = request.getRequestDispatcher("/menuAluno.jsp");
                 view.forward(request, response);
             }else{
-                if(FuncionarioDAO.verificarFuncionario(codUsuarioLogado)){
+                if(UsuarioDAO.verificarTipoUsuario(codUsuarioLogado, "funcionario")){
                     request.setAttribute("codUsuarioLogado", codUsuarioLogado);
                     RequestDispatcher view = request.getRequestDispatcher("PesquisaUsuarioController");
                     view.forward(request, response);
