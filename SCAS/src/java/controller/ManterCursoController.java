@@ -2,14 +2,15 @@ package controller;
 
 import dao.CursoDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Curso;
 
-public class ManterCursoController extends HttpServlet {
+public class ManterCursoController extends ProcessRequestController {
 
     private Curso curso;
     /**
@@ -21,18 +22,6 @@ public class ManterCursoController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -46,7 +35,11 @@ public class ManterCursoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterCursoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -60,7 +53,11 @@ public class ManterCursoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterCursoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -73,13 +70,14 @@ public class ManterCursoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    @Override
     public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             if(!operacao.equals("Incluir")){
                 int codCurso = Integer.parseInt(request.getParameter("codCurso"));
-                curso = CursoDAO.obterCurso(codCurso);
+                curso = (Curso) CursoDAO.getInstance().obterClasse(Curso.class, codCurso);
                 request.setAttribute("curso", curso);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterCurso.jsp");
@@ -91,6 +89,7 @@ public class ManterCursoController extends HttpServlet {
         }
     }
 
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
@@ -100,14 +99,14 @@ public class ManterCursoController extends HttpServlet {
             String turno = request.getParameter("optTurno"); 
             if(operacao.equals("Incluir")){
                 curso = new Curso(codCurso, nome, tipoEnsino, turno);
-                CursoDAO.getInstance().operacao(curso, "gravar");
+                CursoDAO.getInstance().operacao(curso, "gravar", codCurso);
             }else if(operacao.equals("Editar")){
                 curso.setNome(nome);
                 curso.setTipoEnsino(tipoEnsino);
                 curso.setTurno(turno);
-                CursoDAO.getInstance().operacao(curso, "alterar");
+                CursoDAO.getInstance().operacao(curso, "alterar", codCurso);
             }else if (operacao.equals("Excluir")){
-                CursoDAO.getInstance().operacao(curso, "excluir");
+                CursoDAO.getInstance().operacao(curso, "excluir", codCurso);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaCursoController");
             view.forward(request, response);

@@ -16,7 +16,9 @@ import static org.easymock.EasyMock.*;
  * @author Nathan
  */
 public class TesteMockCursoDAO extends TestCase {
-    /** Creates a new instance of TesteDAO */
+    /** Creates a new instance of TesteDAO
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException */
     
     public void testPersistirCursoDAO() throws SQLException, ClassNotFoundException{
         Curso curso = new Curso();
@@ -24,7 +26,7 @@ public class TesteMockCursoDAO extends TestCase {
         curso.setNome("curso");
         curso.setTipoEnsino("tipo");
         curso.setTurno("manha");
-        DAO cursoDAO = CursoDAO.getInstance();
+        DAO cursoDAO = CursoDAO.getInstanceMock();
     
         assertTrue(curso.persistir(cursoDAO));
         assertTrue(curso.eliminar(cursoDAO));
@@ -32,6 +34,7 @@ public class TesteMockCursoDAO extends TestCase {
     
     public void testPersistirCursoDAOMock() throws SQLException, ClassNotFoundException {
         Curso curso = new Curso();
+        curso.setCodCurso(1);
         
         DAO cursoDAOMock = createMock(DAO.class);
         expect(cursoDAOMock.persistir(curso)).andReturn(true);

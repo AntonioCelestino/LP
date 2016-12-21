@@ -2,7 +2,6 @@ package modelo;
 
 import dao.RecursoDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -43,7 +42,7 @@ public class Recurso implements Serializable {
     }
     
     public static Recurso obterRecurso(int codRecurso) throws ClassNotFoundException {
-        return RecursoDAO.obterRecurso(codRecurso);
+        return (Recurso) RecursoDAO.getInstance().obterClasse(Recurso.class, codRecurso);
     }
 
     public Recurso(Integer codRecurso, Integer ano, float creditos, float debitos, float saldo, Modalidade modalidade) {

@@ -21,26 +21,22 @@ public class LoginController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher view = null;
+        RequestDispatcher view;
         try {
             String login = request.getParameter("txtLogin");
             String senha = request.getParameter("txtSenha");
             int codigo = UsuarioDAO.getCodUsuarioPorLogin(login, Criptografia.criptografar(senha));
             if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senha))) {
-                if(UsuarioDAO.verificarTipoUsuario(codigo, "aluno")){         
-                    request.setAttribute("codUsuario", codigo);
-                    request.setAttribute("codUsuarioLogado", codigo);
-                    request.setAttribute("loginUsuarioLogado", login);
+                if(UsuarioDAO.verificarTipoUsuario(codigo, "aluno")){
                     view = request.getRequestDispatcher("/menuAluno.jsp");
+                    request.setAttribute("codUsuario", codigo);
+                }else if(UsuarioDAO.verificarTipoUsuario(codigo, "funcionario")){
+                    view = request.getRequestDispatcher("/menuFuncionario.jsp");
                 }else{
-                    if(UsuarioDAO.verificarTipoUsuario(codigo, "funcionario")){
-                        request.setAttribute("codUsuarioLogado", codigo);
-                        request.setAttribute("loginUsuarioLogado", login);
-                        view = request.getRequestDispatcher("/menuFuncionario.jsp");
-                    }else{
-                       view = request.getRequestDispatcher("/index.jsp"); 
-                    }
+                    view = request.getRequestDispatcher("/index.jsp"); 
                 }
+                request.setAttribute("codUsuarioLogado", codigo);
+                request.setAttribute("loginUsuarioLogado", login);
             } else {
                 view = request.getRequestDispatcher("/index.jsp");
             }

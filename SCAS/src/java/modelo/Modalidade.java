@@ -2,7 +2,6 @@ package modelo;
 
 import dao.ModalidadeDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +34,7 @@ public class Modalidade implements Serializable {
     }
     
     public static Modalidade obterModalidade(int codModalidade) throws ClassNotFoundException{
-        return ModalidadeDAO.obterModalidade(codModalidade);
+        return (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
     }
 
     public Modalidade(Integer codModalidade, float valorMensal, String nome, String descricao) {

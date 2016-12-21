@@ -7,13 +7,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import modelo.Bolsa;
 import modelo.Modalidade;
 
-public class ManterModalidadeController extends HttpServlet {
+public class ManterModalidadeController extends ProcessRequestController {
 
     private Modalidade modalidade;
     /**
@@ -25,18 +23,6 @@ public class ManterModalidadeController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -50,7 +36,11 @@ public class ManterModalidadeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterModalidadeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -64,7 +54,11 @@ public class ManterModalidadeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterModalidadeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -77,13 +71,14 @@ public class ManterModalidadeController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    @Override
     public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             if(!operacao.equals("Incluir")){
                 int codModalidade = Integer.parseInt(request.getParameter("codModalidade"));
-                modalidade = ModalidadeDAO.obterModalidade(codModalidade);
+                modalidade = (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
                 request.setAttribute("modalidade", modalidade);
                 try {
                     impostos(request, response, codModalidade);
@@ -113,6 +108,7 @@ public class ManterModalidadeController extends HttpServlet {
         request.setAttribute("imposto", modalidade.calculaImposto(valor));
     }
 
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
@@ -122,14 +118,14 @@ public class ManterModalidadeController extends HttpServlet {
             String descricao = request.getParameter("txtDescricaoModalidade"); 
             if(operacao.equals("Incluir")){
                 modalidade = new Modalidade(codModalidade, valorMensal, nome, descricao);
-                ModalidadeDAO.getInstance().operacao(modalidade, "gravar");
+                ModalidadeDAO.getInstance().operacao(modalidade, "gravar", codModalidade);
             }else if(operacao.equals("Editar")){
                 modalidade.setValorMensal(valorMensal);
                 modalidade.setNome(nome);
                 modalidade.setDescricao(descricao);
-                ModalidadeDAO.getInstance().operacao(modalidade, "alterar");
+                ModalidadeDAO.getInstance().operacao(modalidade, "alterar", codModalidade);
             }else if (operacao.equals("Excluir")){
-                ModalidadeDAO.getInstance().operacao(modalidade, "excluir");
+                ModalidadeDAO.getInstance().operacao(modalidade, "excluir", codModalidade);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);

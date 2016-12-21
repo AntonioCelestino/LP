@@ -4,16 +4,17 @@ import dao.AlunoDAO;
 import dao.FormularioDAO;
 import dao.SelecaoDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Aluno;
 import modelo.Formulario;
 import modelo.Selecao;
 
-public class ManterFormularioController extends HttpServlet {
+public class ManterFormularioController extends ProcessRequestController {
 
     private Formulario formulario;
     /**
@@ -25,18 +26,6 @@ public class ManterFormularioController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -50,7 +39,11 @@ public class ManterFormularioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterFormularioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -64,7 +57,11 @@ public class ManterFormularioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterFormularioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -77,7 +74,8 @@ public class ManterFormularioController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    @Override
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
@@ -85,7 +83,7 @@ public class ManterFormularioController extends HttpServlet {
             request.setAttribute("selecoes", SelecaoDAO.obterSelecoes());
             if(!operacao.equals("Incluir")){
                 int codFormulario = Integer.parseInt(request.getParameter("codFormulario"));
-                formulario = FormularioDAO.obterFormulario(codFormulario);
+                formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
                 request.setAttribute("formulario", formulario);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterFormulario.jsp");
@@ -105,6 +103,7 @@ public class ManterFormularioController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
@@ -203,10 +202,10 @@ public class ManterFormularioController extends HttpServlet {
             Aluno aluno = null;
             Selecao selecao = null;
             if(codAluno != 0){
-                aluno = AlunoDAO.obterAluno(codAluno);
+                aluno = (Aluno) AlunoDAO.getInstance().obterClasse(Aluno.class, codAluno);
             }
             if(codSelecao != 0){
-                selecao = SelecaoDAO.obterSelecao(codSelecao);
+                selecao = (Selecao) SelecaoDAO.getInstance().obterClasse(Selecao.class, codSelecao);
             }
             if(operacao.equals("Incluir")){
                 formulario = new Formulario(codFormulario, aluno, selecao)
@@ -231,7 +230,7 @@ public class ManterFormularioController extends HttpServlet {
                         .questao_19(qt19_ValorAgua, qt19_ValorLuz, qt19_ValorTelefone, qt19_ValorCondominio, qt19_ValorMensalidadeEscolar, qt19_ValorAlimentacao, qt19_ValorSaude, qt19_ValorTransporte, qt19_ValorIptuAnual, qt19_ValorAluguel, qt19_ValorPensao, qt19_ValorOutros)
                         .questao_20(qt20_ValorAgua, qt20_ValorLuz, qt20_ValorTelefone, qt20_ValorCondominio, qt20_ValorAluguel, qt20_ValorIptuAnual)
                         .questao_21(qt21_Esclarecimentos);
-                FormularioDAO.getInstance().operacao(formulario, "gravar");
+                FormularioDAO.getInstance().operacao(formulario, "gravar", codFormulario);
             }else if(operacao.equals("Editar")){
                 formulario.setQt01_Resposta(qt01_Resposta);
                 formulario.setQt01_Nome(qt01_Nome);
@@ -322,9 +321,9 @@ public class ManterFormularioController extends HttpServlet {
                 formulario.setQt20_ValorAluguel(qt20_ValorAluguel);
                 formulario.setQt20_ValorIptuAnual(qt20_ValorIptuAnual);
                 formulario.setQt21_Esclarecimentos(qt21_Esclarecimentos);
-                FormularioDAO.getInstance().operacao(formulario, "alterar");
+                FormularioDAO.getInstance().operacao(formulario, "alterar", codFormulario);
             }else if (operacao.equals("Excluir")){
-                FormularioDAO.getInstance().operacao(formulario, "excluir");
+                FormularioDAO.getInstance().operacao(formulario, "excluir", codFormulario);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFormularioController");
             view.forward(request, response);

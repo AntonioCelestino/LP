@@ -3,15 +3,16 @@ package controller;
 import dao.ModalidadeDAO;
 import dao.SelecaoDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Modalidade;
 import modelo.Selecao;
 
-public class ManterSelecaoController extends HttpServlet {
+public class ManterSelecaoController extends ProcessRequestController {
     
     private Selecao selecao;
     /**
@@ -23,18 +24,6 @@ public class ManterSelecaoController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -48,7 +37,11 @@ public class ManterSelecaoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterSelecaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -62,7 +55,11 @@ public class ManterSelecaoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterSelecaoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -75,6 +72,7 @@ public class ManterSelecaoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    @Override
     public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             String operacao = request.getParameter("operacao");
@@ -82,7 +80,7 @@ public class ManterSelecaoController extends HttpServlet {
             request.setAttribute("modalidades", ModalidadeDAO.obterModalidades());
             if(!operacao.equals("Incluir")){
                 int codSelecao = Integer.parseInt(request.getParameter("codSelecao"));
-                selecao = SelecaoDAO.obterSelecao(codSelecao);
+                selecao = (Selecao) SelecaoDAO.getInstance().obterClasse(Selecao.class, codSelecao);
                 request.setAttribute("selecao", selecao);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterSelecao.jsp");
@@ -94,6 +92,7 @@ public class ManterSelecaoController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
@@ -104,19 +103,19 @@ public class ManterSelecaoController extends HttpServlet {
             int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
-                modalidade = ModalidadeDAO.obterModalidade(codModalidade);
+                modalidade = (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
             }
             if(operacao.equals("Incluir")){
                 selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-                SelecaoDAO.getInstance().operacao(selecao, "gravar");
+                SelecaoDAO.getInstance().operacao(selecao, "gravar", codSelecao);
             }else if(operacao.equals("Editar")){
                 selecao.setDataInicioSelecao(dataInicioSelecao);
                 selecao.setDataFimSelecao(dataFimSelecao);
                 selecao.setNumeroEdital(numeroEdital);
                 selecao.setModalidade(modalidade);
-                SelecaoDAO.getInstance().operacao(selecao, "alterar");
+                SelecaoDAO.getInstance().operacao(selecao, "alterar", codSelecao);
             }else if (operacao.equals("Excluir")){
-                SelecaoDAO.getInstance().operacao(selecao, "excluir");
+                SelecaoDAO.getInstance().operacao(selecao, "excluir", codSelecao);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
             view.forward(request, response);

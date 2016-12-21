@@ -3,15 +3,16 @@ package controller;
 import dao.BolsaDAO;
 import dao.FormularioDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Bolsa;
 import modelo.Formulario;
 
-public class ManterBolsaController extends HttpServlet {
+public class ManterBolsaController extends ProcessRequestController {
 
     private Bolsa bolsa;
     /**
@@ -23,18 +24,6 @@ public class ManterBolsaController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -48,7 +37,11 @@ public class ManterBolsaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterBolsaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -62,7 +55,11 @@ public class ManterBolsaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterBolsaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -75,14 +72,15 @@ public class ManterBolsaController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    @Override
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
             request.setAttribute("formularios", FormularioDAO.obterFormularios());
             if(!operacao.equals("Incluir")){
                 int codBolsa = Integer.parseInt(request.getParameter("codBolsa"));
-                bolsa = BolsaDAO.obterBolsa(codBolsa);
+                bolsa = (Bolsa) BolsaDAO.getInstance().obterClasse(Bolsa.class, codBolsa);
                 request.setAttribute("bolsa", bolsa);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterBolsa.jsp");
@@ -94,6 +92,7 @@ public class ManterBolsaController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
@@ -103,18 +102,18 @@ public class ManterBolsaController extends HttpServlet {
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
             Formulario formulario = null;
             if(codFormulario != 0){
-                formulario = FormularioDAO.obterFormulario(codFormulario);
+                formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
             }
             if(operacao.equals("Incluir")){
                 bolsa = new Bolsa(codBolsa, dataInicio, dataFim, formulario);
-                BolsaDAO.getInstance().operacao(bolsa, "gravar");
+                BolsaDAO.getInstance().operacao(bolsa, "gravar", codBolsa);
             }else if(operacao.equals("Editar")){
                 bolsa.setDataInicio(dataInicio);
                 bolsa.setDataFim(dataFim);
                 bolsa.setFormulario(formulario);
-                BolsaDAO.getInstance().operacao(bolsa, "alterar");
+                BolsaDAO.getInstance().operacao(bolsa, "alterar", codBolsa);
             }else if (operacao.equals("Excluir")){
-                BolsaDAO.getInstance().operacao(bolsa, "excluir");
+                BolsaDAO.getInstance().operacao(bolsa, "excluir", codBolsa);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaBolsaController");
             view.forward(request, response);

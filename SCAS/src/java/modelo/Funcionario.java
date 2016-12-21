@@ -2,7 +2,6 @@ package modelo;
 
 import dao.FuncionarioDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -38,8 +37,8 @@ public class Funcionario implements Serializable {
         return FuncionarioDAO.obterFuncionarios();
     }
     
-    public static  Funcionario obterFuncionario(int registro) throws ClassNotFoundException{
-        return FuncionarioDAO.obterFuncionario(registro);
+    public static Funcionario obterFuncionario(int registro) throws ClassNotFoundException{
+        return (Funcionario) FuncionarioDAO.getInstance().obterClasse(Funcionario.class, registro);
     }
     
     public Funcionario(Integer registro, String cargo, Usuario usuario) {

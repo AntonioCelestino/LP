@@ -2,7 +2,6 @@ package modelo;
 
 import dao.FormularioDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -304,7 +303,7 @@ public class Formulario implements Serializable {
     }
     
     public static Formulario obterFormulario(int codFormulario) throws ClassNotFoundException{
-        return FormularioDAO.obterFormulario(codFormulario);
+        return (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
     }
 
     public Formulario(Integer codFormulario, Aluno aluno, Selecao selecao) {

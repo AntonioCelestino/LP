@@ -2,7 +2,6 @@ package modelo;
 
 import dao.BolsaDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -42,7 +41,7 @@ public class Bolsa implements Serializable {
     }
 
     public static Bolsa obterBolsa(int codBolsa) throws ClassNotFoundException {
-        return BolsaDAO.obterBolsa(codBolsa);
+        return (Bolsa) BolsaDAO.getInstance().obterClasse(Bolsa.class, codBolsa);
     }
     
     public Bolsa(Integer codBolsa, String dataInicio, String dataFim, Formulario formulario) {

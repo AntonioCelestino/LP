@@ -44,7 +44,7 @@ public class Curso implements Serializable {
     }
     
     public static Curso obterCurso(int codCurso) throws ClassNotFoundException{
-        return CursoDAO.obterCurso(codCurso);
+        return (Curso) CursoDAO.getInstance().obterClasse(Curso.class, codCurso);
     }
 
     public Curso(Integer codCurso, String nome, String tipoEnsino, String turno) {

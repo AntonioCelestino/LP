@@ -2,7 +2,6 @@ package modelo;
 
 import dao.AlunoDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -65,7 +64,7 @@ public class Aluno implements Serializable {
     }
     
     public static Aluno obterAluno(int codAluno) throws ClassNotFoundException{
-        return AlunoDAO.obterAluno(codAluno);
+        return (Aluno) AlunoDAO.getInstance().obterClasse(Aluno.class, codAluno);
     }
     
     public Aluno(Integer matricula, Integer anoIngresso, String periodoCurso, String familia_endereco, String familia_numero, String familia_complemento, String familia_bairro, String familia_cep, String familia_cidade, String familia_uf, Curso curso, Usuario usuario) {

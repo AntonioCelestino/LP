@@ -4,16 +4,17 @@ import dao.AlunoDAO;
 import dao.CursoDAO;
 import dao.UsuarioDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Aluno;
 import modelo.Curso;
 import modelo.Usuario;
 
-public class ManterAlunoController extends HttpServlet {
+public class ManterAlunoController extends ProcessRequestController {
 
     private Aluno aluno;
     /**
@@ -25,18 +26,7 @@ public class ManterAlunoController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -50,7 +40,11 @@ public class ManterAlunoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterAlunoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -64,7 +58,11 @@ public class ManterAlunoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterAlunoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -77,7 +75,8 @@ public class ManterAlunoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    @Override
+    public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
             request.setAttribute("operacao", operacao);
@@ -85,7 +84,7 @@ public class ManterAlunoController extends HttpServlet {
             request.setAttribute("usuarios", UsuarioDAO.obterUsuarios());
             if(!operacao.equals("Incluir")){
                 int codAluno = Integer.parseInt(request.getParameter("codAluno"));
-                aluno = AlunoDAO.obterAluno(codAluno);
+                aluno = (Aluno) AlunoDAO.getInstance().obterClasse(Aluno.class, codAluno);
                 request.setAttribute("aluno", aluno);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterAluno.jsp");
@@ -97,6 +96,7 @@ public class ManterAlunoController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
@@ -115,14 +115,14 @@ public class ManterAlunoController extends HttpServlet {
             Curso curso = null;
             Usuario usuario = null;
             if(codCurso != 0){
-                curso = CursoDAO.obterCurso(codCurso);
+                curso = (Curso) CursoDAO.getInstance().obterClasse(Curso.class, codCurso);
             }
             if(codUsuario != 0){
-                usuario = UsuarioDAO.obterUsuario(codUsuario);
+                usuario = (Usuario) UsuarioDAO.getInstance().obterClasse(Usuario.class, codUsuario);
             }
             if(operacao.equals("Incluir")){
                 aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-                AlunoDAO.getInstance().operacao(aluno, "gravar");
+                AlunoDAO.getInstance().operacao(aluno, "gravar", matricula);
             }else if(operacao.equals("Editar")){
                 aluno.setAnoIngresso(anoIngresso);
                 aluno.setPeriodoCurso(periodoCurso);
@@ -135,9 +135,9 @@ public class ManterAlunoController extends HttpServlet {
                 aluno.setFamilia_uf(familia_uf);
                 aluno.setCurso(curso);
                 aluno.setUsuario(usuario);
-                AlunoDAO.getInstance().operacao(aluno, "alterar");
+                AlunoDAO.getInstance().operacao(aluno, "alterar", matricula);
             }else if (operacao.equals("Excluir")){
-                AlunoDAO.getInstance().operacao(aluno, "excluir");
+                AlunoDAO.getInstance().operacao(aluno, "excluir", matricula);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
             view.forward(request, response);

@@ -2,7 +2,6 @@ package modelo;
 
 import dao.RendaDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -59,7 +58,7 @@ public class Renda implements Serializable {
     }
 
     public static Renda obterRenda(int codRenda) throws ClassNotFoundException {
-        return RendaDAO.obterRenda(codRenda);
+        return (Renda) RendaDAO.getInstance().obterClasse(Renda.class, codRenda);
     }
     
     public Renda(Integer codRenda, Formulario formulario, String qt18_Nome, String qt18_DataNasc, String qt18_EstadoCivil, String qt18_Parentesco, String qt18_Escolaridade, String qt18_Trabalho, String qt18_Ocupacao, float qt18_RendaBruta) {

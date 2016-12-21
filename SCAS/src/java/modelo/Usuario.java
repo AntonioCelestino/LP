@@ -3,7 +3,6 @@ package modelo;
 
 import dao.UsuarioDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -80,7 +79,7 @@ public class Usuario implements Serializable {
     }
     
     public static Usuario obterUsuario(int codUsuario) throws ClassNotFoundException{
-        return UsuarioDAO.obterUsuario(codUsuario);
+        return (Usuario) UsuarioDAO.getInstance().obterClasse(Usuario.class, codUsuario);
     }
     
     public Usuario(Integer codUsuario, String dataNasc, String nome, String sexo, String cpf, String identidade, String telefoneFixo, String telefoneCelular, String email, String endereco, String numero, String complemento, String bairro, String cep, String cidade, String uf, String login, String senha) {

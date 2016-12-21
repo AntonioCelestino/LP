@@ -3,15 +3,16 @@ package controller;
 import dao.FormularioDAO;
 import dao.RendaDAO;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Renda;
 import modelo.Formulario;
 
-public class ManterRendaController extends HttpServlet {
+public class ManterRendaController extends ProcessRequestController {
     
     private Renda renda;
     /**
@@ -23,19 +24,7 @@ public class ManterRendaController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -48,7 +37,11 @@ public class ManterRendaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterRendaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -62,7 +55,11 @@ public class ManterRendaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterRendaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -75,6 +72,7 @@ public class ManterRendaController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    @Override
     public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             String operacao = request.getParameter("operacao");
@@ -82,7 +80,7 @@ public class ManterRendaController extends HttpServlet {
             request.setAttribute("formularios", FormularioDAO.obterFormularios());
             if(!operacao.equals("Incluir")){
                 int codRenda = Integer.parseInt(request.getParameter("codRenda"));
-                renda = RendaDAO.obterRenda(codRenda);
+                renda = (Renda) RendaDAO.getInstance().obterClasse(Renda.class, codRenda);
                 String r = Integer.toString(codRenda);
                 String f = Integer.toString(renda.getFormulario().getCodFormulario());
                 renda.setCodRenda(Integer.parseInt(r.substring(f.length())));
@@ -98,6 +96,7 @@ public class ManterRendaController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
@@ -113,11 +112,11 @@ public class ManterRendaController extends HttpServlet {
             float qt18_RendaBruta = Float.parseFloat(request.getParameter("txt_qt18_RendaBruta"));
             Formulario formulario = null;
             if(codFormulario != 0){
-                formulario = FormularioDAO.obterFormulario(codFormulario);
+                formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
             }
             if(operacao.equals("Incluir")){
                 renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-                RendaDAO.getInstance().operacao(renda, "gravar");
+                RendaDAO.getInstance().operacao(renda, "gravar", codRenda);
             }else if(operacao.equals("Editar")){
                 renda.setCodRenda(codRenda);
                 renda.setFormulario(formulario);
@@ -129,10 +128,10 @@ public class ManterRendaController extends HttpServlet {
                 renda.setQt18_Trabalho(qt18_Trabalho);
                 renda.setQt18_Ocupacao(qt18_Ocupacao);
                 renda.setQt18_RendaBruta(qt18_RendaBruta);
-                RendaDAO.getInstance().operacao(renda, "alterar");
+                RendaDAO.getInstance().operacao(renda, "alterar", codRenda);
             }else if (operacao.equals("Excluir")){
                 renda.setCodRenda(codRenda);
-                RendaDAO.getInstance().operacao(renda, "excluir");
+                RendaDAO.getInstance().operacao(renda, "excluir", codRenda);
             }
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
             view.forward(request, response);

@@ -2,7 +2,6 @@ package modelo;
 
 import dao.SelecaoDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -45,7 +44,7 @@ public class Selecao implements Serializable {
     }
 
     public static Selecao obterSelecao(int codSelecao) throws ClassNotFoundException{
-        return SelecaoDAO.obterSelecao(codSelecao);
+        return (Selecao) SelecaoDAO.getInstance().obterClasse(Selecao.class, codSelecao);
     }
     
     public Selecao(Integer codSelecao, String dataInicioSelecao, String dataFimSelecao, String numeroEdital, Modalidade modalidade) {

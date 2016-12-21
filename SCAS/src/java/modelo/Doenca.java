@@ -2,7 +2,6 @@ package modelo;
 
 import dao.DoencaDAO;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -50,7 +49,7 @@ public class Doenca implements Serializable {
     }
 
     public static Doenca obterDoenca(int codDoenca) throws ClassNotFoundException {
-        return DoencaDAO.obterDoenca(codDoenca);
+        return (Doenca) DoencaDAO.getInstance().obterClasse(Doenca.class, codDoenca);
     }
     
     public Doenca(Integer codDoenca, Formulario Formuario, String qt17_Nome, String qt17_Doenca, String qt17_Trabalho, String qt17_Dependencia, float qt17_Gasto) {
