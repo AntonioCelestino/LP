@@ -97,26 +97,19 @@ public class ManterSelecaoController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
-            String dataInicioSelecao = request.getParameter("txtDataInicioSelecao");
-            String dataFimSelecao = request.getParameter("txtDataFimSelecao");
-            String numeroEdital = request.getParameter("txtNumeroEdital");
             int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
                 modalidade = (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
             }
+            selecao.setDataInicioSelecao(request.getParameter("txtDataInicioSelecao"));
+            selecao.setDataFimSelecao(request.getParameter("txtDataFimSelecao"));
+            selecao.setNumeroEdital(request.getParameter("txtNumeroEdital"));
+            selecao.setModalidade(modalidade);
             if(operacao.equals("Incluir")){
-                selecao = new Selecao(codSelecao, dataInicioSelecao, dataFimSelecao, numeroEdital, modalidade);
-                SelecaoDAO.getInstance().operacao(selecao, "gravar", codSelecao);
-            }else if(operacao.equals("Editar")){
-                selecao.setDataInicioSelecao(dataInicioSelecao);
-                selecao.setDataFimSelecao(dataFimSelecao);
-                selecao.setNumeroEdital(numeroEdital);
-                selecao.setModalidade(modalidade);
-                SelecaoDAO.getInstance().operacao(selecao, "alterar", codSelecao);
-            }else if (operacao.equals("Excluir")){
-                SelecaoDAO.getInstance().operacao(selecao, "excluir", codSelecao);
+                selecao.setCodSelecao(codSelecao);
             }
+            SelecaoDAO.getInstance().operacao(selecao, operacao, codSelecao);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
             view.forward(request, response);
         }catch(ServletException e){

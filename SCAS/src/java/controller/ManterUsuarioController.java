@@ -100,55 +100,33 @@ public class ManterUsuarioController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
         try{
             String operacao = request.getParameter("operacao");
-            int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
             int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
-            String dataNasc = request.getParameter("txtDataNasc");
-            String nome = request.getParameter("txtNome");
-            String sexo = request.getParameter("txtSexo");
-            String cpf = request.getParameter("txtCPF");
-            String identidade = request.getParameter("txtIdentidade");
-            String telefoneFixo = request.getParameter("txtTelefoneFixo");
-            String telefoneCelular = request.getParameter("txtTelefoneCelular");
-            String email = request.getParameter("txtEmail");
-            String endereco = request.getParameter("txtEndereco");
-            String numero = request.getParameter("txtNumero");
-            String complemento = request.getParameter("txtComplemento");
-            String bairro = request.getParameter("txtBairro");
-            String cep = request.getParameter("txtCep");
-            String cidade = request.getParameter("txtCidade");
-            String uf = request.getParameter("txtUF");
-            String login = request.getParameter("txtLogin");
+            int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
             String senhaAnterior = request.getParameter("txtSenhaAnterior");
             String senha = request.getParameter("txtSenha");
-            
-            if(operacao.equals("Incluir")){
-                usuario = new Usuario(codUsuario, dataNasc, nome, sexo, cpf, identidade, telefoneFixo, telefoneCelular, email, endereco, numero, 
-                        complemento, bairro, cep, cidade, uf, login, Criptografia.criptografar(senha));
-                UsuarioDAO.getInstance().operacao(usuario, "gravar", codUsuario);
-            }else if(operacao.equals("Editar")){
-                usuario.setDataNasc(dataNasc);
-                usuario.setNome(nome);
-                usuario.setSexo(sexo);
-                usuario.setCpf(cpf);
-                usuario.setIdentidade(identidade);
-                usuario.setTelefoneFixo(telefoneFixo);
-                usuario.setTelefoneCelular(telefoneCelular);
-                usuario.setEmail(email);
-                usuario.setEndereco(endereco);
-                usuario.setNumero(numero);
-                usuario.setComplemento(complemento);
-                usuario.setBairro(bairro);
-                usuario.setCep(cep);
-                usuario.setCidade(cidade);
-                usuario.setUf(uf);
-                usuario.setLogin(login);
+            usuario.setDataNasc(request.getParameter("txtDataNasc"));
+            usuario.setNome(request.getParameter("txtNome"));
+            usuario.setSexo(request.getParameter("txtSexo"));
+            usuario.setCpf(request.getParameter("txtCPF"));
+            usuario.setIdentidade(request.getParameter("txtIdentidade"));
+            usuario.setTelefoneFixo(request.getParameter("txtTelefoneFixo"));
+            usuario.setTelefoneCelular(request.getParameter("txtTelefoneCelular"));
+            usuario.setEmail(request.getParameter("txtEmail"));
+            usuario.setEndereco(request.getParameter("txtEndereco"));
+            usuario.setNumero(request.getParameter("txtNumero"));
+            usuario.setComplemento(request.getParameter("txtComplemento"));
+            usuario.setBairro(request.getParameter("txtBairro"));
+            usuario.setCep(request.getParameter("txtCep"));
+            usuario.setCidade(request.getParameter("txtCidade"));
+            usuario.setUf(request.getParameter("txtUF"));
+            usuario.setLogin(request.getParameter("txtLogin"));
+            if(operacao.equals("Editar")){
                 if(senha == null && senhaAnterior == null){
                     usuario.setSenha(senhaOriginal);
-                    UsuarioDAO.getInstance().operacao(usuario, "alterar", codUsuario);
                 }else{
-                    if (UsuarioDAO.verificarUsuario(login, Criptografia.criptografar(senhaAnterior))) {
+                    if (UsuarioDAO.verificarUsuario(request.getParameter("txtLogin"), Criptografia.criptografar(senhaAnterior))) {
                         usuario.setSenha(Criptografia.criptografar(senha));
-                        UsuarioDAO.getInstance().operacao(usuario, "alterar", codUsuario);
+                        UsuarioDAO.getInstance().operacao(usuario, operacao, codUsuario);
                     } else {
                         request.setAttribute("operacao", operacao);
                         usuario.setSenha("");
@@ -158,8 +136,12 @@ public class ManterUsuarioController extends ProcessRequestController {
                         view.forward(request, response);
                     }
                 }
-            }else if (operacao.equals("Excluir")){
-                UsuarioDAO.getInstance().operacao(usuario, "excluir", codUsuario);
+            }else{
+                if(operacao.equals("Incluir")){
+                    usuario.setCodUsuario(codUsuario);
+                    Criptografia.criptografar(senha);
+                }
+                UsuarioDAO.getInstance().operacao(usuario, operacao, codUsuario);
             }
             request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view;

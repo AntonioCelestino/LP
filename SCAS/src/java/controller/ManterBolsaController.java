@@ -97,24 +97,18 @@ public class ManterBolsaController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codBolsa = Integer.parseInt(request.getParameter("txtCodBolsa"));
-            String dataInicio = request.getParameter("txtDataInicio");
-            String dataFim = request.getParameter("txtDataFim");
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
             Formulario formulario = null;
             if(codFormulario != 0){
                 formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
             }
+            bolsa.setDataInicio(request.getParameter("txtDataInicio"));
+            bolsa.setDataFim(request.getParameter("txtDataFim"));
+            bolsa.setFormulario(formulario);
             if(operacao.equals("Incluir")){
-                bolsa = new Bolsa(codBolsa, dataInicio, dataFim, formulario);
-                BolsaDAO.getInstance().operacao(bolsa, "gravar", codBolsa);
-            }else if(operacao.equals("Editar")){
-                bolsa.setDataInicio(dataInicio);
-                bolsa.setDataFim(dataFim);
-                bolsa.setFormulario(formulario);
-                BolsaDAO.getInstance().operacao(bolsa, "alterar", codBolsa);
-            }else if (operacao.equals("Excluir")){
-                BolsaDAO.getInstance().operacao(bolsa, "excluir", codBolsa);
-            }
+                bolsa.setCodBolsa(codBolsa);
+            }  
+            BolsaDAO.getInstance().operacao(bolsa, operacao, codBolsa);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaBolsaController");
             view.forward(request, response);
         }catch(ServletException e){

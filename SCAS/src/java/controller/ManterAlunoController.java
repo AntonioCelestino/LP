@@ -101,15 +101,6 @@ public class ManterAlunoController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
-            int anoIngresso = Integer.parseInt(request.getParameter("txtAnoIngresso"));
-            String periodoCurso = request.getParameter("txtPeriodoCurso");
-            String familia_endereco = request.getParameter("txtFamiliaEndereco");
-            String familia_numero = request.getParameter("txtFamiliaNumero");
-            String familia_complemento = request.getParameter("txtFamiliaComplemento");
-            String familia_bairro = request.getParameter("txtFamiliaBairro");
-            String familia_cep = request.getParameter("txtFamiliaCep");
-            String familia_cidade = request.getParameter("txtFamiliaCidade");
-            String familia_uf = request.getParameter("txtFamiliaUF");
             int codCurso = Integer.parseInt(request.getParameter("optCurso"));
             int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
             Curso curso = null;
@@ -120,25 +111,21 @@ public class ManterAlunoController extends ProcessRequestController {
             if(codUsuario != 0){
                 usuario = (Usuario) UsuarioDAO.getInstance().obterClasse(Usuario.class, codUsuario);
             }
+            aluno.setAnoIngresso(Integer.parseInt(request.getParameter("txtAnoIngresso")));
+            aluno.setPeriodoCurso(request.getParameter("txtPeriodoCurso"));
+            aluno.setFamilia_endereco(request.getParameter("txtFamiliaEndereco"));
+            aluno.setFamilia_numero(request.getParameter("txtFamiliaNumero"));
+            aluno.setFamilia_complemento(request.getParameter("txtFamiliaComplemento"));
+            aluno.setFamilia_bairro(request.getParameter("txtFamiliaBairro"));
+            aluno.setFamilia_cep(request.getParameter("txtFamiliaCep"));
+            aluno.setFamilia_cidade(request.getParameter("txtFamiliaCidade"));
+            aluno.setFamilia_uf(request.getParameter("txtFamiliaUF"));
+            aluno.setCurso(curso);
+            aluno.setUsuario(usuario);
             if(operacao.equals("Incluir")){
-                aluno = new Aluno(matricula, anoIngresso, periodoCurso, familia_endereco, familia_numero, familia_complemento, familia_bairro, familia_cep, familia_cidade, familia_uf, curso, usuario);
-                AlunoDAO.getInstance().operacao(aluno, "gravar", matricula);
-            }else if(operacao.equals("Editar")){
-                aluno.setAnoIngresso(anoIngresso);
-                aluno.setPeriodoCurso(periodoCurso);
-                aluno.setFamilia_endereco(familia_endereco);
-                aluno.setFamilia_numero(familia_numero);
-                aluno.setFamilia_complemento(familia_complemento);
-                aluno.setFamilia_bairro(familia_bairro);
-                aluno.setFamilia_cep(familia_cep);
-                aluno.setFamilia_cidade(familia_cidade);
-                aluno.setFamilia_uf(familia_uf);
-                aluno.setCurso(curso);
-                aluno.setUsuario(usuario);
-                AlunoDAO.getInstance().operacao(aluno, "alterar", matricula);
-            }else if (operacao.equals("Excluir")){
-                AlunoDAO.getInstance().operacao(aluno, "excluir", matricula);
+                aluno.setMatricula(matricula);
             }
+            AlunoDAO.getInstance().operacao(aluno, operacao, matricula);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
             view.forward(request, response);
         }catch(ServletException e){

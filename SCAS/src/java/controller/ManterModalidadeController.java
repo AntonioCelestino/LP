@@ -113,20 +113,13 @@ public class ManterModalidadeController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
-            float valorMensal = Float.parseFloat(request.getParameter("txtValorMensal"));
-            String nome = request.getParameter("txtNomeModalidade");
-            String descricao = request.getParameter("txtDescricaoModalidade"); 
+            modalidade.setValorMensal(Float.parseFloat(request.getParameter("txtValorMensal")));
+            modalidade.setNome(request.getParameter("txtNomeModalidade"));
+            modalidade.setDescricao(request.getParameter("txtDescricaoModalidade"));
             if(operacao.equals("Incluir")){
-                modalidade = new Modalidade(codModalidade, valorMensal, nome, descricao);
-                ModalidadeDAO.getInstance().operacao(modalidade, "gravar", codModalidade);
-            }else if(operacao.equals("Editar")){
-                modalidade.setValorMensal(valorMensal);
-                modalidade.setNome(nome);
-                modalidade.setDescricao(descricao);
-                ModalidadeDAO.getInstance().operacao(modalidade, "alterar", codModalidade);
-            }else if (operacao.equals("Excluir")){
-                ModalidadeDAO.getInstance().operacao(modalidade, "excluir", codModalidade);
+                modalidade.setCodModalidade(codModalidade);
             }
+            ModalidadeDAO.getInstance().operacao(modalidade, operacao, codModalidade);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);
         }catch(ServletException e){

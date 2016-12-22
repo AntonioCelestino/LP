@@ -97,28 +97,20 @@ public class ManterRecursoController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codRecurso = Integer.parseInt(request.getParameter("txtCodRecurso"));
-            int ano = Integer.parseInt(request.getParameter("txtAno"));
-            float creditos = Float.parseFloat(request.getParameter("txtCreditos"));
-            float debitos = Float.parseFloat(request.getParameter("txtDebitos"));
-            float saldo = Float.parseFloat(request.getParameter("txtSaldo"));
             int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
                 modalidade = (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
             }
+            recurso.setAno(Integer.parseInt(request.getParameter("txtAno")));
+            recurso.setCreditos(Float.parseFloat(request.getParameter("txtCreditos")));
+            recurso.setDebitos(Float.parseFloat(request.getParameter("txtDebitos")));
+            recurso.setSaldo(Float.parseFloat(request.getParameter("txtSaldo")));
+            recurso.setModalidade(modalidade);
             if(operacao.equals("Incluir")){
-                recurso = new Recurso(codRecurso, ano, creditos, debitos, saldo, modalidade);
-                RecursoDAO.getInstance().operacao(recurso, "gravar", codRecurso);
-            }else if(operacao.equals("Editar")){
-                recurso.setAno(ano);
-                recurso.setCreditos(creditos);
-                recurso.setDebitos(debitos);
-                recurso.setSaldo(saldo);
-                recurso.setModalidade(modalidade);
-                RecursoDAO.getInstance().operacao(recurso, "alterar", codRecurso);
-            }else if (operacao.equals("Excluir")){
-                RecursoDAO.getInstance().operacao(recurso, "excluir", codRecurso);
+                recurso.setCodRecurso(codRecurso);
             }
+            RecursoDAO.getInstance().operacao(recurso, operacao, codRecurso);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRecursoController");
             view.forward(request, response);
         }catch(ServletException e){

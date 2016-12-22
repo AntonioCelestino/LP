@@ -100,39 +100,25 @@ public class ManterRendaController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int codRenda = Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodRenda"));
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-            String qt18_Nome = request.getParameter("txt_qt18_Nome");
-            String qt18_DataNasc = request.getParameter("txt_qt18_DataNasc");
-            String qt18_EstadoCivil = request.getParameter("opt_qt18_EstadoCivil");
-            String qt18_Parentesco = request.getParameter("txt_qt18_Parentesco");
-            String qt18_Escolaridade = request.getParameter("opt_qt18_Escolaridade");
-            String qt18_Trabalho = request.getParameter("opt_qt18_Trabalho");
-            String qt18_Ocupacao = request.getParameter("txt_qt18_Ocupacao");
-            float qt18_RendaBruta = Float.parseFloat(request.getParameter("txt_qt18_RendaBruta"));
+            int codRenda = Integer.parseInt(codFormulario + request.getParameter("txtCodRenda"));
             Formulario formulario = null;
             if(codFormulario != 0){
                 formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
             }
+            renda.setFormulario(formulario);
+            renda.setQt18_Nome(request.getParameter("txt_qt18_Nome"));
+            renda.setQt18_DataNasc(request.getParameter("txt_qt18_DataNasc"));
+            renda.setQt18_EstadoCivil(request.getParameter("opt_qt18_EstadoCivil"));
+            renda.setQt18_Parentesco(request.getParameter("txt_qt18_Parentesco"));
+            renda.setQt18_Escolaridade(request.getParameter("opt_qt18_Escolaridade"));
+            renda.setQt18_Trabalho(request.getParameter("opt_qt18_Trabalho"));
+            renda.setQt18_Ocupacao(request.getParameter("txt_qt18_Ocupacao"));
+            renda.setQt18_RendaBruta(Float.parseFloat(request.getParameter("txt_qt18_RendaBruta")));
             if(operacao.equals("Incluir")){
-                renda = new Renda(codRenda, formulario, qt18_Nome, qt18_DataNasc, qt18_EstadoCivil, qt18_Parentesco, qt18_Escolaridade, qt18_Trabalho, qt18_Ocupacao, qt18_RendaBruta);
-                RendaDAO.getInstance().operacao(renda, "gravar", codRenda);
-            }else if(operacao.equals("Editar")){
                 renda.setCodRenda(codRenda);
-                renda.setFormulario(formulario);
-                renda.setQt18_Nome(qt18_Nome);
-                renda.setQt18_DataNasc(qt18_DataNasc);
-                renda.setQt18_EstadoCivil(qt18_EstadoCivil);
-                renda.setQt18_Parentesco(qt18_Parentesco);
-                renda.setQt18_Escolaridade(qt18_Escolaridade);
-                renda.setQt18_Trabalho(qt18_Trabalho);
-                renda.setQt18_Ocupacao(qt18_Ocupacao);
-                renda.setQt18_RendaBruta(qt18_RendaBruta);
-                RendaDAO.getInstance().operacao(renda, "alterar", codRenda);
-            }else if (operacao.equals("Excluir")){
-                renda.setCodRenda(codRenda);
-                RendaDAO.getInstance().operacao(renda, "excluir", codRenda);
             }
+            RendaDAO.getInstance().operacao(renda, operacao, codRenda);
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
             view.forward(request, response);
         }catch(ServletException e){
@@ -141,5 +127,4 @@ public class ManterRendaController extends ProcessRequestController {
             throw new ServletException(ex);
         }
     }
-
 }

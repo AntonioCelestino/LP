@@ -67,11 +67,11 @@ public class GenericoDAO <T> {
         EntityTransaction tx = getTX(em);
         try {
             tx.begin();
-            if(operacao.equals("gravar")){
+            if(operacao.equals("Incluir")){
                 em.persist(t);
-            } else if(operacao.equals("alterar")){
+            } else if(operacao.equals("Editar")){
                 em.merge(t);
-            } else if(operacao.equals("excluir")){
+            } else if(operacao.equals("Excluir")){
                 em.remove(em.getReference(t.getClass(), codClasse));
             }            
             tx.commit();
