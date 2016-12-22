@@ -46,14 +46,6 @@ public class Selecao implements Serializable {
     public static Selecao obterSelecao(int codSelecao) throws ClassNotFoundException{
         return (Selecao) SelecaoDAO.getInstance().obterClasse(Selecao.class, codSelecao);
     }
-    
-    public Selecao(Integer codSelecao, String dataInicioSelecao, String dataFimSelecao, String numeroEdital, Modalidade modalidade) {
-        this.codSelecao = codSelecao;
-        this.dataInicioSelecao = dataInicioSelecao;
-        this.dataFimSelecao = dataFimSelecao;
-        this.numeroEdital = numeroEdital;
-        this.modalidade = modalidade;
-    }
 
     public Integer getCodSelecao() {
         return codSelecao;

@@ -61,19 +61,6 @@ public class Renda implements Serializable {
         return (Renda) RendaDAO.getInstance().obterClasse(Renda.class, codRenda);
     }
     
-    public Renda(Integer codRenda, Formulario formulario, String qt18_Nome, String qt18_DataNasc, String qt18_EstadoCivil, String qt18_Parentesco, String qt18_Escolaridade, String qt18_Trabalho, String qt18_Ocupacao, float qt18_RendaBruta) {
-        this.codRenda = codRenda;
-        this.formulario = formulario;
-        this.qt18_Nome = qt18_Nome;
-        this.qt18_DataNasc = qt18_DataNasc;
-        this.qt18_EstadoCivil = qt18_EstadoCivil;
-        this.qt18_Parentesco = qt18_Parentesco;
-        this.qt18_Escolaridade = qt18_Escolaridade;
-        this.qt18_Trabalho = qt18_Trabalho;
-        this.qt18_Ocupacao = qt18_Ocupacao;
-        this.qt18_RendaBruta = qt18_RendaBruta;
-    }
-    
     public Integer getCodRenda() {
         return codRenda;
     }

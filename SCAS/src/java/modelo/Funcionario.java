@@ -41,12 +41,6 @@ public class Funcionario implements Serializable {
         return (Funcionario) FuncionarioDAO.getInstance().obterClasse(Funcionario.class, registro);
     }
     
-    public Funcionario(Integer registro, String cargo, Usuario usuario) {
-        this.registro = registro;
-        this.cargo = cargo;
-        this.usuario = usuario;
-    }
-    
     public Integer getRegistro() {
         return registro;
     }

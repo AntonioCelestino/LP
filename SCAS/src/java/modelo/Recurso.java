@@ -45,15 +45,6 @@ public class Recurso implements Serializable {
         return (Recurso) RecursoDAO.getInstance().obterClasse(Recurso.class, codRecurso);
     }
 
-    public Recurso(Integer codRecurso, Integer ano, float creditos, float debitos, float saldo, Modalidade modalidade) {
-        this.codRecurso = codRecurso;
-        this.ano = ano;
-        this.creditos = creditos;
-        this.debitos = debitos;
-        this.saldo = saldo;
-        this.modalidade = modalidade;
-    }
-
     public Integer getCodRecurso() {
         return codRecurso;
     }

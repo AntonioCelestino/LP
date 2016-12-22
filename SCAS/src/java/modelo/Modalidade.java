@@ -37,13 +37,6 @@ public class Modalidade implements Serializable {
         return (Modalidade) ModalidadeDAO.getInstance().obterClasse(Modalidade.class, codModalidade);
     }
 
-    public Modalidade(Integer codModalidade, float valorMensal, String nome, String descricao) {
-        this.codModalidade = codModalidade;
-        this.valorMensal = valorMensal;
-        this.nome = nome;
-        this.descricao = descricao;
-    }
-
     public Integer getCodModalidade() {
         return codModalidade;
     }
