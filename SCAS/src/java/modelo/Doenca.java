@@ -52,16 +52,6 @@ public class Doenca implements Serializable {
         return (Doenca) DoencaDAO.getInstance().obterClasse(Doenca.class, codDoenca);
     }
     
-    public Doenca(Integer codDoenca, Formulario Formuario, String qt17_Nome, String qt17_Doenca, String qt17_Trabalho, String qt17_Dependencia, float qt17_Gasto) {
-        this.codDoenca = codDoenca;
-        this.formulario = Formuario;
-        this.qt17_Nome = qt17_Nome;
-        this.qt17_Doenca = qt17_Doenca;
-        this.qt17_Trabalho = qt17_Trabalho;
-        this.qt17_Dependencia = qt17_Dependencia;
-        this.qt17_Gasto = qt17_Gasto;
-    }
-    
     public Integer getCodDoenca() {
         return codDoenca;
     }

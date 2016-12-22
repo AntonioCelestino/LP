@@ -43,13 +43,6 @@ public class Bolsa implements Serializable {
     public static Bolsa obterBolsa(int codBolsa) throws ClassNotFoundException {
         return (Bolsa) BolsaDAO.getInstance().obterClasse(Bolsa.class, codBolsa);
     }
-    
-    public Bolsa(Integer codBolsa, String dataInicio, String dataFim, Formulario formulario) {
-        this.codBolsa = codBolsa;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.formulario = formulario;
-    }
 
     public Integer getCodBolsa() {
         return codBolsa;

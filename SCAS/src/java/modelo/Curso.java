@@ -47,13 +47,6 @@ public class Curso implements Serializable {
         return (Curso) CursoDAO.getInstance().obterClasse(Curso.class, codCurso);
     }
 
-    public Curso(Integer codCurso, String nome, String tipoEnsino, String turno) {
-        this.codCurso = codCurso;
-        this.nome = nome;
-        this.tipoEnsino = tipoEnsino;
-        this.turno = turno;
-    }
-
     public Integer getCodCurso() {
         return codCurso;
     }
