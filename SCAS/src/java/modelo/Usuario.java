@@ -81,27 +81,6 @@ public class Usuario implements Serializable {
     public static Usuario obterUsuario(int codUsuario) throws ClassNotFoundException{
         return (Usuario) UsuarioDAO.getInstance().obterClasse(Usuario.class, codUsuario);
     }
-    
-    public Usuario(Integer codUsuario, String dataNasc, String nome, String sexo, String cpf, String identidade, String telefoneFixo, String telefoneCelular, String email, String endereco, String numero, String complemento, String bairro, String cep, String cidade, String uf, String login, String senha) {
-        this.codUsuario = codUsuario;
-        this.dataNasc = dataNasc;
-        this.nome = nome;
-        this.sexo = sexo;
-        this.cpf = cpf;
-        this.identidade = identidade;
-        this.telefoneFixo = telefoneFixo;
-        this.telefoneCelular = telefoneCelular;
-        this.email = email;
-        this.endereco = endereco;
-        this.numero = numero;
-        this.complemento = complemento;
-        this.bairro = bairro;
-        this.cep = cep;
-        this.cidade = cidade;
-        this.uf = uf;
-        this.login = login;
-        this.senha = senha;
-    }
 
     public Integer getCodUsuario() {
         return codUsuario;
