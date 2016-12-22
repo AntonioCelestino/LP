@@ -93,14 +93,14 @@ public class ManterCursoController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
+            if(operacao.equals("Incluir")){
+                curso = new Curso();
+                curso.setCodCurso(Integer.parseInt(request.getParameter("txtCodCurso")));
+            }
             curso.setNome(request.getParameter("txtNomeCurso"));
             curso.setTipoEnsino(request.getParameter("optTipoEnsino"));
             curso.setTurno(request.getParameter("optTurno"));
-            int codCurso = Integer.parseInt(request.getParameter("txtCodCurso"));
-            if(operacao.equals("Incluir")){
-                curso.setCodCurso(codCurso);
-            }
-            CursoDAO.getInstance().operacao(curso, operacao, codCurso);
+            CursoDAO.getInstance().operacao(curso, operacao, curso.getCodCurso());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaCursoController");
             view.forward(request, response);
         }catch(ServletException e){

@@ -96,7 +96,10 @@ public class ManterSelecaoController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int codSelecao = Integer.parseInt(request.getParameter("txtCodSelecao"));
+            if(operacao.equals("Incluir")){
+                selecao = new Selecao();
+                selecao.setCodSelecao(Integer.parseInt(request.getParameter("txtCodSelecao")));
+            }
             int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
@@ -106,10 +109,7 @@ public class ManterSelecaoController extends ProcessRequestController {
             selecao.setDataFimSelecao(request.getParameter("txtDataFimSelecao"));
             selecao.setNumeroEdital(request.getParameter("txtNumeroEdital"));
             selecao.setModalidade(modalidade);
-            if(operacao.equals("Incluir")){
-                selecao.setCodSelecao(codSelecao);
-            }
-            SelecaoDAO.getInstance().operacao(selecao, operacao, codSelecao);
+            SelecaoDAO.getInstance().operacao(selecao, operacao, selecao.getCodSelecao());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaSelecaoController");
             view.forward(request, response);
         }catch(ServletException e){

@@ -99,11 +99,32 @@ public class ManterUsuarioController extends ProcessRequestController {
     @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException{
         try{
+            boolean controle = true;
             String operacao = request.getParameter("operacao");
-            int codUsuario = Integer.parseInt(request.getParameter("txtCodUsuario"));
             int codUsuarioLogado = Integer.parseInt(request.getParameter("codUsuarioLogado"));
             String senhaAnterior = request.getParameter("txtSenhaAnterior");
             String senha = request.getParameter("txtSenha");
+            if(operacao.equals("Editar")){
+                if(senha == null && senhaAnterior == null){
+                    usuario.setSenha(senhaOriginal);
+                }else{
+                    if (UsuarioDAO.verificarUsuario(request.getParameter("txtLogin"), Criptografia.criptografar(senhaAnterior))) {
+                        usuario.setSenha(Criptografia.criptografar(senha));
+                    } else {
+                        request.setAttribute("operacao", operacao);
+                        usuario.setSenha("");
+                        request.setAttribute("usuario", usuario);
+                        request.setAttribute("codUsuarioLogado", codUsuarioLogado);
+                        RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
+                        view.forward(request, response);
+                        controle = false;
+                    }
+                }
+            }else if(operacao.equals("Incluir")){
+                usuario = new Usuario();
+                usuario.setCodUsuario(Integer.parseInt(request.getParameter("txtCodUsuario")));
+                Criptografia.criptografar(senha);
+            }
             usuario.setDataNasc(request.getParameter("txtDataNasc"));
             usuario.setNome(request.getParameter("txtNome"));
             usuario.setSexo(request.getParameter("txtSexo"));
@@ -120,33 +141,13 @@ public class ManterUsuarioController extends ProcessRequestController {
             usuario.setCidade(request.getParameter("txtCidade"));
             usuario.setUf(request.getParameter("txtUF"));
             usuario.setLogin(request.getParameter("txtLogin"));
-            if(operacao.equals("Editar")){
-                if(senha == null && senhaAnterior == null){
-                    usuario.setSenha(senhaOriginal);
-                }else{
-                    if (UsuarioDAO.verificarUsuario(request.getParameter("txtLogin"), Criptografia.criptografar(senhaAnterior))) {
-                        usuario.setSenha(Criptografia.criptografar(senha));
-                        UsuarioDAO.getInstance().operacao(usuario, operacao, codUsuario);
-                    } else {
-                        request.setAttribute("operacao", operacao);
-                        usuario.setSenha("");
-                        request.setAttribute("usuario", usuario);
-                        request.setAttribute("codUsuarioLogado", codUsuarioLogado);
-                        RequestDispatcher view = request.getRequestDispatcher("/manterUsuario.jsp");
-                        view.forward(request, response);
-                    }
-                }
-            }else{
-                if(operacao.equals("Incluir")){
-                    usuario.setCodUsuario(codUsuario);
-                    Criptografia.criptografar(senha);
-                }
-                UsuarioDAO.getInstance().operacao(usuario, operacao, codUsuario);
+            if(controle){
+                UsuarioDAO.getInstance().operacao(usuario, operacao, usuario.getCodUsuario());
             }
             request.setAttribute("codUsuarioLogado", codUsuarioLogado);
             RequestDispatcher view;
             if(UsuarioDAO.verificarTipoUsuario(codUsuarioLogado, "aluno")){
-                request.setAttribute("codUsuario", codUsuario);
+                request.setAttribute("codUsuario", usuario.getCodUsuario());
                 view = request.getRequestDispatcher("/menuAluno.jsp");
             }else{
                 view = request.getRequestDispatcher("PesquisaUsuarioController");

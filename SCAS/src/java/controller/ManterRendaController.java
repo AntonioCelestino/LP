@@ -101,7 +101,10 @@ public class ManterRendaController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-            int codRenda = Integer.parseInt(codFormulario + request.getParameter("txtCodRenda"));
+            if(operacao.equals("Incluir")){
+                renda = new Renda();
+            }
+            renda.setCodRenda(Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodRenda")));
             Formulario formulario = null;
             if(codFormulario != 0){
                 formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
@@ -115,10 +118,7 @@ public class ManterRendaController extends ProcessRequestController {
             renda.setQt18_Trabalho(request.getParameter("opt_qt18_Trabalho"));
             renda.setQt18_Ocupacao(request.getParameter("txt_qt18_Ocupacao"));
             renda.setQt18_RendaBruta(Float.parseFloat(request.getParameter("txt_qt18_RendaBruta")));
-            if(operacao.equals("Incluir")){
-                renda.setCodRenda(codRenda);
-            }
-            RendaDAO.getInstance().operacao(renda, operacao, codRenda);
+            RendaDAO.getInstance().operacao(renda, operacao, renda.getCodRenda());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRendaController");
             view.forward(request, response);
         }catch(ServletException e){

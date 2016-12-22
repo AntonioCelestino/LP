@@ -97,18 +97,18 @@ public class ManterFuncionarioController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int registro = Integer.parseInt(request.getParameter("txtRegistro"));
             int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
+            if(operacao.equals("Incluir")){
+                funcionario = new Funcionario();
+                funcionario.setRegistro(Integer.parseInt(request.getParameter("txtRegistro")));
+            }
             Usuario usuario = null;
             if(codUsuario != 0){
                 usuario = (Usuario) UsuarioDAO.getInstance().obterClasse(Usuario.class, codUsuario);
             }
             funcionario.setCargo(request.getParameter("optCargo"));
             funcionario.setUsuario(usuario);
-            if(operacao.equals("Incluir")){
-                funcionario.setRegistro(registro);
-            }
-            FuncionarioDAO.getInstance().operacao(funcionario, operacao, registro);
+            FuncionarioDAO.getInstance().operacao(funcionario, operacao, funcionario.getRegistro());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFuncionarioController");
             view.forward(request, response);
         }catch(ServletException e){

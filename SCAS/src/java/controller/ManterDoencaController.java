@@ -101,7 +101,10 @@ public class ManterDoencaController extends ProcessRequestController {
         try{
             String operacao = request.getParameter("operacao");
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
-            int codDoenca = Integer.parseInt(codFormulario + request.getParameter("txtCodDoenca"));
+            if(operacao.equals("Incluir")){
+                doenca = new Doenca();
+            }
+            doenca.setCodDoenca(Integer.parseInt(request.getParameter("optFormulario") + request.getParameter("txtCodDoenca")));
             Formulario formulario = null;
             if(codFormulario != 0){
                 formulario = (Formulario) FormularioDAO.getInstance().obterClasse(Formulario.class, codFormulario);
@@ -112,10 +115,7 @@ public class ManterDoencaController extends ProcessRequestController {
             doenca.setQt17_Trabalho(request.getParameter("opt_qt17_Trabalho"));
             doenca.setQt17_Dependencia(request.getParameter("opt_qt17_Dependencia"));
             doenca.setQt17_Gasto(Float.parseFloat(request.getParameter("txt_qt17_Gasto")));
-            if(operacao.equals("Incluir")){
-                doenca.setCodDoenca(codDoenca);
-            }
-            DoencaDAO.getInstance().operacao(doenca, operacao, codDoenca);
+            DoencaDAO.getInstance().operacao(doenca, operacao, doenca.getCodDoenca());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaDoencaController");
             view.forward(request, response);
         }catch(ServletException e){

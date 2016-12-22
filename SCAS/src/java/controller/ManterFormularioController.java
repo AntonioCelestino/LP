@@ -117,6 +117,10 @@ public class ManterFormularioController extends ProcessRequestController {
             if(codSelecao != 0){
                 selecao = (Selecao) SelecaoDAO.getInstance().obterClasse(Selecao.class, codSelecao);
             }
+            if(operacao.equals("Incluir")){
+                formulario = new Formulario();
+                formulario.setCodFormulario(Integer.parseInt(request.getParameter("optAluno") + request.getParameter("optSelecao")));
+            }
             formulario.setAluno(aluno);
             formulario.setSelecao(selecao);
             formulario.setQt01_Resposta(request.getParameter("opt_qt01_Resposta"));
@@ -208,9 +212,6 @@ public class ManterFormularioController extends ProcessRequestController {
             formulario.setQt20_ValorAluguel(Float.parseFloat(request.getParameter("txt_qt20_ValorAluguel")));
             formulario.setQt20_ValorIptuAnual(Float.parseFloat(request.getParameter("txt_qt20_ValorIptuAnual")));
             formulario.setQt21_Esclarecimentos(request.getParameter("txt_qt21_Esclarecimentos"));
-            if(operacao.equals("Incluir")){
-                formulario.setCodFormulario(codAluno + codSelecao);
-            }
             FormularioDAO.getInstance().operacao(formulario, operacao, formulario.getCodFormulario());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaFormularioController");
             view.forward(request, response);

@@ -112,14 +112,14 @@ public class ManterModalidadeController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try{
             String operacao = request.getParameter("operacao");
-            int codModalidade = Integer.parseInt(request.getParameter("txtCodModalidade"));
+            if(operacao.equals("Incluir")){
+                modalidade = new Modalidade();
+                modalidade.setCodModalidade(Integer.parseInt(request.getParameter("txtCodModalidade")));
+            }
             modalidade.setValorMensal(Float.parseFloat(request.getParameter("txtValorMensal")));
             modalidade.setNome(request.getParameter("txtNomeModalidade"));
             modalidade.setDescricao(request.getParameter("txtDescricaoModalidade"));
-            if(operacao.equals("Incluir")){
-                modalidade.setCodModalidade(codModalidade);
-            }
-            ModalidadeDAO.getInstance().operacao(modalidade, operacao, codModalidade);
+            ModalidadeDAO.getInstance().operacao(modalidade, operacao, modalidade.getCodModalidade());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaModalidadeController");
             view.forward(request, response);
         }catch(ServletException e){

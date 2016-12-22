@@ -96,7 +96,10 @@ public class ManterRecursoController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int codRecurso = Integer.parseInt(request.getParameter("txtCodRecurso"));
+            if(operacao.equals("Incluir")){
+                recurso = new Recurso();
+                recurso.setCodRecurso(Integer.parseInt(request.getParameter("txtCodRecurso")));
+            }
             int codModalidade = Integer.parseInt(request.getParameter("optModalidade"));
             Modalidade modalidade = null;
             if(codModalidade != 0){
@@ -107,10 +110,7 @@ public class ManterRecursoController extends ProcessRequestController {
             recurso.setDebitos(Float.parseFloat(request.getParameter("txtDebitos")));
             recurso.setSaldo(Float.parseFloat(request.getParameter("txtSaldo")));
             recurso.setModalidade(modalidade);
-            if(operacao.equals("Incluir")){
-                recurso.setCodRecurso(codRecurso);
-            }
-            RecursoDAO.getInstance().operacao(recurso, operacao, codRecurso);
+            RecursoDAO.getInstance().operacao(recurso, operacao, recurso.getCodRecurso());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaRecursoController");
             view.forward(request, response);
         }catch(ServletException e){

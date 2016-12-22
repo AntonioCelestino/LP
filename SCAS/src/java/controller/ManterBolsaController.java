@@ -96,7 +96,10 @@ public class ManterBolsaController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int codBolsa = Integer.parseInt(request.getParameter("txtCodBolsa"));
+            if(operacao.equals("Incluir")){
+                bolsa = new Bolsa();
+                bolsa.setCodBolsa(Integer.parseInt(request.getParameter("txtCodBolsa")));
+            }
             int codFormulario = Integer.parseInt(request.getParameter("optFormulario"));
             Formulario formulario = null;
             if(codFormulario != 0){
@@ -104,11 +107,8 @@ public class ManterBolsaController extends ProcessRequestController {
             }
             bolsa.setDataInicio(request.getParameter("txtDataInicio"));
             bolsa.setDataFim(request.getParameter("txtDataFim"));
-            bolsa.setFormulario(formulario);
-            if(operacao.equals("Incluir")){
-                bolsa.setCodBolsa(codBolsa);
-            }  
-            BolsaDAO.getInstance().operacao(bolsa, operacao, codBolsa);
+            bolsa.setFormulario(formulario);  
+            BolsaDAO.getInstance().operacao(bolsa, operacao, bolsa.getCodBolsa());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaBolsaController");
             view.forward(request, response);
         }catch(ServletException e){

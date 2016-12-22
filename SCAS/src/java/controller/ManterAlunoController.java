@@ -100,7 +100,10 @@ public class ManterAlunoController extends ProcessRequestController {
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int matricula = Integer.parseInt(request.getParameter("txtMatricula"));
+            if(operacao.equals("Incluir")){
+                aluno = new Aluno();
+                aluno.setMatricula(Integer.parseInt(request.getParameter("txtMatricula")));
+            }
             int codCurso = Integer.parseInt(request.getParameter("optCurso"));
             int codUsuario = Integer.parseInt(request.getParameter("optUsuario"));
             Curso curso = null;
@@ -122,10 +125,7 @@ public class ManterAlunoController extends ProcessRequestController {
             aluno.setFamilia_uf(request.getParameter("txtFamiliaUF"));
             aluno.setCurso(curso);
             aluno.setUsuario(usuario);
-            if(operacao.equals("Incluir")){
-                aluno.setMatricula(matricula);
-            }
-            AlunoDAO.getInstance().operacao(aluno, operacao, matricula);
+            AlunoDAO.getInstance().operacao(aluno, operacao, aluno.getMatricula());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaAlunoController");
             view.forward(request, response);
         }catch(ServletException e){
