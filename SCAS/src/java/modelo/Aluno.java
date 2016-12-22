@@ -66,21 +66,6 @@ public class Aluno implements Serializable {
     public static Aluno obterAluno(int codAluno) throws ClassNotFoundException{
         return (Aluno) AlunoDAO.getInstance().obterClasse(Aluno.class, codAluno);
     }
-    
-    public Aluno(Integer matricula, Integer anoIngresso, String periodoCurso, String familia_endereco, String familia_numero, String familia_complemento, String familia_bairro, String familia_cep, String familia_cidade, String familia_uf, Curso curso, Usuario usuario) {
-        this.matricula = matricula;
-        this.anoIngresso = anoIngresso;
-        this.periodoCurso = periodoCurso;
-        this.familia_endereco = familia_endereco;
-        this.familia_numero = familia_numero;
-        this.familia_complemento = familia_complemento;
-        this.familia_bairro = familia_bairro;
-        this.familia_cep = familia_cep;
-        this.familia_cidade = familia_cidade;
-        this.familia_uf = familia_uf;
-        this.curso = curso;
-        this.usuario = usuario;
-    }
 
     public Integer getMatricula() {
         return matricula;
