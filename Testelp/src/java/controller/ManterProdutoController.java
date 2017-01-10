@@ -3,17 +3,16 @@ package controller;
 import dao.FornecedorDAO;
 import dao.ProdutoDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Fornecedor;
 import modelo.Produto;
 
-public class ManterProdutoController extends HttpServlet {
+public class ManterProdutoController extends ProcessRequestController {
     private Produto produto;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -24,18 +23,6 @@ public class ManterProdutoController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding( "UTF-8" );
-        response.setContentType("text/html;charset=UTF-8");
-        String acao = request.getParameter("acao");
-        if(acao.equals("prepararOperacao")){
-            prepararOperacao(request, response);
-        } 
-        if(acao.equals("confirmarOperacao")){
-            confirmarOperacao(request, response);
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -49,7 +36,11 @@ public class ManterProdutoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterProdutoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -63,7 +54,11 @@ public class ManterProdutoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ManterProdutoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -76,6 +71,7 @@ public class ManterProdutoController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
+    @Override
     public void prepararOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try{
             String operacao = request.getParameter("operacao");
@@ -83,7 +79,7 @@ public class ManterProdutoController extends HttpServlet {
             request.setAttribute("fornecedores", FornecedorDAO.obterFornecedores());
             if(!operacao.equals("Incluir")){
                 int codProduto = Integer.parseInt(request.getParameter("codProduto"));
-                produto = ProdutoDAO.obterProduto(codProduto);
+                produto = (Produto) ProdutoDAO.getInstance().obterClasse(Produto.class, codProduto);
                 request.setAttribute("produto", produto);
             }
             RequestDispatcher view = request.getRequestDispatcher("/manterProduto.jsp");
@@ -95,30 +91,24 @@ public class ManterProdutoController extends HttpServlet {
         }
     }
     
+    @Override
     public void confirmarOperacao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             String operacao = request.getParameter("operacao");
-            int codProduto = Integer.parseInt(request.getParameter("txtCodProduto"));
-            String nome = request.getParameter("txtNome");
-            float preco = Float.parseFloat(request.getParameter("txtPreco"));
-            int quantidade = Integer.parseInt(request.getParameter("txtQuantidade"));
             int codFornecedor = Integer.parseInt(request.getParameter("optFornecedor"));
+            if(operacao.equals("Incluir")){
+                produto = new Produto();
+                produto.setId(Integer.parseInt(request.getParameter("txtCodProduto")));
+            }
             Fornecedor fornecedor = null;
             if(codFornecedor != 0){
-                fornecedor = FornecedorDAO.obterFornecedor(codFornecedor);
+                fornecedor = (Fornecedor) FornecedorDAO.getInstance().obterClasse(Fornecedor.class, codFornecedor);
             }
-            if(operacao.equals("Incluir")){
-                produto = new Produto(codProduto, nome, preco, quantidade, fornecedor);
-                ProdutoDAO.getInstance().salvar(produto);
-            }else if(operacao.equals("Editar")){
-                produto.setNome(nome);
-                produto.setPreco(preco);
-                produto.setQuantidade(quantidade);
-                produto.setFornecedorId(fornecedor);
-                ProdutoDAO.getInstance().alterar(produto);
-            }else if (operacao.equals("Excluir")){
-                ProdutoDAO.getInstance().excluir(produto);
-            }
+            produto.setNome(request.getParameter("txtNome"));
+            produto.setPreco(Float.parseFloat(request.getParameter("txtPreco")));
+            produto.setQuantidade(Integer.parseInt(request.getParameter("txtQuantidade")));
+            produto.setFornecedorId(fornecedor);
+            ProdutoDAO.getInstance().operacao(produto, operacao, produto.getId());
             RequestDispatcher view = request.getRequestDispatcher("PesquisaProdutoController");
             view.forward(request, response);
         }catch(ServletException e){

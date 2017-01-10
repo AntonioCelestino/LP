@@ -43,15 +43,7 @@ public class Produto implements Serializable {
     }
     
     public static Produto obterProduto(int codProduto) throws ClassNotFoundException{
-        return ProdutoDAO.obterProduto(codProduto);
-    }
-
-    public Produto(Integer id, String nome, float preco, Integer quantidade, Fornecedor fornecedorId) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.fornecedorId = fornecedorId;
+        return (Produto) ProdutoDAO.getInstance().obterClasse(Produto.class, codProduto);
     }
     
     public Integer getId() {
@@ -117,17 +109,5 @@ public class Produto implements Serializable {
     @Override
     public String toString() {
         return "modelo.Produto[ id=" + id + " ]";
-    }
-    
-    public void salvar() throws SQLException, ClassNotFoundException {
-        ProdutoDAO.getInstance().salvar(this);
-}
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        ProdutoDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        ProdutoDAO.getInstance().excluir(this);
     }
 }

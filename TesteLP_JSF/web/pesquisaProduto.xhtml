@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Pesquisa Produto</title>
+    </h:head>
+    <h:body>
+        <h:dataTable value="#{produtoControllerBean.listaProduto}" var="p" border="1">
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{p.id}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                #{p.nome}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Preço</f:facet>
+                #{p.preco}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Quantidade</f:facet>
+                #{p.quantidade}
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Ações</f:facet>
+                <h:form>
+                    <h:commandLink value="Editar" action="#{produtoControllerBean.manterProduto('Editar', p)}">
+                        <f:setPropertyActionListener value="Editar" target="#{operacao}"/>
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">Ações</f:facet>
+                <h:form>
+                    <h:commandLink value="Excluir" action="#{produtoControllerBean.manterProduto('Excluir', p)}">
+                        <f:setPropertyActionListener value="Excluir" target="#{operacao}"/>
+                    </h:commandLink>
+                </h:form>
+            </h:column>
+        </h:dataTable>
+        <h:form>
+            <h:commandButton value="Incluir" action="#{produtoControllerBean.manterProduto('Incluir', p)}">
+                <f:setPropertyActionListener value="Incluir" target="#{operacao}"/>
+            </h:commandButton>
+        </h:form>
+    </h:body>
+</html>
+

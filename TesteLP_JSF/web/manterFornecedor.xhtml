@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Manter Fornecedor</title>
+    </h:head>
+    <h:body>
+        Fornecedor - #{fornecedorControllerBean.operacao}
+        <input type="hidden" value="#{operacao}"/>
+        <h:form>
+            <h:panelGrid columns="3">
+                <h:outputLabel value="ID:"/>
+                <h:inputText value="#{fornecedorControllerBean.fornecedor.id}" id="id" required="true" requiredMessage="Campo Obrigatório"/>
+                <h:message for="id" />
+                
+                <h:outputLabel value="Nome:"/>
+                <h:inputText value="#{fornecedorControllerBean.fornecedor.nome}" id="nome" required="true" requiredMessage="Campo Obrigatório"/>
+                <h:message for="nome" />
+                
+                <h:outputLabel value="CNPJ:"/>
+                <h:inputText value="#{fornecedorControllerBean.fornecedor.cnpj}" id="cnpj" required="true" requiredMessage="Campo Obrigatório"/>
+                <h:message for="cnpj" />
+                
+                <h:outputLabel value="Telefone:"/>
+                <h:inputText value="#{fornecedorControllerBean.fornecedor.telefone}" id="telefone" required="true" requiredMessage="Campo Obrigatório"/>
+                <h:message for="telefone" />
+                
+                <h:outputLabel value="Cidade:"/>
+                <h:inputText value="#{fornecedorControllerBean.fornecedor.cidade}" id="cidade" required="true" requiredMessage="Campo Obrigatório"/>
+                <h:message for="cidade" />
+                
+                <h:commandButton value="Confirmar" action="#{fornecedorControllerBean.confirmarOperacao()}">
+                    <f:param name="operacao" value="#{fornecedorControllerBean.operacao}"/>
+                </h:commandButton>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

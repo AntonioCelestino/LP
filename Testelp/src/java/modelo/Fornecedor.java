@@ -41,15 +41,7 @@ public class Fornecedor implements Serializable {
     }
     
     public static Fornecedor obterFornecedor(int codFornecedor) throws ClassNotFoundException{
-        return FornecedorDAO.obterFornecedor(codFornecedor);
-    }
-
-    public Fornecedor(Integer id, String nome, String cnpj, String telefone, String cidade) {
-        this.id = id;
-        this.nome = nome;
-        this.cnpj = cnpj;
-        this.telefone = telefone;
-        this.cidade = cidade;
+        return (Fornecedor) FornecedorDAO.getInstance().obterClasse(Fornecedor.class, codFornecedor);
     }
     
     public Integer getId() {
@@ -116,17 +108,5 @@ public class Fornecedor implements Serializable {
     @Override
     public String toString() {
         return "modelo.Fornecedor[ id=" + id + " ]";
-    }
-    
-    public void salvar() throws SQLException, ClassNotFoundException {
-        FornecedorDAO.getInstance().salvar(this);
-}
-
-    public void alterar() throws SQLException, ClassNotFoundException{
-        FornecedorDAO.getInstance().alterar(this);
-    }
-
-    public void excluir() throws SQLException, ClassNotFoundException{
-        FornecedorDAO.getInstance().excluir(this);
     }
 }
