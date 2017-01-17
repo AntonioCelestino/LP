@@ -2,14 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Manter Fornecedor</title>
+        <title>Sistema de Vendas</title>
     </h:head>
     <h:body>
+        <h1>Sistema de Vendas</h1>
+        <p:menubar>
+            <p:menuitem value="Home" outcome="index"></p:menuitem>
+        </p:menubar>
+        <hr />
         Fornecedor - #{fornecedorControllerBean.operacao}
         <input type="hidden" value="#{operacao}"/>
         <h:form>
+            <p:fieldset style="margin-bottom:20px">
             <h:panelGrid columns="3">
                 <h:outputLabel value="ID:"/>
                 <h:inputText value="#{fornecedorControllerBean.fornecedor.id}" id="id" required="true" requiredMessage="Campo Obrigatório"/>
@@ -30,11 +37,15 @@
                 <h:outputLabel value="Cidade:"/>
                 <h:inputText value="#{fornecedorControllerBean.fornecedor.cidade}" id="cidade" required="true" requiredMessage="Campo Obrigatório"/>
                 <h:message for="cidade" />
-                
-                <h:commandButton value="Confirmar" action="#{fornecedorControllerBean.confirmarOperacao()}">
-                    <f:param name="operacao" value="#{fornecedorControllerBean.operacao}"/>
-                </h:commandButton>
             </h:panelGrid>
+            </p:fieldset>
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <h:commandButton value="Confirmar" action="#{fornecedorControllerBean.confirmarOperacao()}">
+                        <f:param name="operacao" value="#{fornecedorControllerBean.operacao}"/>
+                    </h:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
         </h:form>
     </h:body>
 </html>

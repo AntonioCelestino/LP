@@ -2,60 +2,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Pesquisa Fornecedor</title>
+        <title>Sistema de Vendas</title>
     </h:head>
     <h:body>
+        <h1>Sistema de Vendas</h1>
+        <p:menubar>
+            <p:menuitem value="Home" outcome="index"></p:menuitem>
+        </p:menubar>
+        <hr />
+        <p:fieldset style="margin-bottom:20px">
+        <h2>Pesquisa de Fornecedores</h2>
         <h:dataTable value="#{fornecedorControllerBean.listaFornecedor}" var="f" border="1">
-            <h:column>
+            <p:column sortBy="#{f.id}">
                 <f:facet name="header">ID</f:facet>
                 #{f.id}
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">Nome</f:facet>
                 #{f.nome}
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">Cidade</f:facet>
                 #{f.cidade}
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">CNPJ</f:facet>
                 #{f.cnpj}
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">Telefone</f:facet>
                 #{f.telefone}
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">Ações</f:facet>
                 <h:form>
                     <h:commandLink value="Editar" action="#{fornecedorControllerBean.manterFornecedor('Editar', f)}">
                         <f:setPropertyActionListener value="Editar" target="#{operacao}"/>
                     </h:commandLink>
                 </h:form>
-            </h:column>
+            </p:column>
             
-            <h:column>
+            <p:column>
                 <f:facet name="header">Ações</f:facet>
                 <h:form>
                     <h:commandLink value="Excluir" action="#{fornecedorControllerBean.manterFornecedor('Excluir', f)}">
                         <f:setPropertyActionListener value="Excluir" target="#{operacao}"/>
                     </h:commandLink>
                 </h:form>
-            </h:column>
+            </p:column>
         </h:dataTable>
         <h:form>
             <h:commandButton value="Incluir" action="#{fornecedorControllerBean.manterFornecedor('Incluir', null)}">
                 <f:setPropertyActionListener value="Incluir" target="#{operacao}"/>
             </h:commandButton>
         </h:form>
+        </p:fieldset>
     </h:body>
 </html>
 

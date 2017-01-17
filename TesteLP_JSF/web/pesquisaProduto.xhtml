@@ -2,11 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Pesquisa Produto</title>
+        <title>Sistema de Vendas</title>
     </h:head>
     <h:body>
+        <h1>Sistema de Vendas</h1>
+        <p:menubar>
+            <p:menuitem value="Home" outcome="index"></p:menuitem>
+        </p:menubar>
+        <hr />
+        <p:fieldset style="margin-bottom:20px">
+        <h2>Pesquisa de Produtos</h2>
         <h:dataTable value="#{produtoControllerBean.listaProduto}" var="p" border="1">
             <h:column>
                 <f:facet name="header">ID</f:facet>
@@ -51,6 +59,6 @@
                 <f:setPropertyActionListener value="Incluir" target="#{operacao}"/>
             </h:commandButton>
         </h:form>
+        </p:fieldset>
     </h:body>
 </html>
-
